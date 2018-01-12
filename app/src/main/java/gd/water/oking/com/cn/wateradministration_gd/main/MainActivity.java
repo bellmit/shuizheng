@@ -225,7 +225,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 @Override
                 public void onSuccess(String result) {
                     mRefreshTemEndTime = System.currentTimeMillis();
-                    Log.i("TempResult", result);
                     tempStr = result;
 
                     Intent intent = new Intent(UPDATE_TEMP_UI);
@@ -234,7 +233,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.i("TempResult", "onError: " + ex.toString());
+
                 }
 
                 @Override

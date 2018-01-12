@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -268,7 +269,7 @@ public class UpcomingFragment extends BaseFragment {
     }
 
     private void setTempView() {
-        if (MainActivity.tempStr != null && !"".equals(MainActivity.tempStr)) {
+        if (!TextUtils.isEmpty(MainActivity.tempStr)) {
             try {
                 JSONArray jsonArray = new JSONObject(MainActivity.tempStr).getJSONArray("results");
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -284,9 +285,9 @@ public class UpcomingFragment extends BaseFragment {
                 tempUpt_textView.setText("发布时间：" + tempTime.substring(11, 16));
             } catch (JSONException e) {
                 e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
         }
