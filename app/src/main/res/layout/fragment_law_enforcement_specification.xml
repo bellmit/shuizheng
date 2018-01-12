@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorMain1"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.LawEnforcementProcessGuidanceFragment">
+
+    <RadioGroup android:id="@+id/rg" android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="@drawable/cardview_bg"
+                android:orientation="horizontal"
+                android:padding="10px">
+
+        <RadioButton android:id="@+id/rb_inspection_norms"
+                     android:layout_width="320px"
+                     android:layout_height="50px"
+                     android:layout_marginLeft="20px"
+                     android:button="@drawable/radio_button_style"
+                     android:checked="true"
+                     android:padding="10px"
+                     android:text="水行政执法检查行为规范"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+
+        <RadioButton android:id="@+id/rb_language_specification"
+                     android:layout_width="320px"
+                     android:layout_height="50px"
+                     android:layout_marginLeft="20px"
+                     android:button="@drawable/radio_button_style"
+                     android:padding="10px"
+                     android:text="水行政执法用语规范"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+        <RadioButton android:id="@+id/rb_administrative_enforcement"
+                     android:layout_width="320px"
+                     android:layout_height="50px"
+                     android:layout_marginLeft="20px"
+                     android:button="@drawable/radio_button_style"
+                     android:padding="10px"
+                     android:text="水行政执法禁令"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+    </RadioGroup>
+
+    <FrameLayout android:id="@+id/fl_administrative_content"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@id/rg"
+    >
+
+    </FrameLayout>
+
+</RelativeLayout>

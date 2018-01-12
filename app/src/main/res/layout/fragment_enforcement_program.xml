@@ -1,0 +1,432 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:background="@drawable/cardview_bg"
+             tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.EnforcementProgramFragment">
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10px">
+        <ImageView android:id="@+id/iv_title"
+                   android:layout_width="300px"
+                   android:layout_height="110px"
+                   android:layout_centerHorizontal="true"
+                   android:src="@mipmap/qzcs_title"/>
+
+        <Button android:id="@+id/bt_examination_and_approval"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/iv_title"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico01"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="报单位负责人审批"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_examination_and_approval"
+                        android:layout_centerHorizontal="true">
+            <View android:id="@+id/v_01"
+                  android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_eizure_decision"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_01"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico02"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="扣押决定"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_eizure_decision"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="115px"
+                android:layout_centerHorizontal="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_to_the_scene"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_02"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico03"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="通知当时到现场"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_to_the_scene"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="115px"
+                android:layout_centerHorizontal="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_tell_the_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_03"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico04"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="告知理由、依据、权利、救济途径"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_04"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_tell_the_reason"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="115px"
+                android:layout_centerHorizontal="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_listen_their"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_04"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico05"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="听取陈述申辩意见"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+        <RelativeLayout android:id="@+id/rl_05"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_listen_their"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="115px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_record"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_05"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico06"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="制作现场笔录"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_06"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_record"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="115px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="85px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_seizure_listing"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_06"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico07"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="送达扣押决定书、交付扣押清单"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_07"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_seizure_listing"
+                        android:layout_centerHorizontal="true">
+            <View android:id="@+id/v_07"
+                  android:layout_width="2px"
+                  android:layout_height="180px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="156px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_remove_seizure_decision"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_07"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico08"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="解除扣押决定"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_08"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_below="@+id/bt_seizure_listing"
+                        android:layout_marginTop="52px" android:layout_toRightOf="@id/rl_07">
+            <View
+                android:layout_width="200px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:layout_marginLeft="185px"
+                       android:background="@mipmap/ic_chevron_right_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_seizure_deadline_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignTop="@+id/rl_08"
+                android:layout_toEndOf="@+id/rl_08"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico09"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="延长扣押期限申请"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_09"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/bt_seizure_deadline_apply"
+                        android:layout_below="@+id/bt_seizure_deadline_apply"
+                        android:layout_marginStart="90px">
+            <View
+                android:layout_width="2px"
+                android:layout_height="75px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="46px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_detention_period_decided"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignBaseline="@+id/bt_remove_seizure_decision"
+                android:layout_alignBottom="@+id/bt_remove_seizure_decision"
+                android:layout_alignStart="@+id/bt_seizure_deadline_apply"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcs_ico10"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="延长扣押期限决定"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+        <RelativeLayout android:id="@+id/rl_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignBottom="@+id/bt_detention_period_decided"
+                        android:layout_toEndOf="@+id/bt_listen_their">
+
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:background="@mipmap/ic_chevron_left_white"/>
+            <View android:id="@+id/v_10"
+                  android:layout_width="130px"
+                  android:layout_height="2px"
+                  android:layout_centerVertical="true"
+                  android:layout_marginLeft="10px"
+                  android:background="#fff"></View>
+        </RelativeLayout>
+        <View android:id="@+id/v_11"
+              android:layout_width="2px"
+              android:layout_height="40px"
+              android:layout_alignStart="@id/bt_remove_seizure_decision"
+              android:layout_below="@id/bt_remove_seizure_decision"
+              android:layout_marginLeft="60px"
+              android:background="#fff"></View>
+
+        <View android:id="@+id/v_12"
+              android:layout_width="180px"
+              android:layout_height="2px"
+              android:layout_alignEnd="@+id/v_11"
+              android:layout_below="@+id/v_11"
+              android:background="#fff"></View>
+
+        <RelativeLayout android:id="@+id/rl_11"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@id/v_11"
+                        android:layout_below="@+id/v_12"
+
+                        android:layout_marginRight="166px"
+        >
+            <View android:id="@+id/v_13"
+                  android:layout_width="2px"
+                  android:layout_height="40px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="16px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <View android:id="@+id/v_14"
+              android:layout_width="2px"
+              android:layout_height="40px"
+              android:layout_alignEnd="@id/bt_remove_seizure_decision"
+              android:layout_below="@id/bt_remove_seizure_decision"
+              android:layout_marginRight="60px"
+              android:background="#fff"></View>
+        <View android:id="@+id/v_15"
+              android:layout_width="180px"
+              android:layout_height="2px"
+              android:layout_alignStart="@+id/v_14"
+              android:layout_below="@+id/v_11"
+              android:background="#fff"></View>
+        <RelativeLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/v_15" android:layout_marginStart="28px"
+            android:layout_toEndOf="@+id/iv_title">
+            <View android:id="@+id/v_16"
+                  android:layout_width="2px"
+                  android:layout_height="40px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="16px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="70px"
+            android:layout_below="@id/rl_11"
+            android:layout_marginRight="60px"
+            android:layout_toStartOf="@id/bt_remove_seizure_decision"
+            android:background="@drawable/law_enforcement_bt_selector"
+            android:drawableLeft="@mipmap/qzcs_ico11"
+            android:paddingLeft="10px"
+            android:paddingRight="30px"
+            android:text="退还财物"
+            android:textColor="@color/white"
+            android:textSize="30px"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="70px"
+            android:layout_below="@id/rl_11"
+            android:layout_marginLeft="60px"
+            android:layout_toEndOf="@id/bt_remove_seizure_decision"
+            android:background="@drawable/law_enforcement_bt_selector"
+            android:drawableLeft="@mipmap/qzcs_ico12"
+            android:paddingLeft="10px"
+            android:paddingRight="30px"
+            android:text="拍卖财物"
+            android:textColor="@color/white"
+            android:textSize="30px"/>
+
+    </RelativeLayout>
+
+
+</ScrollView>

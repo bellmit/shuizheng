@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="blocksDescendants"
+              android:foreground="?attr/selectableItemBackground"
+              android:orientation="horizontal"
+              android:padding="10px">
+
+
+    <TextView
+        android:id="@+id/jjcd_tv"
+        android:layout_width="8px"
+        android:layout_height="20px"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="28px"
+        android:layout_marginTop="10px"
+        android:background="@color/colorMain5"/>
+
+    <TextView
+        android:id="@+id/rwlx_tv"
+        android:layout_marginLeft="37px"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="#f00"
+        android:textSize="32px"
+    />
+
+    <TextView
+        android:id="@+id/rwnr_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="#f00"
+        android:textSize="32px"/>
+
+    <TextView
+        android:id="@+id/fqr_tv"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:layout_width="100px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="#f00"
+        android:textSize="32px"
+    />
+
+    <TextView
+        android:id="@+id/fqsj_tv"
+        android:layout_width="120px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="#f00"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="32px"
+    />
+
+</LinearLayout>

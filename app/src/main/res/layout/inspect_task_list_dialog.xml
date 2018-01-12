@@ -1,0 +1,497 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+>
+
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="2"
+                  android:background="@drawable/cardview_bg"
+                  android:orientation="vertical"
+                  android:padding="10px">
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:layout_marginTop="10px"
+              android:background="@color/login_bg"></View>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="80px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="任务名称："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_taskname"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="任务类型："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_tasktype"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+
+
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="80px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="申请人："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:id="@+id/publisher_tv"
+                android:textSize="34px"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10px"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="10px"
+                android:paddingTop="10px"
+                android:textColor="@color/login_bg"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="审批领导："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:id="@+id/tv_approver"
+                android:layout_width="0dp"
+                android:textSize="34px"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="80px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="线索来源："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_souce"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="任务性质："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_tasknature"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="80px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="开始时间："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_begintime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:textSize="34px"
+                      android:gravity="center"
+                      android:text="结束时间："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_endtime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="接收人："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:id="@+id/list_item_missionMember"
+                android:layout_width="0dp"
+                android:textSize="34px"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="3"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="4"
+                android:textColor="@color/login_bg"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:textSize="34px"
+                      android:text="核查区域："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/list_item_missionDetail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:textSize="34px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="任务描述："
+                      android:textColor="@color/login_bg"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <TextView
+                android:textSize="34px"
+                android:id="@+id/tv_description"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/login_bg"
+                android:textColorHint="@android:color/darker_gray"/>
+            <View android:layout_width="1px"
+                  android:layout_height="120px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <Button
+
+            android:visibility="gone"
+            android:id="@+id/bt_back"
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="40px"
+            android:background="@drawable/btn_addevidence_selector"
+            android:gravity="center"
+            android:text="撤     回"
+            android:textColor="@color/white"
+            android:textSize="34px"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5px"
+    android:orientation="vertical"
+    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.SubUpcomingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="32px"
+            android:layout_width="80px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="紧急程度"
+            android:textColor="@color/colorMain6" />
+
+        <TextView
+            android:textSize="32px"
+            android:layout_width="100px"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="任务类型"
+            android:textColor="@color/colorMain6" />
+
+        <TextView
+            android:textSize="32px"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="任务内容"
+            android:textColor="@color/colorMain6" />
+
+        <TextView
+            android:textSize="32px"
+            android:layout_width="100px"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="发起人"
+            android:textColor="@color/colorMain6" />
+
+        <TextView
+            android:layout_marginRight="5px"
+            android:textSize="32px"
+            android:layout_width="120px"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="发起时间"
+            android:textColor="@color/colorMain6" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/upcoming_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

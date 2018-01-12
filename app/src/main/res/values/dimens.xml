@@ -1,0 +1,7 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. 华为PAD 530-1060px    警翼PAD  600-1200px-->
+    <dimen name="webview_height">2000px</dimen>
+    <dimen name="task_input_textsize">36px</dimen>
+    <dimen name="task_input_height">120px</dimen>
+    <dimen name="task_mission_detail">190px</dimen>
+</resources>

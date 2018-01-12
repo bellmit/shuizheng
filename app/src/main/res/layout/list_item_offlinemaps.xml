@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/cityName_tv"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:textColor="@color/colorMain6" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:layout_weight="1"
+        android:progress="100" />
+
+    <TextView
+        android:id="@+id/state_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:textColor="@color/colorMain6" />
+
+    <Button
+        android:id="@+id/download_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:background="@drawable/fast_btn_bg"
+        android:gravity="center"
+        android:text="&#xf019;"
+        android:textColor="@color/colorMain6" />
+</LinearLayout>

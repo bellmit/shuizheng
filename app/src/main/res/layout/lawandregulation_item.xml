@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:padding="20px"
+        android:layout_weight="1"
+        android:background="@drawable/member_item_bg2"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:id="@+id/tv_level_effectiveness"
+        android:layout_width="150px"
+        android:padding="20px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/member_item_bg2"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:id="@+id/tv_publishing_department"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@drawable/member_item_bg2"
+        android:gravity="center"
+        android:padding="20px"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:id="@+id/tv_release_time"
+        android:layout_width="150px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/member_item_bg2"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:id="@+id/tv_implementation_time"
+        android:layout_width="150px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/member_item_bg2"
+        android:gravity="center"
+        android:padding="20px"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <RelativeLayout android:layout_width="150px" android:layout_height="match_parent"
+                    android:background="@drawable/member_item_bg2">
+        <Button
+            android:id="@+id/bt_toview"
+            android:layout_width="100px"
+            android:layout_height="70px"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/datetimeview_bg"
+            android:gravity="center"
+            android:text="查看"
+            android:textColor="@color/colorMain7"
+            android:textSize="32px"/>
+    </RelativeLayout>
+</LinearLayout>

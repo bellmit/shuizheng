@@ -1,0 +1,706 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:background="@drawable/cardview_bg"
+            tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.PunishmentProceduresFragment">
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10px">
+
+
+        <ImageView android:id="@+id/iv_title"
+                   android:layout_width="300px"
+                   android:layout_height="110px"
+                   android:layout_centerHorizontal="true"
+                   android:src="@mipmap/ybcx_title"/>
+        <Button android:id="@+id/bt_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/iv_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10px"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico01"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="受理"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_accept"
+                        android:layout_centerHorizontal="true">
+            <View android:id="@+id/v_01"
+                  android:layout_width="2px"
+                  android:layout_height="230px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="186px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+
+        <RelativeLayout android:id="@+id/rl_02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignBottom="@+id/rl_01"
+                        android:layout_alignStart="@id/bt_accept"
+                        android:layout_marginBottom="88px"
+                        android:layout_marginLeft="62px"
+        >
+            <View
+                android:layout_width="280px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:layout_marginLeft="262px"
+                       android:background="@mipmap/ic_chevron_right"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_complaint"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignBottom="@+id/rl_02"
+                android:layout_toEndOf="@+id/rl_02"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico02"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="转办"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <Button android:id="@+id/bt_investigation"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@+id/rl_01"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico03"
+                android:drawablePadding="5dp"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="承办并调查取证"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_investigation"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                android:layout_height="170px"
+                android:layout_centerHorizontal="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="116px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+
+
+        <Button android:id="@+id/bt_record"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_accept"
+                android:layout_below="@+id/rl_03"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico04"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="立案"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+
+        <RelativeLayout android:id="@+id/rl_04"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignBottom="@+id/bt_record"
+                        android:layout_toEndOf="@+id/bt_record">
+            <View
+                android:layout_width="205px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:layout_marginLeft="185px"
+                       android:background="@mipmap/ic_chevron_right"/>
+        </RelativeLayout>
+
+
+        <Button android:id="@+id/bt_supplementary_evidence"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignTop="@+id/rl_04"
+                android:layout_toEndOf="@+id/rl_04"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico05"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="补充证据"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_05"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/rl_03"
+                        android:layout_below="@+id/bt_record">
+            <View
+                android:layout_width="2px"
+                android:layout_height="150px"
+                android:layout_centerHorizontal="true"
+                android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="106px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+
+        <View android:id="@+id/v_07"
+              android:layout_width="2px"
+              android:layout_height="56px"
+              android:layout_alignEnd="@+id/bt_complaint"
+              android:layout_below="@+id/bt_supplementary_evidence"
+              android:layout_marginEnd="128px"
+              android:background="#0f0"></View>
+
+        <RelativeLayout android:id="@+id/rl_06"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignEnd="@+id/v_07"
+                        android:layout_below="@+id/bt_supplementary_evidence"
+                        android:layout_marginTop="26px">
+
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:background="@mipmap/ic_chevron_left"/>
+            <View
+                android:layout_width="320px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:background="#0f0"></View>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_case_review"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_record"
+                android:layout_below="@+id/rl_05"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico07"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="案件审查"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_08"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignBottom="@+id/bt_case_review"
+                        android:layout_toStartOf="@+id/bt_case_review">
+
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:background="@mipmap/ic_chevron_left_white"/>
+            <View
+                android:layout_width="210px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:background="#fff"></View>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_not_punishable"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignBottom="@+id/rl_08"
+                android:layout_toStartOf="@+id/rl_08"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico06"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="不予处罚"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <View android:id="@+id/v_9"
+              android:layout_width="370px"
+              android:layout_height="2px"
+              android:layout_alignTop="@+id/rl_08"
+              android:layout_marginTop="28px"
+              android:layout_toEndOf="@+id/bt_case_review"
+              android:background="#fff"></View>
+
+        <RelativeLayout android:id="@+id/rl_09"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/v_9"
+                        android:layout_marginLeft="23px"
+                        android:layout_toRightOf="@id/bt_supplementary_evidence">
+            <View
+                android:layout_width="2px"
+                android:layout_height="126px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="86px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_transfer"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@+id/rl_09"
+                android:layout_marginEnd="40px"
+                android:layout_toEndOf="@+id/bt_hearing"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico10"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="移送"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+        <View android:id="@+id/v_10"
+              android:layout_width="2px"
+              android:layout_height="40px"
+              android:layout_below="@+id/bt_case_review" android:layout_marginStart="42px"
+              android:layout_toEndOf="@+id/rl_08" android:background="#fff"></View>
+        <View android:id="@+id/v_11"
+              android:layout_width="210px"
+              android:layout_height="2px"
+              android:layout_alignEnd="@+id/v_10" android:layout_below="@+id/v_10"
+              android:background="#fff"></View>
+        <RelativeLayout android:id="@+id/rl_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/v_11"
+                        android:layout_marginStart="40px"
+                        android:layout_toEndOf="@+id/bt_not_punishable">
+            <View android:id="@+id/v_12"
+                  android:layout_width="2px"
+                  android:layout_height="55px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="20px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <View android:id="@+id/v_13"
+              android:layout_width="2px"
+              android:layout_height="40px"
+              android:layout_alignBottom="@+id/v_11" android:layout_marginStart="20px"
+              android:layout_toEndOf="@+id/rl_05" android:background="#fff"></View>
+        <View android:id="@+id/v_14"
+              android:layout_width="210px"
+              android:layout_height="2px"
+              android:layout_alignStart="@+id/v_13" android:layout_below="@+id/v_13"
+              android:background="#fff"></View>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v_14"
+            android:layout_marginRight="20px"
+            android:layout_toStartOf="@+id/bt_supplementary_evidence">
+            <View android:id="@+id/v_15"
+                  android:layout_width="2px"
+                  android:layout_height="60px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="16px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_perfect_information"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@+id/rl_10"
+                android:layout_marginEnd="180px"
+                android:layout_toStartOf="@+id/bt_case_review"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico08"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="完善资料"
+                android:textColor="@color/white" android:textSize="32px"/>
+        <Button android:id="@+id/bt_group_discussion"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignBaseline="@+id/bt_perfect_information"
+                android:layout_alignBottom="@+id/bt_perfect_information"
+                android:layout_marginEnd="35px"
+                android:layout_toStartOf="@+id/v_07"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico09"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="集体讨论"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <View android:id="@+id/v_16"
+              android:layout_width="2px"
+              android:layout_height="58px"
+              android:layout_alignStart="@+id/v_11" android:layout_below="@+id/bt_transfer"
+              android:background="#fff"></View>
+
+        <View android:id="@+id/v_17"
+              android:layout_width="208px"
+              android:layout_height="2px"
+              android:layout_alignStart="@+id/v_16"
+              android:layout_below="@+id/v_16" android:background="#fff"></View>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v_17"
+            android:layout_marginLeft="12px"
+            android:layout_toEndOf="@+id/bt_perfect_information">
+            <View
+                android:layout_width="2px"
+                android:layout_height="55px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="25px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <View android:id="@+id/v_19"
+              android:layout_width="2px"
+              android:layout_height="60px"
+              android:layout_alignEnd="@+id/v_14" android:layout_below="@+id/bt_group_discussion"
+              android:background="#fff"></View>
+
+        <View android:id="@+id/v_20"
+              android:layout_width="208px"
+              android:layout_height="2px"
+              android:layout_below="@+id/v_19"
+              android:layout_toLeftOf="@id/v_19"
+              android:background="#fff"></View>
+
+        <RelativeLayout android:id="@+id/rl_13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/v_20" android:layout_toEndOf="@+id/rl_05">
+
+            <View
+                android:layout_width="2px"
+                android:layout_height="50px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="16px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_punishment_inform"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_13"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="28px"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico11"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="处罚告知或听证"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bt_punishment_inform"
+                        android:layout_centerHorizontal="true"
+        >
+            <View
+                android:layout_width="2px"
+                android:layout_height="230px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="192px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_review"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_15"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="28px"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico13"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="复核"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <RelativeLayout android:id="@+id/rl_16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60px"
+                        android:layout_alignBottom="@+id/bt_punishment_inform"
+                        android:layout_toEndOf="@+id/bt_case_review">
+            <View
+                android:layout_width="200px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:layout_marginLeft="180px"
+                       android:background="@mipmap/ic_chevron_right_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_hearing"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignTop="@+id/rl_16"
+                android:layout_toEndOf="@+id/rl_16"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico12"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="听证" android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <View android:id="@+id/v_24"
+              android:layout_width="2px"
+              android:layout_height="330px"
+              android:layout_alignTop="@+id/rl_16"
+              android:layout_marginTop="34px" android:layout_toEndOf="@+id/iv_title"
+              android:background="#fff"></View>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            android:layout_alignBottom="@+id/bt_review"
+            android:layout_alignEnd="@+id/v_24">
+
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:background="@mipmap/ic_chevron_left_white"/>
+            <View
+                android:layout_width="94px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:background="#fff"></View>
+        </RelativeLayout>
+
+
+        <RelativeLayout android:id="@+id/rl_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bt_review"
+                        android:layout_centerHorizontal="true"
+        >
+            <View
+                android:layout_width="2px"
+                android:layout_height="150px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="106px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_penalty_decision"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_18"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico14"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="处罚决定"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+        <RelativeLayout android:id="@+id/rl_19"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bt_penalty_decision"
+                        android:layout_centerHorizontal="true"
+        >
+            <View
+                android:layout_width="2px"
+                android:layout_height="180px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="130px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_perform"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_19"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico15"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="执行"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+        <View
+            android:layout_width="385px"
+            android:layout_height="2px"
+            android:layout_below="@+id/rl_19"
+            android:layout_marginTop="30px"
+            android:layout_toRightOf="@id/bt_perform"
+            android:background="#fff"></View>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bt_group_discussion"
+            android:layout_toEndOf="@+id/v_9">
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:background="@mipmap/ic_chevron_arrow_up"/>
+            <View
+                android:layout_width="2px"
+                android:layout_height="1030px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="26px"
+                android:background="#fff"></View>
+
+
+        </RelativeLayout>
+        <RelativeLayout android:id="@+id/rl_21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bt_perform"
+                        android:layout_centerHorizontal="true"
+        >
+            <View
+                android:layout_width="2px"
+                android:layout_height="130px"
+                android:layout_centerHorizontal="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="86px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_case_and_file"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/rl_21"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/ybcx_ico16"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="结案并归档"
+                android:textColor="@color/white"
+                android:textSize="32px"/>
+
+        <View android:id="@+id/v_31"
+              android:layout_width="2px"
+              android:layout_height="1508px"
+              android:layout_alignStart="@+id/bt_not_punishable"
+              android:layout_alignTop="@+id/v_13"
+              android:layout_marginStart="68px"
+              android:background="#fff"></View>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            android:layout_alignBottom="@+id/bt_case_and_file"
+            android:layout_toEndOf="@+id/v_31">
+            <View
+                android:layout_width="280px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerVertical="true"
+                       android:layout_marginLeft="260px"
+                       android:background="@mipmap/ic_chevron_right_white"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

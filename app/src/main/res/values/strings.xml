@@ -1,0 +1,399 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">广东水政自适应执法仪</string>
+    <string name="switch_camera">切换摄像头</string>
+    <string name="capture_image">抓取图片</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string-array name="spinner_source">
+        <item>上级交办</item>
+        <item>部门移送</item>
+        <item>系统报警</item>
+        <item>日常巡查</item>
+        <item>媒体披露</item>
+        <item>群众举报</item>
+    </string-array>
+    <string-array name="spinner_tasknature">
+        <item>日常执法</item>
+        <item>专项执法</item>
+        <item>联合执法</item>
+    </string-array>
+    <string-array name="spinner_emergency">
+        <item>特急</item>
+        <item>紧急</item>
+        <item>一般</item>
+    </string-array>
+    <string-array name="spinner_tasktype">
+        <item>河道管理</item>
+        <item>河道采砂</item>
+        <item>水资源管理</item>
+        <item>水土保持管理</item>
+        <item>水利工程管理</item>
+    </string-array>
+
+    <string-array name="spinner_matters">
+        <item>河道管理执法巡查</item>
+        <item>河道采砂管理执法巡查</item>
+        <item>水资源管理执法巡查</item>
+        <item>水土保持管理执法巡查</item>
+        <item>水利工程管理执法巡查</item>
+        <item>举报案件核查巡查</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="spinner_plan">
+        <item>月计划</item>
+        <item>季度计划</item>
+        <item>年计划</item>
+    </string-array>
+
+    <string-array name="spinner_equipment_type">
+        <item>全部</item>
+        <item>交通工具</item>
+        <item>通讯工具</item>
+        <item>取证工具</item>
+        <item>办公设备及场所</item>
+    </string-array>
+
+    <string-array name="spinner_evidence_source">
+        <item>当事人提供</item>
+        <item>当事人口述</item>
+        <item>调查搜集</item>
+        <item>执法人员制作</item>
+        <item>执法人员拍摄</item>
+        <item>局审批科室</item>
+    </string-array>
+
+    <string-array name="spinner_data_type">
+        <item>图片</item>
+        <item>视频</item>
+        <item>语音</item>
+    </string-array>
+
+    <string-array name="spinner_sex">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+
+    <string-array name="pup_accept">
+        <item>1、受理资料</item>
+    </string-array>
+
+    <string-array name="pup_complaint">
+        <item>1、案件移送函</item>
+        <item>2、案件移送函（回执）</item>
+        <item>3、案件移送告知书</item>
+    </string-array>
+
+    <string-array name="pup_investigation">
+        <item>1、责令停止违法行为通知书</item>
+        <item>2、协助调查通知书</item>
+        <item>3、调查笔录</item>
+        <item>4、抽样取证清单</item>
+        <item>5、先行登记保存呈批表</item>
+        <item>6、先行登记保存清单</item>
+        <item>7、先行登记保存物品处理告知书</item>
+        <item>8、水行政现场勘验笔录</item>
+        <item>9、案件照片（摄像）记录</item>
+        <item>10、送达回证</item>
+    </string-array>
+
+
+    <string-array name="pup_record">
+        <item>1、水行政案件立案呈批表</item>
+
+    </string-array>
+
+    <string-array name="pup_supplementary_evidence">
+        <item>1、书证</item>
+        <item>2、现场笔录</item>
+        <item>3、视听资料</item>
+        <item>4、勘验笔录</item>
+
+    </string-array>
+
+    <string-array name="pup_case_review">
+        <item>1、水行政案件调查报告</item>
+        <item>2、水行政案件合议笔录</item>
+
+    </string-array>
+
+    <string-array name="pup_transfer">
+        <item>1、案件移送函</item>
+        <item>2、案件移送函（回执）</item>
+        <item>3、案件移送告知书</item>
+
+    </string-array>
+
+    <string-array name="pup_group_discussion">
+        <item>1、水行政案件集体讨论笔录</item>
+
+    </string-array>
+
+    <string-array name="pup_punishment_inform">
+        <item>1、水行政处罚告知书（符合听证）</item>
+        <item>2、水行政处罚告知书（不符合听证）</item>
+        <item>3、送达回证</item>
+
+    </string-array>
+
+    <string-array name="pup_review">
+        <item>1、当事人陈述、申辩笔录</item>
+
+    </string-array>
+
+    <string-array name="pup_hearing">
+        <item>1、水行政处罚听证通知书</item>
+        <item>2、权利义务告知书</item>
+        <item>3、授权委托书</item>
+        <item>4、水行政处罚听证公告</item>
+        <item>5、听证笔录</item>
+        <item>6、听证报告书</item>
+        <item>7、送达回证</item>
+
+    </string-array>
+
+    <string-array name="pup_penalty_decision">
+        <item>1、责令限期改正违法行为决定书</item>
+        <item>2、处罚（处理）决定呈批表</item>
+        <item>3、水行政处罚决定书</item>
+        <item>4、水行政处理决定书</item>
+        <item>5、送达回证</item>
+
+    </string-array>
+
+    <string-array name="pup_case_and_file">
+        <item>1、水行政案件结案报告</item>
+        <item>2、证据清单</item>
+        <item>3、结案归档打印</item>
+
+    </string-array>
+
+
+    <string-array name="spinner_case_type">
+        <item>无河道采砂许可证案</item>
+        <item>水土保持方案违法案</item>
+
+    </string-array>
+
+    <string-array name="lv_administration_ban">
+        <item>1、严禁无行政执法证件执法、越权执法。</item>
+        <item>2、严禁违法收费、罚款。</item>
+        <item>3、严禁违法扣留执法对象物品和证件。</item>
+        <item>4、严禁利用职务之便吃、拿、卡、要。</item>
+        <item>5、严禁在工作时间饮酒和酒后执法。</item>
+        <item>6、严禁非公务需要穿执法制服出入酒店、娱乐场所。</item>
+        <item>7、严禁违规使用执法车船。</item>
+        <item>违反执法禁令者，一律调离水行政执法岗位、注销行政执法证件。</item>
+
+    </string-array>
+
+    <string-array name="lv_language_specification">
+        <item>1、水行政执法人员执行公务时，应当用语规范、准确、文明，语音清晰，语速适中。</item>
+        <item>2、表明身份时，使用问候语，出示执法证件，并清楚地告知对方执法主体的名称。例如：你好！我们是XXXXXX(行政执法主体名称)的执法人员，这是我们的行政执法证件，请看清。
+        </item>
+        <item>3、进行依法检查时，清楚明了地告知检查事项和检查依据。例如：我们依法在这里进行XXXXXX(检查事项)检查，请你配合。</item>
+        <item>4、要求出示相关证件时，清楚简洁地告知所要检查的证件名称。例如：请出示你的XXXXXX证件（证件完整名称）。</item>
+        <item>5、勘验（检查）现场时，明确告知现场勘验（检查）的事项。例如：根据《XXXXXX》(法律、法规、规章完整名称)，我们正在进行现场勘验（检查），请你协助。</item>
+        <item>
+            6、要求提供有关资料时，清楚地告知所依据的法律、法规、规章及所要检查的资料的名称。例如：根据《XXXXXX》(法律、法规、规章完整名称)，请提供XXXXXX（资料名称），按规定，我们有义务为你保守有关秘密。
+        </item>
+        <item>7、调查取证时，准确无误地告知调查取证的事项、依据，以及行政相对人依法享有的权利、应当履行的义务。涉及案件定性问题，凡未经查证属实，不得向行政相对人发表结论性意见。例如：
+            （1）现在向你询问有关问题，我们依法对询问情况制作笔录，请如实回答。如果你不如实回答，你将承当相应的法律责任。
+            （2）依据法律规定，我们现在进行录音（或录像）取证，请如实回答。若你不如实回答，你将承担相应的法律责任。
+            （3）依据法律规定，现对XXXXXX进行抽样取证，请你配合。这是抽样清单，请你签字确认。
+            （4）由于XXXX(证据名称)可能灭失（以后难以取得），根据《行政处罚法》的规定，经本单位负责人批准，我们现在需要对XXXXXX采取证据登记保存措施，并将在7日内及时作出处理决定。在此期间，你不得销毁或者转移XXXXXX(证据名称)。你（单位）负有保管责任，如证据灭失或转移，将承担法律责任。这是证据登记保存清单，请你核对。如果没有异议，请你在此处签署姓名和时间。
+        </item>
+        <item>
+            8、制作笔录后，要将笔录交行政相对人阅读，要求行政相对人核对笔录，并清楚地告知行政相对人应当在笔录上签署的具体内容。如遇到行政相对人有不识字或其他阅读障碍时，应该当场将笔录内容向行政相对人宣读。例如：这是我们制作的XX笔录，请你仔细核对笔录内容，如果你认为笔录不全或者有错误，可以要求补正。如果没有异议，请你在此处写明“以上笔录无误”，并请写清你的姓名和时间。（无书写能力的，由行政相对人按手印。）
+        </item>
+
+    </string-array>
+
+    <string-array name="lv_inspection_norms">
+        <item>1、实施水行政执法检查，执法人员不得少于两人，并持有行政执法证。</item>
+        <item>2、水行政执法人员进行执法检查时应严格执行安全防护规定，采取有效防护措施，注意自身和他人人身安全和财产安全。</item>
+        <item>3、水行政执法人员在执法检查时，不得检查与执法活动无关的物品。检查完成后，对检查所涉及的物品要尽可能复位。</item>
+        <item>4、水行政执法机关应当编制行政执法应急预案。</item>
+        <item>
+            5、水行政执法人员在执法检查时应着制服，佩戴胸章和臂章，并应根据检查需要携带执法证件、录音、录像、摄像等调查取证工具、及相关法律文书（如当场作出行政处罚的文书、行政强制的文书等）。
+        </item>
+        <item>6、实施水行政执法检查时，应当保持执法车辆及船舶清洁完好、标志清晰醒目，确保执法车辆及船舶安全性能完好。</item>
+        <item>7、如果出现行政相对人态度蛮横、暴力抗法或煽动围观群众围攻执法人员的情况，水行政执法人员应当立即向单位领导报告，并及时通知公安机关协助处理。</item>
+        <item>8、经检查，行政相对人不存在违法行为的，水行政执法人员应当交还有关证件，对行政相对人和其他人员表示感谢。</item>
+        <item>
+            9、如发现行政相对人存在违法行为，但违法行为轻微，依法可以不予行政处罚的，水行政执法人员应当制作并送达《不予处罚决定书》，告知行政相对人违法行为的基本事实、依据，向行政相对人进行批评教育，纠正违法行为后放行。
+        </item>
+        <item>10、如发现行政相对人的违法行为应受行政处罚的，应当按照法律法规规定的程序进行调查取证，并根据有关规定作出相应的处理决定。</item>
+
+    </string-array>
+
+
+    <string-array name="lv_city">
+        <item>广州</item>
+        <item>韶关</item>
+        <item>惠州</item>
+        <item>梅州</item>
+        <item>汕头</item>
+        <item>深圳</item>
+        <item>珠海</item>
+        <item>佛山</item>
+        <item>肇庆</item>
+        <item>湛江</item>
+        <item>江门</item>
+        <item>河源</item>
+        <item>清远</item>
+        <item>云浮</item>
+        <item>潮州</item>
+        <item>东莞</item>
+        <item>中山</item>
+        <item>阳江</item>
+        <item>揭阳</item>
+        <item>茂名</item>
+        <item>汕尾</item>
+
+    </string-array>
+
+    <string-array name="lv_county_01">
+        <item>番禺</item>
+        <item>从化</item>
+        <item>增城</item>
+        <item>花都</item>
+    </string-array>
+
+    <string-array name="lv_county_02">
+        <item>乳源</item>
+        <item>始兴</item>
+        <item>翁源</item>
+        <item>乐昌</item>
+        <item>仁化</item>
+        <item>南雄</item>
+        <item>新丰</item>
+        <item>曲江</item>
+        <item>浈江</item>
+        <item>武江</item>
+    </string-array>
+
+    <string-array name="lv_county_03">
+        <item>博罗</item>
+        <item>惠阳</item>
+        <item>惠东</item>
+        <item>龙门</item>
+    </string-array>
+
+    <string-array name="lv_county_04">
+        <item>兴宁</item>
+        <item>蕉岭</item>
+        <item>大埔</item>
+        <item>丰顺</item>
+        <item>平远</item>
+        <item>五华</item>
+        <item>梅县</item>
+    </string-array>
+    <string-array name="lv_county_05">
+        <item>潮阳</item>
+        <item>澄海</item>
+        <item>南澳</item>
+    </string-array>
+
+    <string-array name="lv_county_07">
+        <item>斗门</item>
+        <item>金湾</item>
+    </string-array>
+
+    <string-array name="lv_county_08">
+        <item>顺德</item>
+        <item>三水</item>
+        <item>南海</item>
+        <item>高明</item>
+    </string-array>
+
+    <string-array name="lv_county_09">
+        <item>广宁</item>
+        <item>四会</item>
+        <item>德庆</item>
+        <item>怀集</item>
+        <item>封开</item>
+        <item>高要</item>
+    </string-array>
+
+    <string-array name="lv_county_10">
+        <item>吴川</item>
+        <item>雷州</item>
+        <item>徐闻</item>
+        <item>廉江</item>
+        <item>赤坎</item>
+        <item>遂溪</item>
+        <item>坡头</item>
+        <item>霞山</item>
+        <item>麻章</item>
+    </string-array>
+
+    <string-array name="lv_county_11">
+        <item>开平</item>
+        <item>新会</item>
+        <item>恩平</item>
+        <item>台山</item>
+        <item>蓬江</item>
+        <item>鹤山</item>
+        <item>江海</item>
+    </string-array>
+
+    <string-array name="lv_county_12">
+        <item>紫金</item>
+        <item>连平</item>
+        <item>和平</item>
+        <item>龙川</item>
+        <item>东源</item>
+    </string-array>
+
+    <string-array name="lv_county_13">
+        <item>连南</item>
+        <item>连州</item>
+        <item>连山</item>
+        <item>阳山</item>
+        <item>佛冈</item>
+        <item>英德</item>
+        <item>清新</item>
+    </string-array>
+
+    <string-array name="lv_county_14">
+        <item>罗定</item>
+        <item>新兴</item>
+        <item>郁南</item>
+        <item>云安</item>
+    </string-array>
+
+    <string-array name="lv_county_15">
+        <item>饶平</item>
+        <item>潮安</item>
+    </string-array>
+
+    <string-array name="lv_county_18">
+        <item>阳春</item>
+        <item>阳东</item>
+        <item>阳西</item>
+    </string-array>
+
+    <string-array name="lv_county_19">
+        <item>揭西</item>
+        <item>普宁</item>
+        <item>惠来</item>
+        <item>揭东</item>
+    </string-array>
+
+    <string-array name="lv_county_20">
+        <item>高州</item>
+        <item>化州</item>
+        <item>电白</item>
+        <item>信宜</item>
+        <item>茂港</item>
+    </string-array>
+
+    <string-array name="lv_county_21">
+        <item>海丰</item>
+        <item>陆丰</item>
+        <item>陆河</item>
+    </string-array>
+</resources>

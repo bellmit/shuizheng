@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="80px"
+                android:orientation="vertical"
+                android:padding="16px">
+    <TextView android:id="@+id/tv_name"
+              android:layout_width="match_parent"
+              android:textSize="32px"
+              android:textColor="@color/login_bg"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:text="张三"/>
+    <CheckBox android:layout_width="70px"
+              android:layout_height="70px"
+              android:button="@drawable/checkbox_bg"
+              android:id="@+id/cb"
+              android:padding="6px"
+              android:layout_marginRight="5px"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"/>
+
+</RelativeLayout>

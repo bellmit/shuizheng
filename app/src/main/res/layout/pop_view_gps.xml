@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="5px"
+              android:background="@drawable/cardview_bg"
+              android:orientation="vertical">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:textColor="@android:color/white"
+              android:gravity="center"
+              android:textSize="32px"
+              android:padding="20px"
+              android:text="最新定位信息"/>
+    <TextView android:id="@+id/tv_longitude" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="@android:color/white"
+              android:paddingBottom="20px"
+              android:textSize="32px"
+              android:paddingLeft="30px"
+              android:paddingTop="20px"
+              android:text="经度："/>
+    <TextView android:id="@+id/tv_latitude" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:textSize="32px"
+              android:textColor="@android:color/white"
+              android:paddingLeft="30px"
+              android:paddingTop="20px"
+              android:text="纬度："/>
+    <TextView android:id="@+id/tv_altitude" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:paddingLeft="30px"
+              android:textSize="32px"
+              android:textColor="@android:color/white"
+              android:paddingTop="20px"
+              android:text="高度："/>
+    <TextView android:id="@+id/tv_speed" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:paddingLeft="30px"
+              android:textSize="32px"
+              android:textColor="@android:color/white"
+              android:paddingTop="20px"
+              android:text="速度："/>
+    <TextView android:id="@+id/tv_accuracy" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:paddingLeft="30px"
+              android:textSize="32px"
+              android:textColor="@android:color/white"
+              android:paddingTop="20px"
+              android:text="精度："/>
+    <TextView android:id="@+id/tv_count" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:paddingLeft="30px"
+              android:textSize="32px"
+              android:textColor="@android:color/white"
+              android:paddingTop="20px"
+              android:text="采样点数："/>
+    <TextView android:id="@+id/tv_dateTime"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="20px"
+              android:textSize="32px"
+              android:paddingLeft="30px"
+              android:textColor="@android:color/white"
+              android:paddingTop="20px"
+              android:text="定位时间："/>
+
+
+</LinearLayout>

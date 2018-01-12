@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pupview_quest">
+    <TextView android:id="@+id/tv_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="20px"
+              android:gravity="center_horizontal"
+              android:padding="20px"
+              android:text="问题模版"
+              android:textColor="@color/white"
+              android:textSize="36px"
+              android:textStyle="bold"/>
+    <TextView android:id="@+id/tv_add"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBottom="@id/tv_title"
+              android:layout_alignParentRight="true"
+              android:layout_alignTop="@id/tv_title"
+              android:layout_marginRight="20px"
+              android:drawableLeft="@mipmap/ic_add"
+              android:gravity="center"
+              android:padding="10px"
+              android:text="新增问题"
+              android:textColor="@color/custom_progress_blue_header"
+              android:textSize="36px"/>
+    <TextView android:id="@+id/tv_back"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBottom="@id/tv_title"
+              android:layout_alignParentRight="true"
+              android:layout_alignTop="@id/tv_title"
+              android:layout_marginRight="20px"
+              android:drawableLeft="@mipmap/back"
+              android:gravity="center"
+              android:padding="10px"
+              android:text="返回"
+              android:textColor="@color/custom_progress_blue_header"
+              android:textSize="36px"
+              android:visibility="gone"/>
+
+
+    <View android:layout_width="match_parent"
+          android:layout_height="1px"
+          android:layout_below="@id/tv_title"
+          android:background="@color/custom_progress_blue_header"></View>
+    <ListView android:id="@+id/lv_questions"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/tv_title"
+              android:layout_marginTop="10px">
+
+    </ListView>
+
+    <TextView android:id="@+id/tv_typename"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/tv_title"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="20px"
+              android:layout_marginTop="20px"
+              android:text="案件类型："
+              android:textColor="@color/colorBackground"
+              android:textSize="36px"
+              android:visibility="gone"
+    />
+    <TextView android:id="@+id/tv_tag1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/tv_typename"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="20px"
+              android:layout_marginTop="40px"
+              android:text="问题内容："
+              android:textColor="@color/colorMain4"
+              android:textSize="36px"
+              android:visibility="gone"
+    />
+
+    <EditText android:id="@+id/et_ask_content"
+              android:layout_width="match_parent"
+              android:layout_height="120px"
+              android:layout_below="@id/tv_typename"
+              android:layout_marginRight="40px"
+              android:paddingTop="15px"
+              android:layout_marginTop="3dp"
+              android:layout_toRightOf="@id/tv_tag1"
+              android:textColor="@color/colorMain4"
+              android:textSize="36px"
+              android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/bt_add"
+        android:layout_width="140px"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/et_ask_content"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="20px"
+        android:background="@drawable/btn_waiting_selector"
+        android:text="新  增"
+        android:textColor="@color/colorMain6"
+        android:textSize="36px"/>
+
+
+</RelativeLayout>

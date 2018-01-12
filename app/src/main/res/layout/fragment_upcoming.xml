@@ -1,0 +1,450 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorMain1"
+              android:orientation="vertical"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.UpcomingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="10px"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="3.4"
+            android:background="@drawable/cardview_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_margin="5px"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/upcoming_tabBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="5px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="5px"
+                    android:background="@drawable/btn_waiting_selector"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:text="待办任务"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="38px"/>
+
+
+                <View
+                    android:layout_width="0px"
+                    android:layout_height="2px"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:background="@color/colorMain3"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4px"
+                    android:text="一般"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20px"
+                    android:background="@color/colorMain5"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4px"
+                    android:text="紧急"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20px"
+                    android:background="@color/colorMain7"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginRight="20px"
+                    android:text="特急"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/colorLine1"/>
+
+            <FrameLayout
+                android:id="@+id/upcoming_fragment_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></FrameLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5px"
+            android:layout_weight="1"
+            android:background="@drawable/cardview_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:text="本月任务情况"
+                android:textColor="@color/colorMain6"
+                android:textSize="35px"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="10px"
+                android:background="@color/colorLine1"/>
+
+            <FrameLayout
+                android:id="@+id/chart_layout"
+                android:layout_width="match_parent"
+                android:layout_height="320px"
+            ></FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="7px"
+                    android:layout_height="18px"
+
+                    android:layout_gravity="center"
+                    android:background="@color/colorMain5"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:text="本月已完成任务数"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="32px"/>
+
+                <TextView
+                    android:id="@+id/count1_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="57"
+                    android:textColor="@color/colorMain5"
+                    android:textSize="32px"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="7px"
+                    android:layout_height="18px"
+                    android:layout_gravity="center"
+                    android:background="@color/colorMain7"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:text="本月未完成任务数"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="32px"/>
+
+                <TextView
+                    android:id="@+id/count2_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="43"
+                    android:textColor="@color/colorMain7"
+                    android:textSize="35px"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5px"
+            android:layout_weight="1"
+            android:background="@drawable/cardview_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:text="天气情况"
+                android:textColor="@color/colorMain6"
+                android:textSize="35px"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginTop="10px"
+                android:background="@color/colorLine1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView android:id="@+id/tv_time"
+                          android:layout_width="120px"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="center_horizontal"
+                          android:layout_marginTop="50px"
+                          android:gravity="center_horizontal"
+                          android:background="@drawable/datetimeview_bg"
+                          android:paddingBottom="10px"
+                          android:paddingLeft="20px"
+                          android:paddingRight="20px"
+                          android:paddingTop="10px"
+                          android:text="12:36"
+                          android:textStyle="bold"
+                          android:textColor="@color/colorMain5"
+                          android:textSize="75px"/>
+
+
+                <ImageView
+                    android:id="@+id/temp_imageView"
+                    android:layout_width="140px"
+                    android:layout_height="140px"
+                    android:layout_gravity="center"
+                    android:src="@drawable/w99"/>
+
+                <TextView
+                    android:id="@+id/temp_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorMain8"
+                    android:textSize="52px"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/temp2_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="38px"/>
+
+                <TextView
+                    android:id="@+id/tempUpdt_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="38px"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+
+            android:layout_weight="3.4"
+            android:background="@drawable/cardview_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginTop="20px"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left|center_vertical"
+                    android:text="核查任务"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="38px"
+                    android:textStyle="bold"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:background="@color/colorMain8"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4px"
+                    android:text="一般"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20px"
+                    android:background="@color/colorMain5"/>
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4px"
+                    android:layout_gravity="center_vertical"
+                    android:text="紧急"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+
+
+                <View
+                    android:layout_width="10px"
+                    android:layout_height="20px"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20px"
+                    android:background="@color/colorMain7"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginRight="20px"
+                    android:text="特急"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="26px"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/colorLine1"/>
+
+            <ListView
+                android:id="@+id/mission_listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:divider="@color/colorLine1"
+                android:dividerHeight="1dip"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="5px"
+            android:layout_marginTop="5px"
+            android:layout_weight="2.05"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calendar_title"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:background="@color/colorMain2"
+                android:gravity="center"
+                android:padding="20px"
+                android:textColor="@color/colorMain6"
+                android:textSize="38px"/>
+
+
+            <com.github.sundeepk.compactcalendarview.CompactCalendarView
+                android:id="@+id/materialcalendarview2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:compactCalendarBackgroundColor="@color/colorMain2"
+                app:compactCalendarCurrentDayBackgroundColor="@color/colorMain8"
+                app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorMain5"
+                app:compactCalendarCurrentSelectedDayIndicatorStyle="fill_large_indicator"
+                app:compactCalendarCurrentSelectedDayTextColor="@color/my_date_text_color"
+                app:compactCalendarDisplayOtherMonthDays="true"
+                app:compactCalendarOtherMonthDaysTextColor="@color/colorMain10"
+                app:compactCalendarTextColor="@color/colorMain6"
+                app:compactCalendarTextSize="24px"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

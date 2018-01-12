@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hands_free">Бесконтактное управление</string>
+    <string name="address_book">Контакты</string>
+    <string name="answer">Ответить</string>
+    <string name="attach_location">Местоположение</string>
+    <string name="attach_picture">Изображение</string>
+    <string name="attach_take_pic">Сделать фото</string>
+    <string name="attach_voice_call">Голосовой вызов</string>
+    <string name="button_pushtotalk">Удерживайте</string>
+    <string name="button_send">Послать</string>
+    <string name="cancel">Отмена</string>
+    <string name="confirm_resend">Вы уверены, что хотите отправить сообщение еще раз?</string>
+    <string name="connect_failuer_toast">Пожалуйста, проверьте соединение с интернетом либо попробуйте еще раз позже</string>
+    <string name="downwaiting">Документ загружается, пожалуйста подождите...</string>
+    <string name="file">[Документ]</string>
+    <string name="hang_up">Завершить</string>
+    <string name="is_down_please_wait">Пожалуйста подождите, видео загружается...</string>
+    <string name="location_message">Информация о местоположении</string>
+    <string name="location_prefix">[Мое местоположение]</string>
+    <string name="location_recv">[Местоположение%1$]</string>
+    <string name="move_up_to_cancel">Провести вверх для отмены отправки</string>
+    <string name="mute">Без звука</string>
+    <string name="network_unavailable">Ошибка соединения, пожалуйста, проверьте Ваше соединение с интернетом.</string>
+    <string name="not_download">Не скачано:</string>
+    <string name="picture">[Изображение]</string>
+    <string name="prompt">Оповещения</string>
+    <string name="recoding_fail">Сделать запись не удалось, пожалуйста, попробуйте еще раз!</string>
+    <string name="recording_video">Сделать видео</string>
+    <string name="release_to_cancel">Отпустить палец для отмены отправки</string>
+    <string name="resend">Отправить повторно</string>
+    <string name="search">Поиск</string>
+    <string name="search_header">Поиск</string>
+    <string name="send_fail">Ошибка при передаче сообщения,</string>
+    <string name="session">Диалог</string>
+    <string name="text_ack_msg">Прочитанные</string>
+    <string name="text_delivered_msg">Переданные</string>
+    <string name="video">[Видео]</string>
+    <string name="voice_call">[Голосовой вызов]</string>
+</resources>

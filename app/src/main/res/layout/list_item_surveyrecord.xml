@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bdcr_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg1"
+            android:gravity="center"
+            android:textColor="@color/colorMain6"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dcry_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg1"
+            android:gravity="center"
+            android:textColor="@color/colorMain6"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dcsj_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg1"
+            android:gravity="center"
+            android:textColor="@color/colorMain6"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/member_item_bg1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/edit_button"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/datetimeview_bg"
+                android:text="编辑"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/del_button"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/datetimeview_bg"
+                android:text="删除"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/upload_button"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/datetimeview_bg"
+                android:text="上传"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

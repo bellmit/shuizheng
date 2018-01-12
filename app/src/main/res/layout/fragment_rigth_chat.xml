@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:choiceMode="singleChoice"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.RigthChatFragment">
+    <RelativeLayout android:id="@+id/rl" android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignParentBottom="true">
+        <RadioGroup android:id="@+id/rg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+            <RadioButton android:id="@+id/rb_content"
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:background="@color/colorMain7"
+                         android:button="@null"
+
+                         android:gravity="center"
+                         android:text="通讯录"
+                         android:textColor="@android:color/white"/>
+            <RadioButton android:id="@+id/rb_chat"
+                         android:checked="true"
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:background="@android:color/darker_gray"
+                         android:button="@null"
+                         android:gravity="center"
+                         android:text="会话"
+                         android:textColor="@android:color/white"/>
+
+        </RadioGroup>
+    </RelativeLayout>
+    <FrameLayout android:id="@+id/fl_chat"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_marginBottom="60dp">
+
+    </FrameLayout>
+    <TextView android:id="@+id/tv_tag"
+              android:layout_width="10dp"
+              android:layout_height="10dp"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentRight="true"
+              android:layout_marginBottom="45dp"
+              android:background="@drawable/ease_unread_count_bg"
+              android:gravity="center"
+              android:textColor="@android:color/white"
+              android:textSize="8sp"
+              android:visibility="gone"/>
+
+</RelativeLayout>

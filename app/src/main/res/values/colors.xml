@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="login_bg">#f7828b</color>
+
+    <color name="colorLoginETextFocus">#002283</color>
+
+    <color name="colorMenuImageNoSelected">#2871C0</color>
+
+    <color name="waiting_btn_enable">#ff7ad1fd</color>
+    <color name="waiting_btn_press">#ff23b0f9</color>
+
+    <color name="btn_switch_case_enable">#FF6C00</color>
+    <color name="btn_switch_case_press">#fc9b00</color>
+
+    <color name="btn_addevidence_enable">#8ebf5b</color>
+    <color name="btn_addevidence_press">#bfea93</color>
+
+    <color name="msg_btn_enable">#14191C</color>
+    <color name="msg_btn_press">#41484e</color>
+
+    <!--新配色-->
+    <color name="colorMain1">#14191C</color>
+    <color name="colorMain2">#262B2E</color>
+    <color name="colorMain3">#3C4247</color>
+    <color name="colorMain4">#A1A8AE</color>
+    <color name="colorMain5">#63CAFF</color>
+    <color name="colorMain6">#FFFFFF</color>
+    <color name="colorMain7">#FF6C00</color>
+    <color name="colorMain8">#98CF60</color>
+    <color name="colorMain9">#303538</color>
+    <color name="colorMain10">#666666</color>
+
+    <color name="colorLine1">#373B3E</color>
+
+
+    <color name="law_enforcement_bt_enable">#ffea64</color>
+    <color name="law_enforcement_bt">#41424b</color>
+
+</resources>

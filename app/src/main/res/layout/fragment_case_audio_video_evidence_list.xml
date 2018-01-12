@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.CaseAudioVideoEvidenceListFragment">
+
+
+        <Button
+            android:id="@+id/add_evidence_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/btn_addevidence_selector"
+            android:text="添加视听资料"
+            android:textColor="@color/cpb_white" />
+
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/ll_01"
+            android:layout_below="@id/add_evidence_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="证据名称"
+                android:textColor="@color/colorMain6"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="采集地点"
+                android:textColor="@color/colorMain6"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="证据内容"
+                android:textColor="@color/colorMain6"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="类型"
+                android:textColor="@color/colorMain6"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="操作"
+                android:textColor="@color/colorMain6"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ListView
+            android:layout_below="@id/ll_01"
+            android:id="@+id/main_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"></ListView>
+
+</RelativeLayout>

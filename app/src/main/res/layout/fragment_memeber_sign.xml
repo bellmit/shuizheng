@@ -1,0 +1,206 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorMain1"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MemberSignFragment">
+
+
+    <LinearLayout
+        android:id="@+id/ll_01"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="10px"
+        android:background="@drawable/cardview_bg"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="35px"
+            android:layout_height="80px"
+            android:layout_marginBottom="12px"
+            android:layout_marginLeft="14px"
+            android:layout_marginTop="12px"
+            android:background="@drawable/mission_state_bg2"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/back"
+            android:textColor="@color/colorMain3"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="20px"
+            android:text="任务管理"
+            android:textColor="@color/colorMain4"
+            android:textSize="34px"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:text="/"
+            android:textColor="@color/colorMain4"
+            android:textSize="34px"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:text="任务日志"
+            android:textColor="@color/colorMain4"
+            android:textSize="34px"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:text="/"
+            android:textColor="@color/colorMain4"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="巡查人员签名"
+            android:textColor="@color/colorMain6"
+            android:textSize="34px"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_02"
+        android:layout_width="360px"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_01"
+        android:layout_marginBottom="20px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:background="@drawable/cardview_bg"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/member_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10px"
+            android:layout_weight="1"
+            android:divider="@color/colorLine1"
+            android:dividerHeight="1px"/>
+
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_gravity="center_horizontal"
+                      android:orientation="horizontal"
+                      android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="90px"
+            android:layout_gravity="center"
+            android:layout_margin="20px"
+            android:background="@drawable/btn_waiting_selector"
+            android:text="添加队员"
+            android:textColor="@color/colorMain6"
+            android:textSize="34px"/>
+        <Button
+            android:id="@+id/complete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="90px"
+            android:layout_gravity="center"
+            android:layout_margin="20px"
+            android:background="@drawable/btn_waiting_selector"
+            android:text="完成签名"
+            android:textColor="@color/colorMain6"
+            android:textSize="34px"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_01"
+        android:layout_marginBottom="20px"
+        android:layout_marginRight="20px"
+        android:layout_toRightOf="@id/ll_02"
+        android:background="@drawable/cardview_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:layout_marginLeft="10px"
+            android:gravity="left|center_vertical"
+            android:text="巡查人员"
+            android:textColor="@color/colorMain8"
+            android:textSize="34px"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/colorLine1"/>
+
+        <gd.water.oking.com.cn.wateradministration_gd.View.SignatureView
+            android:id="@+id/signature_View"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="10px"
+            android:layout_marginTop="10px"
+            android:layout_weight="1"
+            android:background="#FFFFFF"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/colorLine1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20px">
+
+            <Button
+                android:id="@+id/clear_btn"
+                android:layout_width="120px"
+                android:layout_height="90px"
+                android:background="@drawable/btn_msg_selector"
+                android:text="清空"
+                android:textColor="@color/colorMain6"
+                android:textSize="34px"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="120px"
+                android:layout_height="90px"
+                android:layout_marginLeft="40px"
+                android:background="@drawable/btn_waiting_selector"
+                android:text="保存"
+                android:textColor="@color/colorMain6"
+                android:textSize="34px"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

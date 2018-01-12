@@ -1,0 +1,127 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10px"
+              android:background="@color/colorMain1"
+              android:orientation="horizontal"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.ArrangeMissionFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+
+    <RelativeLayout
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/cardview_bg">
+
+        <gd.water.oking.com.cn.wateradministration_gd.View.SearchMissionEditText
+            android:id="@+id/searchMission_editText"
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:layout_margin="16px"
+            android:background="@drawable/search_edittext_bg"
+            android:hint="输入需要查询的任务名称......"
+            android:paddingBottom="10px"
+            android:paddingLeft="40px"
+            android:paddingRight="10px"
+            android:paddingTop="10px"
+            android:singleLine="true"
+            android:textColor="@color/colorMain4"
+            android:textColorHint="@color/colorMain4"
+            android:textSize="32px"/>
+
+
+        <ExpandableListView
+            android:layout_below="@id/searchMission_editText"
+            android:id="@+id/mission_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorLine1"
+            android:dividerHeight="1px"
+            android:groupIndicator="@null">
+
+        </ExpandableListView>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10px"
+        android:layout_weight="3"
+        android:background="@drawable/cardview_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/arrange_title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10px"
+            android:text="巡查队员安排"
+            android:textColor="@color/colorMain6"
+            android:textSize="32px"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorLine1"/>
+
+        <LinearLayout
+            android:id="@+id/ll_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="80px"
+                android:layout_marginTop="10px"
+                android:gravity="center"
+                android:text="请选择队员"
+                android:textColor="@color/colorMain4"
+                android:textSize="32px"/>
+
+            <ListView
+                android:id="@+id/canSelect_listView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="40px"
+                android:layout_marginLeft="100px"
+                android:layout_marginRight="100px"
+                android:layout_marginTop="40px"
+                android:layout_weight="1"
+                android:divider="@color/colorLine1"
+                android:dividerHeight="0.5sp"
+            />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorLine1"/>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/qrMission_button"
+            android:layout_width="150px"
+            android:layout_height="80px"
+            android:layout_gravity="center"
+            android:layout_margin="10px"
+            android:background="@drawable/btn_waiting_selector"
+            android:text="任务确认"
+            android:textColor="@color/colorMain6"
+            android:textSize="32px"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

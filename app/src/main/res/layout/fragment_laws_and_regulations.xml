@@ -1,0 +1,103 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorMain1"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.LawsAndRegulationsFragment">
+
+    <LinearLayout
+
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:id="@+id/ll_01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/type_spinner"
+        android:layout_marginTop="10px"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="标题"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="150px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="效力级别"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="发布部门"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="150px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="发布时间"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="150px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="实施时间"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+        <TextView
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:layout_width="150px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/member_item_bg2"
+            android:gravity="center"
+            android:text="操作"
+            android:textColor="@color/colorAccent"
+            android:textSize="32px"/>
+    </LinearLayout>
+
+    <ListView android:id="@+id/lv"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_below="@id/ll_01"
+              >
+
+    </ListView>
+
+</RelativeLayout>

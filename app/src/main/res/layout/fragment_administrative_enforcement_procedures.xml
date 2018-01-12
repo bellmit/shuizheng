@@ -1,0 +1,267 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:background="@drawable/cardview_bg"
+            tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.AdministrativeEnforcementProceduresFragment">
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10px">
+        <ImageView android:id="@+id/iv_title"
+                   android:layout_width="300px"
+                   android:layout_height="110px"
+                   android:layout_centerHorizontal="true"
+                   android:src="@mipmap/qzcc_title"/>
+        <Button android:id="@+id/bt_demolition_decision"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@id/iv_title"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico01"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="责令限期拆除决定书"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_demolition_decision"
+                        android:layout_centerHorizontal="true">
+            <View android:id="@+id/v_01"
+                  android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_demolition_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_demolition_decision"
+                android:layout_below="@+id/rl_01"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico02"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="行政强制拆除公告"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_demolition_notice"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_demand_book"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_demolition_decision"
+                android:layout_below="@+id/rl_02"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico03"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="履行拆除义务催告书"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+        <RelativeLayout android:id="@+id/rl_03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_demand_book"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+
+        <Button android:id="@+id/bt_listen_opinions"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@+id/rl_03"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico04"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="听取并记录当事人陈述、申辩意见"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_04"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_listen_opinions"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#0f0"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_defend"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_demolition_decision"
+                android:layout_below="@+id/rl_04"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico05"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="复核陈述、申辩意见"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+        <RelativeLayout android:id="@+id/rl_05"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_defend"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_decision"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignStart="@+id/bt_demolition_decision"
+                android:layout_below="@+id/rl_05"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico06"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="行政强制执行决定书"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+        <RelativeLayout android:id="@+id/rl_06"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_decision"
+                        android:layout_centerHorizontal="true">
+            <View
+                android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_experiment_dismantle"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/rl_06"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico07"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="组织或实验拆除"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <RelativeLayout android:id="@+id/rl_07"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_experiment_dismantle"
+                        android:layout_centerHorizontal="true">
+            <View android:id="@+id/v_07"
+                  android:layout_width="2px"
+                  android:layout_height="115px"
+                  android:layout_centerHorizontal="true"
+                  android:background="#fff"></View>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_alignParentStart="true"
+                       android:layout_alignParentTop="true"
+                       android:layout_marginTop="80px"
+                       android:background="@mipmap/ic_chevron_botton_white"/>
+        </RelativeLayout>
+        <Button android:id="@+id/bt_record"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_below="@+id/rl_07"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/law_enforcement_bt_selector"
+                android:drawableLeft="@mipmap/qzcc_ico08"
+                android:drawablePadding="10px"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:text="拆除现场笔录"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_below="@id/bt_demolition_notice"
+                  android:layout_toRightOf="@id/rl_02"
+                  android:textColor="@color/rect"
+                  android:layout_marginTop="25px"
+                  android:textSize="34px"
+                  android:layout_marginLeft="10px"
+                  android:text="行政诉讼期限届满之日起三个月内"/>
+    </RelativeLayout>
+
+
+</ScrollView>

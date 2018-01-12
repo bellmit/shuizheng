@@ -1,0 +1,205 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain2"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.SurveyRecordQuestionFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="序号"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="问题"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="操作"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/question_listView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:divider="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="问 题"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2">
+
+                <EditText
+                    android:id="@+id/question_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/memo_edittext_bg"
+                    android:gravity="top|left"
+                    android:padding="5dp"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2"
+                android:gravity="center"
+                android:text="回 答"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2">
+
+                <EditText
+                    android:id="@+id/answer_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/memo_edittext_bg"
+                    android:gravity="top|left"
+                    android:padding="5dp"
+                    android:textColor="@color/colorMain4"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/member_item_bg2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/member_item_bg2"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/add_newQuestion_button"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/gary_btn_bg"
+                    android:text="新增问答"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dip"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@id/save_button"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/btn_waiting_selector"
+                    android:text="保 存"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/next_button"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/gary_btn_bg"
+                    android:text="下一题"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/close_button"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/btn_msg_selector"
+                    android:text="关闭"
+                    android:textColor="@color/colorMain6"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

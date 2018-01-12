@@ -1,0 +1,434 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10px"
+            android:background="@drawable/cardview_bg"
+            tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.CaseDealFragment">
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+        <TextView android:id="@+id/tv_title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="110px"
+                  android:layout_centerHorizontal="true"
+                  android:layout_marginTop="40px"
+                  android:text="水行政责令停止违法行为通知书"
+                  android:textColor="@color/white"
+                  android:textSize="40px"
+                  android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentRight="true"
+                  android:layout_below="@id/tv_title"
+                  android:layout_marginRight="40px"
+                  android:text="×水停字〔   〕第  号"
+                  android:textColor="@color/white"
+                  android:textSize="22px"/>
+
+        <RadioGroup android:id="@+id/rg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_title"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginTop="10px"
+                    android:orientation="horizontal">
+            <RadioButton android:id="@+id/rb_natural_person"
+                         android:layout_width="250px"
+                         android:layout_height="50px"
+                         android:button="@drawable/radio_button_style"
+                         android:checked="true"
+                         android:text="当事人为自然人"
+                         android:textColor="@color/white"
+                         android:textSize="19px"/>
+            <RadioButton
+                android:layout_width="320px"
+                android:layout_height="50px"
+                android:layout_marginLeft="30px"
+                android:button="@drawable/radio_button_style"
+                android:text="当事人为法人或其他组织"
+                android:textColor="@color/white"
+                android:textSize="19px"/>
+        </RadioGroup>
+        <TextView android:id="@+id/tv_tag1"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/rg"
+                  android:layout_marginLeft="20px"
+                  android:layout_marginTop="10px"
+                  android:text="（当事人为自然人时填写如下信息）"
+                  android:textColor="#f00"
+                  android:textSize="30px"/>
+
+        <LinearLayout android:id="@+id/ll_01"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_alignStart="@id/tv_tag1"
+                      android:layout_below="@id/tv_tag1"
+                      android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="当事人："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_parties_concerned_natural"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="性别："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText android:id="@+id/tet_sex_natural"
+                                                                 android:layout_width="match_parent"
+                                                                 android:layout_height="wrap_content"
+                                                                 android:digits="男女"
+                                                                 android:textColor="@color/white"
+                                                                 android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="身份证号："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText android:id="@+id/tet_card_natural"
+                                                                 android:layout_width="match_parent"
+                                                                 android:layout_height="wrap_content"
+                                                                 android:digits="0123456789X"
+                                                                 android:maxLength="18"
+                                                                 android:textColor="@color/white"
+                                                                 android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="电话："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText android:id="@+id/tet_phone_natural"
+                                                                 android:layout_width="match_parent"
+                                                                 android:layout_height="wrap_content"
+                                                                 android:inputType="number"
+                                                                 android:maxLength="11"
+                                                                 android:textColor="@color/white"
+                                                                 android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="2"
+                android:hint="住址："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_address_natural"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <Button android:id="@+id/bt_idcard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:layout_marginTop="50px"
+                    android:padding="10px"
+                    android:text="身份证识别"
+                    android:textColor="#fff"
+                    android:textSize="30px"/>
+        </LinearLayout>
+
+
+        <TextView android:id="@+id/tv_tag2"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_01"
+                  android:layout_marginLeft="20px"
+                  android:layout_marginTop="60px"
+                  android:text="（当事人为法人或其他组织时填写如下信息）"
+                  android:textColor="#f00"
+                  android:textSize="30px"/>
+
+        <LinearLayout android:id="@+id/ll_02"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_alignStart="@id/tv_tag2"
+                      android:layout_below="@id/tv_tag2"
+                      android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="当事人："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_parties_concerned_other"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="职务："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_position_other"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="电话："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText android:id="@+id/tet_phone_other"
+                                                                 android:layout_width="match_parent"
+                                                                 android:layout_height="wrap_content"
+                                                                 android:enabled="false"
+                                                                 android:inputType="number"
+                                                                 android:maxLength="11"
+                                                                 android:textColor="@color/white"
+                                                                 android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+
+                android:layout_weight="1"
+                android:hint="法定代表人："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_representative_other"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginRight="40px"
+                android:layout_weight="2"
+                android:hint="统一社会信用代码："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_credit_code_oher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <android.support.design.widget.TextInputLayout android:id="@+id/til_11"
+                                                       android:layout_width="250dp"
+                                                       android:layout_height="wrap_content"
+                                                       android:layout_alignStart="@id/ll_02"
+                                                       android:layout_below="@id/ll_02"
+                                                       android:layout_marginTop="10px"
+                                                       android:hint="住所："
+                                                       android:textColorHint="@color/colorMain4">
+            <android.support.design.widget.TextInputEditText android:id="@+id/tet_address_other"
+                                                             android:layout_width="match_parent"
+                                                             android:layout_height="wrap_content"
+                                                             android:enabled="false"
+                                                             android:inputType="number"
+                                                             android:textColor="@color/white"
+                                                             android:textSize="20px"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout android:id="@+id/ll_03"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_alignStart="@id/til_11"
+                      android:layout_below="@id/til_11"
+                      android:layout_marginRight="210px"
+                      android:layout_marginTop="30px"
+                      android:orientation="horizontal">
+            <TextView android:id="@+id/tv_tag3"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10px"
+                      android:layout_weight="2"
+                      android:gravity="right"
+                      android:text="据初步调查，你（单位）"
+                      android:textColor="@color/gray1"
+                      android:textSize="30px"/>
+            <EditText android:id="@+id/et_illegal_facts"
+                      android:layout_width="0dp"
+                      android:layout_height="115px"
+                      android:layout_below="@id/til_11"
+                      android:layout_weight="2.5"
+                      android:hint="（违法事实）"
+                      android:paddingTop="15px"
+                      android:textColor="#f00"
+                      android:textColorHint="@color/colorMain4"
+                      android:textSize="30px"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="涉嫌违反了"
+                android:textColor="@color/gray1"
+                android:textSize="30px"/>
+
+            <EditText android:id="@+id/et_legal_provisions"
+                      android:layout_width="0dp"
+                      android:layout_height="115px"
+                      android:layout_weight="2.5"
+                      android:hint="（法律条款）"
+                      android:paddingTop="15px"
+                      android:textColor="#f00"
+                      android:textColorHint="@color/colorMain4"
+                      android:textSize="30px"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tv_tag3"
+                android:layout_below="@id/til_11"
+                android:layout_marginTop="10px"
+                android:layout_toRightOf="@id/et_legal_provisions"
+                android:text="的规定，现根据"
+                android:textColor="@color/gray1"
+                android:textSize="30px"/>
+        </LinearLayout>
+
+
+        <EditText android:id="@+id/et_legal_provisions2"
+                  android:layout_width="300dp"
+                  android:layout_height="115px"
+                  android:layout_below="@id/ll_03"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginTop="10px"
+                  android:hint="（法律条款）"
+                  android:paddingTop="15px"
+                  android:textColor="#f00"
+                  android:textColorHint="@color/colorMain4"
+                  android:textSize="30px"
+        />
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_03"
+                  android:layout_marginTop="44px"
+                  android:layout_toRightOf="@id/et_legal_provisions2"
+                  android:text="的规定，责令你（单位）立即停止违法行为，听候处理。"
+                  android:textColor="@color/gray1"
+                  android:textSize="30px"/>
+
+
+        <TextView android:id="@+id/tv_time"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentRight="true"
+                  android:layout_below="@id/et_legal_provisions2"
+                  android:layout_marginRight="80px"
+                  android:layout_marginTop="200px"
+                  android:text="年   月   日"
+                  android:textColor="@color/gray1"/>
+        <android.support.design.widget.TextInputLayout android:id="@+id/til_12"
+                                                       android:layout_width="140px"
+                                                       android:layout_height="wrap_content"
+                                                       android:layout_below="@id/tv_time"
+                                                       android:layout_marginLeft="60px"
+                                                       android:layout_marginTop="10px"
+                                                       android:hint="联系人："
+                                                       android:textColorHint="@color/colorMain4">
+            <android.support.design.widget.TextInputEditText android:id="@+id/tet_contact"
+                                                             android:layout_width="match_parent"
+                                                             android:layout_height="wrap_content"
+                                                             android:textColor="@color/white"
+                                                             android:textSize="20px"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="140px"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10px"
+            android:hint="联系电话："
+            android:textColorHint="@color/colorMain4">
+            <android.support.design.widget.TextInputEditText android:id="@+id/tet_phone"
+                                                             android:layout_width="match_parent"
+                                                             android:layout_height="wrap_content"
+                                                             android:inputType="number"
+                                                             android:maxLength="11"
+                                                             android:textColor="@color/white"
+                                                             android:textSize="20px"/>
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout android:id="@+id/til_14"
+                                                       android:layout_width="200px"
+                                                       android:layout_height="wrap_content"
+                                                       android:layout_alignParentRight="true"
+                                                       android:layout_below="@id/tv_time"
+                                                       android:layout_marginRight="60px"
+                                                       android:layout_marginTop="10px"
+                                                       android:hint="联系地址："
+                                                       android:textColorHint="@color/colorMain4">
+            <android.support.design.widget.TextInputEditText android:id="@+id/tet_addr"
+                                                             android:layout_width="match_parent"
+                                                             android:layout_height="wrap_content"
+                                                             android:textColor="@color/white"
+                                                             android:textSize="20px"/>
+        </android.support.design.widget.TextInputLayout>
+        <Button android:id="@+id/bt_prin"
+                android:layout_width="200px"
+                android:layout_height="90px"
+                android:layout_below="@id/til_14"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20px"
+                android:layout_marginTop="40px"
+                android:background="@drawable/btn_waiting_selector"
+                android:text="打印"
+                android:textColor="@color/white"
+                android:textSize="30px"/>
+    </RelativeLayout>
+</ScrollView>

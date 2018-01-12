@@ -1,0 +1,393 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/cardview_bg"
+              android:layout_margin="10px"
+              android:orientation="vertical"
+              android:padding="10px">
+    <TextView android:layout_width="wrap_content"
+              android:layout_marginTop="20px"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:text="预立案"
+              android:textColor="@color/white"
+              android:textSize="40px"/>
+
+        <View android:layout_width="match_parent"
+
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:layout_marginTop="20px"
+              android:background="@color/login_bg"></View>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="130px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="案由："
+                      android:textColor="@color/login_bg"
+                      android:textSize="34px"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <EditText
+                android:id="@+id/et_cause_action"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:hint="请输入..."
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="34px"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="案发时间："
+                      android:textColor="@color/login_bg"
+                      android:textSize="34px"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <Button
+                android:textSize="@dimen/task_input_textsize"
+                android:id="@+id/bt_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="18px"
+                android:layout_weight="1"
+                android:background="@drawable/btn_addevidence_selector"
+                android:gravity="center"
+                android:text="选择"
+                android:textColor="@color/white"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="案发地点："
+                      android:textColor="@color/login_bg"
+                      android:textSize="34px"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <EditText
+                android:id="@+id/et_scene"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:hint="请输入..."
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/task_input_textsize"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+
+
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="130px"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="案件来源："
+                      android:textColor="@color/login_bg"
+                      android:textSize="@dimen/task_input_textsize"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <CheckBox android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:id="@+id/cb_examination_revealed"
+                      android:button="@drawable/checkbox_bg"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="10px"
+                      android:text="检查发现"
+                      android:textColor="#fff"
+                      android:textSize="34px"/>
+            <CheckBox android:layout_width="0dp"
+                      android:id="@+id/cb_superior_specified"
+                      android:layout_weight="1"
+                      android:button="@drawable/checkbox_bg"
+                      android:layout_height="wrap_content"
+                      android:text="上级指定"
+                      android:layout_marginLeft="10px"
+                      android:textSize="34px"
+                      android:textColor="#fff"/>
+            <CheckBox android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:id="@+id/cb_department_transfer"
+                         android:button="@drawable/checkbox_bg"
+                      android:layout_height="wrap_content"
+                      android:text="部门移送"
+                      android:layout_marginLeft="10px"
+                      android:textSize="34px"
+                      android:textColor="#fff"/>
+            <CheckBox android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:id="@+id/cb_masses_report"
+                         android:button="@drawable/checkbox_bg"
+                      android:layout_height="wrap_content"
+                      android:text="群众举报"
+                      android:layout_marginLeft="10px"
+                      android:textSize="34px"
+                      android:textColor="#fff"/>
+            <CheckBox android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:id="@+id/cb_media_disclosure"
+                      android:button="@drawable/checkbox_bg"
+                      android:layout_height="wrap_content"
+                      android:text="媒体披露"
+                      android:layout_marginLeft="10px"
+                      android:textSize="34px"
+                      android:textColor="#fff"/>
+            <CheckBox android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:checked="true"
+                      android:id="@+id/cb_other"
+                      android:button="@drawable/checkbox_bg"
+                      android:text="其他"
+                      android:layout_marginLeft="10px"
+                      android:textSize="34px"
+                      android:textColor="#fff"/>
+            <EditText android:layout_width="120dp"
+                      android:id="@+id/et_other"
+                      android:paddingTop="15px"
+                      android:layout_height="115px"
+                      android:textColor="@color/gray1"
+                      android:textSize="@dimen/task_input_textsize"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="@dimen/task_mission_detail"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="当事人基本情况："
+                      android:textColor="@color/login_bg"
+                      android:textSize="@dimen/task_input_textsize"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <EditText
+                android:id="@+id/et_situation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:hint="请输入..."
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/task_input_textsize"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="@dimen/task_mission_detail"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="案情简要："
+                      android:textColor="@color/login_bg"
+                      android:textSize="@dimen/task_input_textsize"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <EditText
+                android:id="@+id/et_case_brief"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:hint="请输入..."
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/task_input_textsize"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+
+
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="@dimen/task_mission_detail"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+
+            <TextView android:layout_width="120px"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="承办人意见："
+                      android:textColor="@color/login_bg"
+                      android:textSize="@dimen/task_input_textsize"/>
+
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:background="@color/login_bg"></View>
+            <EditText
+                android:id="@+id/et_opinion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:hint="请输入..."
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/task_input_textsize"/>
+            <View android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:layout_marginRight="10px"
+                  android:background="@color/login_bg"></View>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:background="@color/login_bg"></View>
+
+        <Button
+            android:id="@+id/bt_ok"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/task_input_height"
+            android:layout_marginLeft="180px"
+            android:layout_marginRight="180px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/btn_addevidence_selector"
+            android:gravity="center"
+            android:text="提交"
+            android:textColor="@color/white"
+            android:textSize="@dimen/task_input_textsize"/>
+
+</LinearLayout>

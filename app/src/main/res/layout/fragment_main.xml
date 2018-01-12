@@ -1,0 +1,254 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        xmlns:tools="http://schemas.android.com/tools"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal"
+                                        tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MainFragment">
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="130px"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorMain2"
+            android:orientation="vertical"
+            android:padding="5px">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_imageView"
+                android:layout_width="126px"
+                android:layout_height="126px"
+                android:layout_gravity="center"
+                android:layout_marginTop="46px"
+                app:civ_border_color="#00000000"
+                app:civ_border_width="0dp"/>
+            <TextView
+                android:id="@+id/user_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="80px"
+                android:layout_gravity="center"
+                android:layout_marginTop="30px"
+                android:gravity="center"
+                android:text="XXX"
+                android:textColor="@color/colorMain4"
+                android:textSize="32px"/>
+            <View android:layout_width="match_parent"
+                  android:layout_height="2px"
+                  android:layout_marginTop="30px"
+                  android:background="@color/colorMain3"></View>
+
+            <ListView android:id="@+id/lv_menu"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:divider="@color/colorMain3"
+                      android:dividerHeight="1px">
+
+            </ListView>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorMain1">
+
+
+                    <ImageButton
+                        android:id="@+id/chatBtn"
+                        android:layout_width="40px"
+                        android:layout_height="100px"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:background="@drawable/fast_btn_bg"
+                        android:gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_textsms"
+                        android:textColor="@color/colorMain5"
+                        android:textSize="32px"/>
+                    <TextView android:id="@+id/tv_tilecunt"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_alignEnd="@id/chatBtn"
+                              android:layout_marginTop="28px"
+                              android:background="@drawable/ease_unread_count_bg"
+                              android:gravity="center"
+                              android:padding="4px"
+                              android:visibility="gone"
+                              android:text=""
+                              android:textColor="@android:color/white"
+                              android:textSize="24px"/>
+                    <ImageView
+                        android:layout_width="500px"
+                        android:layout_height="140px"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/main_logo2"/>
+
+
+                    <FrameLayout
+                        android:id="@+id/fl_01"
+                        android:layout_width="40px"
+                        android:layout_height="100px"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@id/chatBtn"
+                        android:background="@drawable/fast_btn_bg"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/gpsStar_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16px"
+                            android:layout_marginTop="16px"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/colorMain6"
+                            android:textSize="20px"/>
+
+                        <ImageButton
+                            android:id="@+id/gpsBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:padding="12px"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/gpsfailure"/>
+
+                    </FrameLayout>
+
+
+                    <FrameLayout
+                        android:id="@+id/fl_sl"
+                        android:layout_width="40px"
+                        android:layout_height="100px"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@id/fl_01"
+                        android:background="@drawable/fast_btn_bg"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/signal_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16px"
+                            android:layout_marginTop="16px"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/colorMain6"
+                            android:textSize="28px"/>
+
+                        <ImageButton
+                            android:id="@+id/signalBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:padding="14px"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/signal0"/>
+
+
+
+                    </FrameLayout>
+
+                    <ImageButton
+                        android:layout_toLeftOf="@id/fl_sl"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:id="@+id/ib_vpn"
+                        android:layout_width="40px"
+                        android:layout_height="100px"
+                        android:padding="14px"
+                        android:background="@drawable/fast_btn_bg"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/online" />
+
+                    <Button
+                        android:layout_toLeftOf="@id/ib_vpn"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:id="@+id/bt_sos"
+                        android:layout_width="40px"
+                        android:layout_height="100px"
+                        android:padding="14px"
+                        android:textSize="28px"
+                        android:background="@drawable/fast_btn_bg"
+                        android:scaleType="fitCenter"
+                        android:textColor="#f00"
+                        android:text="急"
+                         />
+                </RelativeLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rc_tbitem"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:background="@color/colorMain2"
+                    android:divider="@color/colorMain4"
+                    android:dividerHeight="0.4px"
+                    android:paddingLeft="20px"
+                    android:visibility="gone"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/colorLine1"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorMain1">
+
+
+                    <FrameLayout
+                        android:id="@+id/fragment_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </FrameLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_chat"
+        android:layout_width="600px"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:choiceMode="singleChoice"
+        android:orientation="vertical">
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorMain1"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="10px"
+              android:orientation="horizontal"
+    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MissionFragment">
+
+
+
+
+            <LinearLayout
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/cardview_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <gd.water.oking.com.cn.wateradministration_gd.View.SearchMissionEditText
+                        android:id="@+id/searchMission_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="80px"
+                        android:layout_gravity="center"
+                        android:layout_margin="16px"
+                        android:background="@drawable/search_edittext_bg"
+                        android:hint="输入需要查询的任务名称......"
+                        android:paddingBottom="10px"
+                        android:paddingLeft="40px"
+                        android:paddingRight="10px"
+                        android:paddingTop="10px"
+                        android:singleLine="true"
+                        android:textColor="@color/colorMain4"
+                        android:textColorHint="@color/colorMain4"
+                        android:textSize="32px"/>
+
+                </LinearLayout>
+
+                <ExpandableListView
+                    android:layout_below="@id/searchMission_editText"
+                    android:id="@+id/mission_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/colorLine1"
+                    android:dividerHeight="1px"
+                    android:groupIndicator="@null">
+
+                </ExpandableListView>
+
+            </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_web"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/webview_height"
+            android:layout_marginLeft="10px"
+            android:layout_weight="3"
+            android:background="@drawable/cardview_bg">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/map"
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+
+
+</LinearLayout>

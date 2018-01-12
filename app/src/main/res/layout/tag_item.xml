@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_tag"
+            android:textSize="34px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18px"
+            android:background="@drawable/tab_bg"
+            android:paddingBottom="10px"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:paddingTop="10px"
+            android:text="TAG标签"
+            android:textColor="@color/colorMain4" />
+
+
+</LinearLayout>

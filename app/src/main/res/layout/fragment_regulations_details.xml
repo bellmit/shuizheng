@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="10px"
+              android:orientation="horizontal"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.RegulationsDetailsFragment">
+
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@drawable/cardview_bg"
+        android:orientation="vertical">
+
+        <ImageButton
+android:visibility="gone"
+            android:id="@+id/back_button"
+            android:layout_width="35px"
+            android:layout_height="80px"
+            android:layout_marginBottom="12px"
+            android:layout_marginLeft="14px"
+            android:layout_marginTop="12px"
+            android:layout_gravity="center"
+            android:background="@drawable/mission_state_bg3"
+            android:gravity="center"
+            android:src="@mipmap/back"/>
+
+        <EditText
+            android:visibility="gone"
+            android:id="@+id/search_editText"
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:layout_margin="16px"
+            android:layout_toRightOf="@id/back_button"
+            android:background="@drawable/search_edittext_bg"
+            android:drawablePadding="20px"
+            android:hint="输入需要查询的法律法规关键字..."
+            android:paddingBottom="20px"
+            android:paddingLeft="20dp"
+            android:paddingRight="20px"
+            android:paddingTop="20px"
+            android:singleLine="true"
+            android:textColor="@color/colorMain4"
+            android:textColorHint="@color/colorMain4"
+            android:textSize="32px"/>
+
+        <ImageView android:id="@+id/iv_serch"
+                   android:visibility="gone"
+                     android:layout_width="50px"
+                     android:layout_height="50px"
+                     android:layout_alignEnd="@id/search_editText"
+                     android:layout_marginTop="30px"
+                     android:layout_marginRight="10px"
+                     android:gravity="center"
+                     android:src="@drawable/search_ico"/>
+        <ExpandableListView
+            android:id="@+id/el"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_editText"
+            android:divider="@color/colorLine1"
+            android:dividerHeight="1px"
+            android:groupIndicator="@null">
+        </ExpandableListView>
+
+    </RelativeLayout>
+
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="10px"
+                  android:layout_weight="3"
+                  android:orientation="vertical">
+        <ScrollView android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/cardview_bg">
+            <TextView android:id="@+id/tv_detail"
+                      android:layout_width="match_parent"
+                      android:textSize="26px"
+                      android:layout_height="match_parent"
+                      android:lineSpacingExtra="8px"
+                      android:padding="20px"
+                      android:textColor="@color/colorMain4"/>
+        </ScrollView>
+        <ScrollView android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10px"
+                    android:layout_weight="1"
+                    android:background="@drawable/cardview_bg">
+            <TextView android:id="@+id/tv_itemdetail"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:lineSpacingExtra="8px"
+                      android:textSize="26px"
+                      android:padding="20px"
+                      android:textColor="@color/colorMain4"/>
+
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

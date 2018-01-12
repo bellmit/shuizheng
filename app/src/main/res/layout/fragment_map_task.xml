@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MapTaskFragment">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.amap.api.maps.MapView>
+
+    <RelativeLayout android:layout_width="wrap_content"
+                    android:id="@+id/rl"
+                    android:visibility="gone"
+                    android:padding="30px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/maptask_bg_shap"
+                    android:layout_height="wrap_content">
+        <TextView android:id="@+id/tv_taskname"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="任务名称"
+                  android:textColor="#f00"
+                  android:textSize="36px"
+                  />
+        <TextView android:id="@+id/tv_state"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_taskname"
+                  android:layout_marginTop="6px"
+                  android:text="任务状态"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+        <TextView android:id="@+id/tv_pelease_people"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_state"
+                  android:layout_marginTop="6px"
+                  android:text="发布人"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+        <TextView android:id="@+id/tv_approver"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_pelease_people"
+                  android:layout_marginTop="6px"
+                  android:text="审批人"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+
+
+        <TextView android:id="@+id/tv_description"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_approver"
+                  android:layout_marginTop="6px"
+                  android:text="任务描述"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+        <TextView android:id="@+id/tv_are"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_description"
+                  android:layout_marginTop="6px"
+                  android:text="巡查区域"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+
+        <TextView android:id="@+id/tv_time"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_are"
+                  android:layout_marginTop="6px"
+                  android:text="发布时间"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
+    </RelativeLayout>
+</RelativeLayout>

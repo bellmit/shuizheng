@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/XH_textView"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/member_item_bg3"
+            android:gravity="center"
+            android:textColor="@color/colorMain4"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/WT_textView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/member_item_bg3"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/colorMain4"
+            android:textSize="16sp" />
+
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/member_item_bg3">
+
+            <Button
+                android:id="@+id/del_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/datetimeview_bg"
+                android:text="删除"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

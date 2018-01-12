@@ -1,0 +1,543 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10px"
+    android:background="@drawable/cardview_bg"
+    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.WrittenRecordFragment">
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+        <TextView android:id="@+id/tv_title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerHorizontal="true"
+                  android:layout_marginTop="40px"
+                  android:text="调查询问笔录"
+                  android:textColor="@color/white"
+                  android:textSize="34px"
+                  android:textStyle="bold"/>
+        <LinearLayout android:id="@+id/ll_01"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/tv_title"
+                      android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="40px"
+                android:layout_marginTop="32px"
+                android:text="案件类型："
+                android:textColor="@color/colorBackground"
+                android:textSize="32px"/>
+            <Spinner android:id="@+id/sp_type"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center_vertical"
+                     android:layout_marginTop="32px"
+                     android:overlapAnchor="false"
+                     android:spinnerMode="dropdown"
+                     android:textSize="32px"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="12px"
+                android:hint="询问内容："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout android:id="@+id/ll_02"
+                      android:layout_width="match_parent"
+                      android:layout_height="80px"
+                      android:layout_below="@id/ll_01"
+                      android:orientation="horizontal">
+
+            <TextView android:id="@+id/tv_tag1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_marginLeft="40px"
+                      android:layout_marginTop="16px"
+                      android:text="笔录时间："
+                      android:textColor="@color/white"
+                      android:textSize="32px"
+            />
+            <Button
+
+                android:textSize="28px"
+                android:id="@+id/bt_select_begintime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5px"
+                android:layout_weight="1"
+                android:background="@drawable/btn_addevidence_selector"
+                android:gravity="center"
+                android:text="选择"
+                android:textColor="@color/white"/>
+
+
+
+            <TextView android:id="@+id/tv_tag6"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_marginTop="8px"
+                      android:text="至"
+                      android:textColor="@color/white"
+                      android:textSize="32px"
+            />
+
+            <Button
+
+                android:textSize="28px"
+                android:id="@+id/bt_select_endtime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5px"
+                android:layout_weight="1"
+                android:background="@drawable/btn_addevidence_selector"
+                android:gravity="center"
+                android:layout_marginRight="40px"
+                android:text="选择"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <TextView android:id="@+id/tv_addr"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_02"
+                  android:layout_marginLeft="40px"
+                  android:layout_marginTop="40px"
+                  android:text="询问地点：广东省"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <Spinner android:id="@+id/sp_city"
+                 android:layout_width="100px"
+                 android:layout_below="@id/ll_02"
+                 android:layout_toRightOf="@id/tv_addr"
+                 android:layout_height="80px"
+                 android:layout_marginTop="12px"
+                 android:layout_marginLeft="8px"
+                 android:layout_marginBottom="8px"
+                 android:layout_marginRight="8px"
+                 android:gravity="center"
+                 android:overlapAnchor="false"
+                 android:paddingLeft="8px"
+                 android:paddingTop="8px"
+                 android:spinnerMode="dropdown"
+                 android:textSize="32px"/>
+
+        <TextView android:id="@+id/tv_tag12"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_02"
+                  android:layout_marginTop="40px"
+                  android:layout_toRightOf="@id/sp_city"
+                  android:text="市（区）"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <Spinner android:id="@+id/sp_county"
+                 android:layout_width="100px"
+                 android:layout_below="@id/ll_02"
+                 android:layout_toRightOf="@id/tv_tag12"
+                 android:layout_height="80px"
+                 android:layout_marginTop="12px"
+                 android:layout_marginLeft="8px"
+                 android:layout_marginBottom="8px"
+                 android:layout_marginRight="8px"
+                 android:gravity="center"
+                 android:overlapAnchor="false"
+                 android:paddingLeft="8px"
+                 android:paddingTop="8px"
+                 android:spinnerMode="dropdown"
+                 android:textSize="32px"/>
+        <TextView android:id="@+id/tv_tag13"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_02"
+                  android:layout_marginTop="40px"
+                  android:layout_toRightOf="@id/sp_county"
+                  android:text="县（市、区）"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <EditText
+            android:id="@+id/et_addrdetail"
+            android:layout_width="match_parent"
+            android:layout_height="115px"
+            android:layout_below="@id/ll_02"
+            android:layout_marginRight="40px"
+            android:layout_marginTop="6px"
+            android:layout_toRightOf="@id/tv_tag13"
+            android:paddingTop="15px"
+            android:textColor="@color/white"
+            android:textSize="32px"/>
+        <LinearLayout android:id="@+id/ll_03"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="20px"
+                      android:layout_below="@id/tv_tag13"
+                      android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40px"
+
+                android:layout_weight="1"
+                android:hint="询问人："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_ask_person"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="执法编号（询问人）："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_ask_enforcement_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_weight="1"
+                android:hint="记录人："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_recorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginRight="40px"
+                android:layout_weight="1"
+                android:hint="执法编号（记录人）："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_recorder_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+        <TextView android:id="@+id/tv_tag14"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_03"
+                  android:layout_marginLeft="40px"
+                  android:layout_marginTop="20px"
+                  android:text="被询问人："
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <RadioGroup android:id="@+id/rg"
+                    android:layout_width="match_parent"
+                    android:layout_height="80px"
+                    android:layout_below="@id/ll_03"
+                    android:layout_toRightOf="@id/tv_tag14"
+                    android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/rb_illegal_person"
+                android:checked="true"
+                android:layout_width="160px"
+                android:layout_height="50px"
+                android:button="@drawable/radio_button_style"
+                android:text="违法行为人"
+                android:textColor="@color/white"
+                android:textSize="19px"/>
+            <RadioButton
+                android:id="@+id/rb_victim"
+                android:layout_width="160px"
+                android:layout_height="50px"
+                android:layout_marginLeft="30px"
+                android:button="@drawable/radio_button_style"
+                android:text="受害人"
+                android:textColor="@color/white"
+                android:textSize="19px"/>
+            <RadioButton
+                android:id="@+id/rb_other"
+                android:layout_width="160px"
+                android:layout_height="50px"
+                android:layout_marginLeft="30px"
+                android:button="@drawable/radio_button_style"
+                android:text="第三方"
+                android:textColor="@color/white"
+                android:textSize="19px"/>
+        </RadioGroup>
+
+        <LinearLayout android:id="@+id/ll_04"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/rg"
+                      android:orientation="horizontal">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40px"
+                android:layout_marginTop="10px"
+                android:layout_weight="1"
+                android:hint="姓名："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_asking_people"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="10px"
+                android:layout_weight="1"
+                android:hint="身份证号码："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_asking_idcard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:digits="0123456789X"
+                    android:maxLength="18"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="10px"
+                android:layout_weight="1"
+                android:hint="职务："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/tet_asking_position"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="10px"
+                android:layout_weight="1"
+                android:hint="工作单位："
+                android:textColorHint="@color/colorMain4">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tet_asking_work_units"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20px"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <TextView android:id="@+id/tv_tag15"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginLeft="40px"
+                  android:layout_marginTop="40px"
+                  android:text="住址：广东省"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <Spinner android:id="@+id/sp_city2"
+                 android:layout_width="100px"
+                 android:layout_below="@id/ll_04"
+                 android:layout_toRightOf="@id/tv_tag15"
+                 android:layout_height="80px"
+                 android:layout_marginTop="12px"
+                 android:layout_marginLeft="8px"
+                 android:layout_marginBottom="8px"
+                 android:layout_marginRight="8px"
+                 android:gravity="center"
+                 android:overlapAnchor="false"
+                 android:paddingLeft="8px"
+                 android:paddingTop="8px"
+                 android:spinnerMode="dropdown"
+                 android:textSize="32px"/>
+
+        <TextView android:id="@+id/tv_tag16"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginTop="40px"
+                  android:layout_toRightOf="@id/sp_city2"
+                  android:text="市（区）"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <Spinner android:id="@+id/sp_county2"
+                 android:layout_width="100px"
+                 android:layout_below="@id/ll_04"
+                 android:layout_toRightOf="@id/tv_tag16"
+                 android:layout_height="80px"
+                 android:layout_marginTop="12px"
+                 android:layout_marginLeft="8px"
+                 android:layout_marginBottom="8px"
+                 android:layout_marginRight="8px"
+                 android:gravity="center"
+                 android:overlapAnchor="false"
+                 android:paddingLeft="8px"
+                 android:paddingTop="8px"
+                 android:spinnerMode="dropdown"
+                 android:textSize="32px"/>
+        <TextView android:id="@+id/tv_tag17"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginTop="40px"
+                  android:layout_toRightOf="@id/sp_county2"
+                  android:text="县（市、区）"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+
+
+        <EditText android:id="@+id/et_addr_detailed2"
+                  android:layout_width="100px"
+                  android:layout_height="115px"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginTop="6px"
+                  android:layout_toRightOf="@id/tv_tag17"
+                  android:paddingTop="15px"
+                  android:textColor="@color/white"
+                  android:textSize="32px"/>
+        <TextView android:id="@+id/tv_tag18"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginTop="40px"
+
+                  android:layout_toRightOf="@id/et_addr_detailed2"
+                  android:text="镇（乡、街道）"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+
+        <EditText android:id="@+id/et_addrdetail2"
+                  android:layout_width="match_parent"
+                  android:layout_height="115px"
+                  android:layout_below="@id/ll_04"
+                  android:layout_marginRight="40px"
+                  android:layout_marginTop="6px"
+                  android:layout_toRightOf="@id/tv_tag18"
+                  android:paddingTop="15px"
+                  android:textColor="@color/white"
+                  android:textSize="32px"/>
+
+        <TextView android:id="@+id/tv_tag19"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/et_addrdetail2"
+                  android:layout_marginLeft="40px"
+                  android:layout_marginTop="40px"
+                  android:text="问：我是"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+        <EditText android:id="@+id/et_enforcement_name"
+                  android:layout_width="100px"
+                  android:layout_height="115px"
+                  android:layout_below="@id/et_addrdetail2"
+                  android:layout_marginTop="6px"
+                  android:layout_toRightOf="@id/tv_tag19"
+                  android:paddingTop="15px"
+                  android:textColor="@color/white"
+                  android:textSize="32px"/>
+
+        <TextView android:id="@+id/tv_tag20"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/et_addrdetail2"
+                  android:layout_marginRight="40px"
+                  android:layout_marginTop="40px"
+                  android:layout_toRightOf="@id/et_enforcement_name"
+                  android:text="执法人员，现在我需要问一些问题，你要如实回答。"
+                  android:textColor="@color/white"
+                  android:textSize="32px"
+        />
+        <TextView android:id="@+id/tv_problem"
+                  android:layout_width="wrap_content"
+                  android:layout_height="70px"
+                  android:layout_alignParentRight="true"
+                  android:layout_alignTop="@id/tv_title"
+                  android:layout_marginRight="60px"
+                  android:background="@null"
+                  android:drawableLeft="@mipmap/ic_event_note"
+                  android:gravity="center_vertical"
+                  android:text="问题库"
+                  android:textColor="@color/colorMain5"
+                  android:textSize="32px"
+        />
+        <gd.water.oking.com.cn.wateradministration_gd.View.NoScrollListView
+            android:id="@+id/lv_ask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tag20"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:layout_marginTop="10px"></gd.water.oking.com.cn.wateradministration_gd.View.NoScrollListView>
+        <Button
+            android:id="@+id/bt_save"
+            android:layout_width="140px"
+            android:layout_height="80px"
+            android:layout_below="@id/lv_ask"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10px"
+            android:layout_marginTop="10px"
+            android:background="@drawable/btn_waiting_selector"
+            android:text="提  交"
+            android:textColor="@color/colorMain6"
+            android:textSize="32px"/>
+    </RelativeLayout>
+</ScrollView>

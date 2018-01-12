@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="@drawable/cardview_bg"
+                android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/case_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:divider="@color/colorLine1"
+        android:dividerHeight="1dip"
+        android:visibility="gone"
+        android:padding="5dp"/>
+
+    <ProgressBar style="?android:attr/progressBarStyleInverse"
+                 android:id="@+id/pb"
+                 android:layout_centerInParent="true"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+    />
+</RelativeLayout>
+

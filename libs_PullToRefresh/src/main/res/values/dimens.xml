@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="indicator_right_padding">18px</dimen>
+    <dimen name="indicator_corner_radius">20px</dimen>
+    <dimen name="indicator_internal_padding">6px</dimen>
+    <dimen name="header_footer_left_right_padding">40px</dimen>
+    <dimen name="header_footer_top_bottom_padding">20px</dimen>
+
+</resources>

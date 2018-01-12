@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorMain1"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.LawEnforcementProcessGuidanceFragment">
+
+    <RadioGroup android:id="@+id/rg"
+                android:layout_width="match_parent"
+                android:padding="10px"
+                android:layout_margin="10px"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cardview_bg"
+                android:orientation="horizontal">
+        <RadioButton android:id="@+id/rb_punishment_procedures"
+                     android:layout_width="320px"
+                     android:layout_height="50px"
+                     android:checked="true"
+                     android:layout_marginLeft="20px"
+                     android:button="@drawable/radio_button_style"
+                     android:padding="10px"
+                     android:text="一般行政处罚程序"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+        <RadioButton android:id="@+id/rb_compulsory_measures"
+                     android:layout_width="320px"
+                     android:layout_marginLeft="20px"
+                     android:layout_height="wrap_content"
+                     android:button="@drawable/radio_button_style"
+                     android:padding="10px"
+                     android:text="水行政强制措施程序"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+        <RadioButton android:id="@+id/rb_enforcement_program"
+                     android:layout_marginLeft="20px"
+                     android:layout_width="320px"
+                     android:layout_height="50px"
+                     android:padding="10px"
+                     android:text="行政强制执行程序"
+                     android:button="@drawable/radio_button_style"
+                     android:textColor="@color/white"
+                     android:textSize="19px"/>
+    </RadioGroup>
+
+    <FrameLayout android:id="@+id/fl_law_enforcement_content"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@id/rg"
+                 >
+
+    </FrameLayout>
+
+</RelativeLayout>

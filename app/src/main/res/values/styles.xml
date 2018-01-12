@@ -1,0 +1,76 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:typeface">sans</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!--按钮选中或者点击获得焦点后的颜色-->
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlNormal">@color/gray1</item>
+
+        <!--控制searchView的icon颜色的设置-->
+        <!--   <item name="colorControlNormal">@color/colorControlNormal</item>-->
+        <!--Button按钮正常状态颜色-->
+        <item name="colorButtonNormal">@color/accent_material_light</item>
+        <!--EditText 输入框中字体的颜色-->
+        <item name="editTextColor">@android:color/white</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <!--导航栏上的标题颜色-->
+        <item name="android:textColorPrimary">@color/black</item>
+
+        <!--  <item name="android:listDivider">@drawable/card_list_divider</item>
+
+        <item name="textAppearanceLargePopupMenu">@style/splashPopUpMenuStyle</item>
+        <item name="textAppearanceSmallPopupMenu">@style/splashPopUpMenuStyle</item>-->
+    </style>
+
+    <style name="Theme_audioDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!--<style name="TreeNodeStyleCustom">-->
+    <!--<item name="android:paddingLeft">20dp</item>-->
+    <!--&lt;!&ndash;<item name="android:showDividers">middle</item>&ndash;&gt;-->
+    <!--&lt;!&ndash;<item name="android:divider">@android:drawable/divider_horizontal_bright</item>&ndash;&gt;-->
+    <!--</style>-->
+
+    <!--<style name="TreeNodeStyleDivided">-->
+    <!--<item name="android:showDividers">middle</item>-->
+    <!--<item name="android:divider">@android:drawable/divider_horizontal_bright</item>-->
+    <!--</style>-->
+
+    <!--日历样式-->
+
+    <!--登录页面checkbox-->
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorMain1</item>
+        <item name="colorControlActivated">@color/colorMain1</item>
+    </style>
+
+    <!--tabLayout样式-->
+    <!--<style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">-->
+    <!--<item name="tabIndicatorColor">#000000000</item>-->
+    <!--<item name="tabIndicatorHeight">2dp</item>-->
+    <!--<item name="tabPaddingStart">12dp</item>-->
+    <!--<item name="tabPaddingEnd">12dp</item>-->
+    <!--<item name="tabBackground">@color/colorBackground</item>-->
+    <!--<item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>-->
+    <!--<item name="tabSelectedTextColor">@color/green</item>-->
+    <!--</style>-->
+
+    <!--<style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">-->
+    <!--<item name="android:textSize">16dp</item>-->
+    <!--<item name="android:textColor">@android:color/black</item>-->
+    <!--&lt;!&ndash;  false: ImageSpan被渲染  &ndash;&gt;-->
+    <!--<item name="textAllCaps">true</item>-->
+    <!--</style>-->
+</resources>

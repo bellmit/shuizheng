@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal">
+    <CheckBox android:id="@+id/cb"
+              android:background="@drawable/member_item_bg2"
+              android:gravity="center"
+              android:paddingTop="20px"
+              android:button="@drawable/checkbox_bg"
+              android:paddingBottom="20px"
+              android:layout_gravity="center_vertical"
+              android:layout_width="100px"
+              android:layout_height="80px"/>
+
+    <TextView
+        android:background="@drawable/member_item_bg2"
+        android:id="@+id/type_textView"
+        android:layout_width="130px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:background="@drawable/member_item_bg2"
+        android:id="@+id/value_textView"
+        android:layout_width="200px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:background="@drawable/member_item_bg2"
+        android:id="@+id/remarks_textView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:background="@drawable/member_item_bg2"
+        android:id="@+id/tv_mc"
+        android:layout_width="200px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+    <TextView
+        android:background="@drawable/member_item_bg2"
+        android:id="@+id/tv_attribute"
+        android:layout_width="200px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorMain4"
+        android:textSize="32px"/>
+
+</LinearLayout>

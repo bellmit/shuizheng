@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10px"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.EmergencyTaskListFragment">
+
+    <TextView android:id="@+id/tv_01"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:padding="32px"
+              android:text="巡查任务列表"
+              android:textColor="#f00"
+              android:textSize="32px"/>
+    <Button
+        android:id="@+id/add_Btn"
+        android:layout_width="110px"
+        android:layout_height="80px"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="10px"
+        android:background="@drawable/btn_waiting_selector"
+        android:textColor="#fff"
+        android:text="新增"
+        android:textSize="32px"/>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_01"
+
+        android:dividerHeight="1px"/>
+    <TextView android:id="@+id/tv"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_below="@id/tv_01"
+              android:gravity="center"
+              android:text="（无）"
+              android:visibility="gone"/>
+
+</RelativeLayout>

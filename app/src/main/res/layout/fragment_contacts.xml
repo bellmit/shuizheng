@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+              android:background="@drawable/cardview_bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="10px"
+              android:layout_marginBottom="10px"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px"
+              android:orientation="vertical"
+    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.ContactsFragment">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80px"
+                    android:background="@color/colorMain9">
+
+                    <TextView
+                        android:id="@+id/name_textView"
+                        android:layout_width="130px"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorMain9"
+                        android:gravity="center"
+                        android:text="姓名"
+                        android:textColor="@color/colorMain5"
+                        android:textSize="26px"/>
+
+                    <TextView
+                        android:id="@+id/dept_textView"
+                        android:layout_width="500px"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorMain9"
+                        android:gravity="center"
+                        android:text="部门"
+                        android:textColor="@color/colorMain5"
+                        android:textSize="26px" />
+
+                    <TextView
+                        android:id="@+id/phone_textView"
+                        android:layout_width="300px"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorMain9"
+                        android:gravity="center"
+                        android:text="联系方式"
+                        android:textColor="@color/colorMain5"
+                        android:textSize="26px" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/colorMain9"
+                        android:gravity="center"
+                        android:text="操作"
+                        android:textColor="@color/colorMain5"
+                        android:textSize="26px" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorLine1" />
+
+                <com.handmark.pulltorefresh.library.PullToRefreshListView
+                    android:id="@+id/contacts_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:dividerHeight="1px"/>
+
+</LinearLayout>

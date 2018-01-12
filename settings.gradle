@@ -1,0 +1,1 @@
+include ':app', ':easeui', ':FlowLayout', ':RxTools-library', ':libs_PullToRefresh', ':CircularProgressButtonLibrary', ':ocr_ui', ':android-pdf-viewer', ':autolayout', ':xCLCharts', ':whiteboardlib'

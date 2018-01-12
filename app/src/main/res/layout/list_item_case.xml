@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain2"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
+
+    <Button
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:padding="5dp"
+        android:text="&#xf040;"
+        android:textColor="@color/colorMain8" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="案件类型："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_Type_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="XXX有限公司"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="案件名称："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_name_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="XXX有限公司"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="案件来源："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_source_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="XXX有限公司"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="受理时间："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_dateTime_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="2016/9/12"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="归属部门："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_dept_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="2016/9/12"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="状态："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_state_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="2016/9/12"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="left|center_vertical"
+                android:text="案发地点："
+                android:textColor="@color/colorMain5"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/case_location_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:maxLines="2"
+                android:text="2016/9/12"
+                android:textColor="@color/colorMain4"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/state_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/datetimeview_bg"
+        android:clickable="false"
+        android:contextClickable="false"
+        android:text="待取证"
+        android:textColor="@color/colorMain4" />
+
+</LinearLayout>

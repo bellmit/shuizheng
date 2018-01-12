@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:background="@drawable/cardview_bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="10dp"
+              android:layout_marginBottom="10dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:orientation="vertical"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.ContactsFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorMain9">
+
+        <TextView
+            android:id="@+id/name_textView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="名称"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/dept_textView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="出生年月"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/phone_textView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="联系电话"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="性别"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="身份证"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="现住址"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorMain9"
+            android:gravity="center"
+            android:text="户籍所在地"
+            android:textColor="@color/colorMain5"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/colorLine1" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lv_rf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:dividerHeight="1dip"/>
+
+</LinearLayout>
