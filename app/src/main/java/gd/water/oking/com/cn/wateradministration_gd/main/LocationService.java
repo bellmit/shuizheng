@@ -46,7 +46,6 @@ import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.SetLocationParams;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class LocationService extends Service {
 
@@ -83,12 +82,12 @@ public class LocationService extends Service {
         }
         Flowable.interval(0, 1, TimeUnit.MINUTES)
                 .onBackpressureDrop()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Long>() {
                     @Override
                     public void onSubscribe(Subscription s) {
                         mSubscription = s;
+                        s.request(Long.MAX_VALUE);
                     }
 
                     @Override

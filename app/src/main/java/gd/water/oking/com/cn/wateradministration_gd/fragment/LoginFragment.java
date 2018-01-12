@@ -36,14 +36,12 @@ import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
-import org.xutils.http.cookie.DbCookieStore;
 import org.xutils.x;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.HttpCookie;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +59,7 @@ import gd.water.oking.com.cn.wateradministration_gd.http.MapResponse;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
+import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -156,14 +155,14 @@ public class LoginFragment extends BaseFragment {
                 }).flatMap(new Function<String, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(String s) throws Exception {
-                        if (s.equals("0")){
+                        if (s.equals("0")) {
                             return new Observable<String>() {
                                 @Override
                                 protected void subscribeActual(Observer<? super String> observer) {
                                     reQuestMenu(observer);
                                 }
                             };
-                        }else if (s.equals("1")){    //离线登录
+                        } else if (s.equals("1")) {    //离线登录
                             return new Observable<String>() {
                                 @Override
                                 protected void subscribeActual(Observer<? super String> observer) {
@@ -171,7 +170,7 @@ public class LoginFragment extends BaseFragment {
                                     observer.onNext("1");
                                 }
                             };
-                        }else {
+                        } else {
                             return new Observable<String>() {
                                 @Override
                                 protected void subscribeActual(Observer<? super String> observer) {
@@ -220,7 +219,7 @@ public class LoginFragment extends BaseFragment {
                                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_root, f).commitAllowingStateLoss();
                                         }
                                     }, 800);
-                                }else {
+                                } else {
                                     userNameEditText.setEnabled(true);
                                     passwordEditText.setEnabled(true);
                                     loginBtn.setErrorText("登录失败，请重新登录");
@@ -288,18 +287,7 @@ public class LoginFragment extends BaseFragment {
 
                                     }
 
-                                    DbCookieStore instance = DbCookieStore.INSTANCE;
-                                    List<HttpCookie> cookies = instance.getCookies();
-                                    for (int i = 0; i < cookies.size(); i++) {
-                                        HttpCookie cookie = cookies.get(i);
-                                        if ("JSESSIONID".equals(cookie.getName())) {
-                                            DefaultContants.ISHTTPLOGIN = true;
-                                            DefaultContants.JSESSIONID = cookie.getValue();
-                                            DefaultContants.DOMAIN = cookie.getDomain();
-                                            DefaultContants.PATH = cookie.getPath();
-                                            DefaultContants.CURRENTUSER = new User();
-                                        }
-                                    }
+                                    Utils.getCookies2DB();
 
                                     SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("lastAccount", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -338,7 +326,6 @@ public class LoginFragment extends BaseFragment {
                                     }
                                 }
                             });
-
 
 
                         } else {
@@ -389,7 +376,7 @@ public class LoginFragment extends BaseFragment {
                                 emitter.onNext("-1");
                                 e.printStackTrace();
                             }
-
+                            cursor.close();
 
                         } else {
                             emitter.onNext("-1");
@@ -479,6 +466,7 @@ public class LoginFragment extends BaseFragment {
 
 
     }
+
     //下载apk
     private void donlowdApk() {
         final NumberFormat format = NumberFormat.getPercentInstance();// 获取格式化类实例

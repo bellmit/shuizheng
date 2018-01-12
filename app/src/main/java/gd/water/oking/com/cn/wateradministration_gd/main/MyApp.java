@@ -66,7 +66,7 @@ public class MyApp extends Application{
                 registerReceiver(callReceiver, callFilter);
 
                 x.Ext.init(this);
-//                x.Ext.setDebug(BuildConfig.DEBUG);
+                x.Ext.setDebug(true);
 
                 //创建本地数据库
                 localSqlite = new LocalSqlite(getApplicationContext());

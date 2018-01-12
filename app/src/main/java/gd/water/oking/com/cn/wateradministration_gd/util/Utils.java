@@ -11,15 +11,20 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.EditText;
 
+import org.xutils.http.cookie.DbCookieStore;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import gd.water.oking.com.cn.wateradministration_gd.bean.User;
+import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 
 public class Utils {
@@ -157,5 +162,20 @@ public class Utils {
             }
         };
         editText.setFilters(new InputFilter[]{filter});
+    }
+
+    public static synchronized void getCookies2DB(){
+        DbCookieStore instance = DbCookieStore.INSTANCE;
+        List<HttpCookie> cookies = instance.getCookies();
+        for (int i = 0; i < cookies.size(); i++) {
+            HttpCookie cookie = cookies.get(i);
+            if ("JSESSIONID".equals(cookie.getName())) {
+                DefaultContants.ISHTTPLOGIN = true;
+                DefaultContants.JSESSIONID = cookie.getValue();
+                DefaultContants.DOMAIN = cookie.getDomain();
+                DefaultContants.PATH = cookie.getPath();
+                DefaultContants.CURRENTUSER = new User();
+            }
+        }
     }
 }

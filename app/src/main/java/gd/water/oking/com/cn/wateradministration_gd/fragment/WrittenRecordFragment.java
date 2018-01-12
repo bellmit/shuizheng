@@ -111,6 +111,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
             ,R.array.lv_county_14,R.array.lv_county_15,0,0,R.array.lv_county_18
             ,R.array.lv_county_19,R.array.lv_county_20,R.array.lv_county_21};
     private RxDialogLoading mRxDialogLoading;
+    private EditText mEt_town;
 
 
     public WrittenRecordFragment() {
@@ -169,6 +170,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
         mTet_asking_work_units = rootView.findViewById(R.id.tet_asking_work_units);
         mSp_city2 = rootView.findViewById(R.id.sp_city2);
         mSp_county2 = rootView.findViewById(R.id.sp_county2);
+        mEt_town = rootView.findViewById(R.id.et_town);
         mEt_addrdetail2 = rootView.findViewById(R.id.et_addrdetail2);
         mEt_enforcement_name = rootView.findViewById(R.id.et_enforcement_name);
         initData();
@@ -310,6 +312,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
         String askingWorkUnits = mTet_asking_work_units.getText().toString().trim();
         String city2 = mSp_city2.getSelectedItem().toString().trim();
         String county2 = mSp_county2.getSelectedItem().toString().trim();
+        String town = mEt_town.getText().toString().trim();
         String addrdetail2 = mEt_addrdetail2.getText().toString().trim();
         String enforcementName = mEt_enforcement_name.getText().toString().trim();
 
@@ -334,26 +337,88 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
 
         }
 
-        if (!TextUtils.isEmpty(askContent) && !TextUtils.isEmpty(addrdetail)
-                && !TextUtils.isEmpty(askPerson) && !TextUtils.isEmpty(askEnforcementNumber)
-                && !TextUtils.isEmpty(recorder) && !TextUtils.isEmpty(recorderNumber)
-                && !TextUtils.isEmpty(askingPeople)&& !TextUtils.isEmpty(askingIdcard)
-                && !TextUtils.isEmpty(askingPosition)&& !TextUtils.isEmpty(askingWorkUnits)&& !TextUtils.isEmpty(addrdetail2)
-                && !TextUtils.isEmpty(enforcementName)) {
-            String address1;
-            if(county.equals("无")){
-                address1=  "广东省" + city + "市"  + addrdetail;
-            }else {
-                address1=  "广东省" + city + "市" + county + "县" + addrdetail;
+        if(TextUtils.isEmpty(askContent) ){
+            RxToast.warning("询问内容不能为空");
+            return;
+        }
 
-            }
-            String address2;
-            if(county2.equals("无")){
-                address2=  "广东省" + city2 + "市"  + addrdetail2;
-            }else {
-                address2=  "广东省" + city2 + "市" + county2 + "县" + addrdetail2;
 
-            }
+
+        if(TextUtils.isEmpty(addrdetail)){
+            RxToast.warning("询问地点不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askPerson)){
+            RxToast.warning("询问人不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askEnforcementNumber)){
+            RxToast.warning("询问人执法编号不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(recorder)){
+            RxToast.warning("记录人不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(recorderNumber)){
+            RxToast.warning("记录人执法编号不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askingPeople)){
+            RxToast.warning("被询问人姓名不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askingIdcard)){
+            RxToast.warning("被询问人身份证号码不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askingPosition)){
+            RxToast.warning("被询问人职务不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(askingWorkUnits)){
+            RxToast.warning("被询问人工作单位不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(town)){
+            RxToast.warning("被询问人住址不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(addrdetail2)){
+            RxToast.warning("被询问人住址不能为空");
+            return;
+        }
+
+        if(TextUtils.isEmpty(enforcementName)){
+            RxToast.warning("执法人员姓名不能为空");
+            return;
+        }
+
+        String address1;
+        if(county.equals("无")){
+            address1=  "广东省" + city + "市"  + addrdetail;
+        }else {
+            address1=  "广东省" + city + "市" + county + "县" + addrdetail;
+
+        }
+        String address2;
+        if(county2.equals("无")){
+            address2=  "广东省" + city2 + "市"  + town+addrdetail2;
+        }else {
+            address2=  "广东省" + city2 + "市" + county2 + "县" +town+"镇"+addrdetail2;
+
+        }
+
 
             if (mRxDialogLoading == null) {
 
@@ -401,6 +466,22 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
                             RxToast.success(MyApp.getApplictaion(),"数据提交成功",Toast.LENGTH_SHORT).show();
                             mTet_content.setText("");
                             mEt_addrdetail.setText("");
+                            mTet_ask_person.setText("");
+                            mTet_ask_enforcement_number.setText("");
+                            mTet_recorder.setText("");
+                            mTet_recorder_number.setText("");
+                            mTet_asking_people.setText("");
+                            mTet_asking_idcard.setText("");
+                            mTet_asking_position.setText("");
+                            mTet_asking_work_units.setText("");
+                            mEt_addrdetail2.setText("");
+                            mEt_enforcement_name.setText("");
+
+                            for (ProblemBean problemBean:mProblemContent){
+                                problemBean.setContent("");
+                            }
+
+                            mAskAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -426,9 +507,6 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
 
                 }
             });
-        } else {
-            RxToast.warning(MyApp.getApplictaion(), "提交数据不能有空", Toast.LENGTH_SHORT).show();
-        }
 
     }
 

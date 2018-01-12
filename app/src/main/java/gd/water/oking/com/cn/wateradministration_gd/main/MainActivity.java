@@ -71,6 +71,7 @@ import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
 import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
@@ -261,7 +262,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 //    }
 
     private void init() {
-        MyApp.getGlobalThreadPool().execute(new Runnable() {
+        Schedulers.io().createWorker().schedule(new Runnable() {
             @Override
             public void run() {
                 copyDB();
@@ -350,10 +351,9 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                             if (missionList != null) {
 
 
-                                MyApp.getGlobalThreadPool().execute(new Runnable() {
+                                Schedulers.io().createWorker().schedule(new Runnable() {
                                     @Override
                                     public void run() {
-
                                         setMissionList(result);
                                     }
                                 });
@@ -384,7 +384,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         } else {
             missionList.clear();
 
-            MyApp.getGlobalThreadPool().execute(new Runnable() {
+            Schedulers.io().createWorker().schedule(new Runnable() {
                 @Override
                 public void run() {
                     Cursor cursor = MyApp.localSqlite.select(LocalSqlite.MISSION_TABLE,
@@ -426,7 +426,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                     sendBroadcast(new Intent(UPDATE_MISSION_LIST));
 
                     getMissionTypeNum();
-
                 }
             });
         }
@@ -441,10 +440,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 @Override
                 public void onSuccess(final String result) {
                     caseList.clear();
-                    MyApp.getGlobalThreadPool().execute(new Runnable() {
+
+                    Schedulers.io().createWorker().schedule(new Runnable() {
                         @Override
                         public void run() {
-                            int deleteCount = MyApp.localSqlite.delete(LocalSqlite.CASE_TABLE,
+                           MyApp.localSqlite.delete(LocalSqlite.CASE_TABLE,
                                     null, null);
 
                             ArrayList<Case> cList = DataUtil.praseJson(result.toString(),
@@ -462,7 +462,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                             Intent uptIntent = new Intent(MainActivity.UPDATE_CASE_LIST);
                             sendBroadcast(uptIntent);
-
                         }
                     });
                 }
@@ -485,7 +484,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         } else {
             caseList.clear();
 
-            MyApp.getGlobalThreadPool().execute(new Runnable() {
+            Schedulers.io().createWorker().schedule(new Runnable() {
                 @Override
                 public void run() {
                     Cursor cursor = MyApp.localSqlite.select(LocalSqlite.CASE_TABLE,
@@ -502,7 +501,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                     }
                 }
             });
-
         }
     }
 
@@ -513,12 +511,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             mGetQuestionCancelable = x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(final String result) {
-                    Log.i("GetQuestion", "onSuccess>>> " + result);
 
-                    MyApp.getGlobalThreadPool().execute(new Runnable() {
+                    Schedulers.io().createWorker().schedule(new Runnable() {
                         @Override
                         public void run() {
-                            int deleteCount = MyApp.localSqlite.delete(LocalSqlite.QUESTION_TABLE,
+                         MyApp.localSqlite.delete(LocalSqlite.QUESTION_TABLE,
                                     null, null);
 
                             final ArrayList<Question> qList = DataUtil.praseJson(result.toString(),
@@ -532,7 +529,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                                     question.insertDB(MyApp.localSqlite);
                                 }
                             }
-
                         }
                     });
                 }
@@ -567,7 +563,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                 try {
                     JSONObject object = new JSONObject(result);
-                    int count = object.getInt("total");
                     JSONArray missionJSONArray = object.getJSONArray("rows");
 
                     mission.getMembers().clear();
@@ -837,7 +832,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
     @Override
     protected void onDestroy() {
-        stopService(mIntent);
+        super.onDestroy();
+        if (mIntent!=null){
+
+            stopService(mIntent);
+        }
         if (mSubscription!=null){
 
             mSubscription.cancel();
@@ -856,26 +855,28 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             mGetCaseCancelable.cancel();
         }
 
-        if (mGetTemperatureCancelable != null) {
+        if (mGetTemperatureCancelable != null&&mGetTemperatureCancelable.isCancelled()) {
+
             mGetTemperatureCancelable.cancel();
         }
 
-        if (mGetMissionCancelable != null) {
+        if (mGetMissionCancelable != null&&mGetMissionCancelable.isCancelled()) {
             mGetMissionCancelable.cancel();
         }
 
-        if (mGetQuestionCancelable != null) {
+        if (mGetQuestionCancelable != null&&mGetQuestionCancelable.isCancelled()) {
             mGetQuestionCancelable.cancel();
         }
 
-        if (mGetMissionMemberCancelable != null) {
+        if (mGetMissionMemberCancelable != null&&mGetMissionMemberCancelable.isCancelled()) {
+
             mGetMissionMemberCancelable.cancel();
         }
 
-        if (mGetMissionAreaCancelable != null) {
+        if (mGetMissionAreaCancelable != null&&mGetMissionAreaCancelable.isCancelled()) {
             mGetMissionAreaCancelable.cancel();
         }
-        super.onDestroy();
+
     }
 
     private synchronized void setMissionList(String result) {
@@ -1057,28 +1058,28 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             mSubscription=null;
         }
 
-        if (mGetCaseCancelable != null) {
+        if (mGetCaseCancelable != null&&mGetCaseCancelable.isCancelled()) {
 
             mGetCaseCancelable.cancel();
         }
 
-        if (mGetTemperatureCancelable != null) {
+        if (mGetTemperatureCancelable != null&&mGetTemperatureCancelable.isCancelled()) {
             mGetTemperatureCancelable.cancel();
         }
 
-        if (mGetMissionCancelable != null) {
+        if (mGetMissionCancelable != null&&mGetMissionCancelable.isCancelled()) {
             mGetMissionCancelable.cancel();
         }
 
-        if (mGetQuestionCancelable != null) {
+        if (mGetQuestionCancelable != null&&mGetQuestionCancelable.isCancelled()) {
             mGetQuestionCancelable.cancel();
         }
 
-        if (mGetMissionMemberCancelable != null) {
+        if (mGetMissionMemberCancelable != null&&mGetMissionMemberCancelable.isCancelled()) {
             mGetMissionMemberCancelable.cancel();
         }
 
-        if (mGetMissionAreaCancelable != null) {
+        if (mGetMissionAreaCancelable != null&&mGetMissionAreaCancelable.isCancelled()) {
             mGetMissionAreaCancelable.cancel();
         }
     }

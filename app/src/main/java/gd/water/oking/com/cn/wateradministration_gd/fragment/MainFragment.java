@@ -17,7 +17,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -55,14 +54,14 @@ import com.vondear.rxtools.RxDeviceUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.xutils.common.Callback;
 import org.xutils.ex.HttpException;
-import org.xutils.http.cookie.DbCookieStore;
 import org.xutils.x;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.HttpCookie;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import gd.water.oking.com.cn.wateradministration_gd.Adapter.MenuAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.Adapter.MenuItemAdapter;
@@ -87,6 +87,8 @@ import gd.water.oking.com.cn.wateradministration_gd.http.MapResponse;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
+import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
+import io.reactivex.Flowable;
 
 /**
  * A simple {@link BaseFragment} subclass.
@@ -104,15 +106,6 @@ public class MainFragment extends BaseFragment {
     private TextView user_textView, signal_tv, gpsStar_tv;
     private UpcomingFragment mUpcomingFragment;
 
-    private Handler connectHandler = new Handler();
-    private Runnable connectRunnable = new Runnable() {
-        @Override
-        public void run() {
-            reLogin();
-
-            connectHandler.postDelayed(this, 5 * 1000);
-        }
-    };
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -261,6 +254,7 @@ public class MainFragment extends BaseFragment {
     private int mSelePos = -1;
     private int mScreenWidths;
     private int mScreenHeights;
+    private Subscription mSubscription;
 
     public MainFragment() {
         // Required empty public constructor
@@ -299,7 +293,11 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         MyApp.getApplictaion().unregisterReceiver(mReceiver);
-        connectHandler.removeCallbacks(connectRunnable);
+        if (mSubscription!=null){
+
+            mSubscription.cancel();
+            mSubscription=null;
+        }
         super.onDestroyView();
     }
 
@@ -391,6 +389,7 @@ public class MainFragment extends BaseFragment {
         menuItemAdapter.openLoadAnimation();
         mLv_tbitem.setAdapter(menuItemAdapter);
 //        menuItemAdapter.getViewByPosition(mLv_tbitem, 0, R.id.tv).setBackgroundColor(Color.DKGRAY);
+
         menuItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -404,7 +403,10 @@ public class MainFragment extends BaseFragment {
                 view.setBackgroundColor(Color.DKGRAY);
                 mSelePos = position;
                 ArrayList<Fragment> fragmentArrayList = menus.get(mPostion).getFragments();
-                getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, fragmentArrayList.get(position)).commit();
+                if (fragmentArrayList.get(position)!=null){
+
+                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, fragmentArrayList.get(position)).commit();
+                }
 
 
             }
@@ -547,14 +549,32 @@ public class MainFragment extends BaseFragment {
 
 
 //        //定时检测重新登录
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                reLogin();
-            }
-        });
+        Flowable.interval(5, 10, TimeUnit.SECONDS)
+                .onBackpressureDrop()
+                .subscribe(new Subscriber<Long>() {
 
-        connectHandler.postDelayed(connectRunnable, 150);
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        mSubscription = s;
+                        s.request(Long.MAX_VALUE);
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        reLogin();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
     }
 
@@ -980,18 +1000,7 @@ public class MainFragment extends BaseFragment {
 
                                 }
 
-                                DbCookieStore instance = DbCookieStore.INSTANCE;
-                                List<HttpCookie> cookies = instance.getCookies();
-                                for (int i = 0; i < cookies.size(); i++) {
-                                    HttpCookie cookie = cookies.get(i);
-                                    if ("JSESSIONID".equals(cookie.getName())) {
-                                        DefaultContants.ISHTTPLOGIN = true;
-                                        DefaultContants.JSESSIONID = cookie.getValue();
-                                        DefaultContants.DOMAIN = cookie.getDomain();
-                                        DefaultContants.PATH = cookie.getPath();
-//                                                    DefaultContants.currentUser = new User();
-                                    }
-                                }
+                                Utils.getCookies2DB();
 
                                 //登录成功，本地数据库存入数据或更新数据
                                 if (DefaultContants.CURRENTUSER != null) {

@@ -98,6 +98,7 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
     private UpcomingFragment mUpcomingFragment;
     private FrameLayout mFl_web;
     private AgentWeb mAgentWeb;
+    private View mInflate;
 
     public PatrolsToReleaseFragment() {
         // Required empty public constructor
@@ -123,7 +124,11 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_patrols_to_release, container, false);
+        if(mInflate==null){
+            mInflate = inflater.inflate(R.layout.fragment_patrols_to_release, container, false);
+
+        }
+        return mInflate;
     }
 
     @Override
