@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -24,42 +23,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hhl.library.FlowTagLayout;
 import com.hhl.library.OnTagSelectListener;
-import com.just.library.AgentWeb;
-import com.just.library.ChromeClientCallbackManager;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogLoading;
 import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +66,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +106,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link BaseFragment} subclass.
  */
-public class MissionRecordFragment extends BaseFragment {
+public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLocationChangeListener {
     private MyCallBack mMyCallBack;
     private static final int PHOTO_FROM_CAMERA = 100;
     private static final int PHOTO_FROM_GALLERY = 101;
@@ -130,10 +120,8 @@ public class MissionRecordFragment extends BaseFragment {
     private MissionLog log;
     private PicSimpleAdapter picadapter;
     private VideoSimpleAdapter videoadapter;
-    private Handler handler = new Handler();
     private File picStorageDir = new File(Environment.getExternalStorageDirectory(), "oking/mission_pic");
     private File videoStorageDir = new File(Environment.getExternalStorageDirectory(), "oking/mission_video");
-    private RelativeLayout mRl_web;
     private MapView mapView;
     private boolean isArcgis = false;
     private List<String> partList = new ArrayList<String>();
@@ -153,14 +141,6 @@ public class MissionRecordFragment extends BaseFragment {
     private Button editEquipmentBtn;
     private MyFlowTagLayout partFlowTagLayout;
     private TagAdapter partTagAdapter;
-    private AgentWeb mAgentWeb;
-    private Runnable updateLocationRunnable = new Runnable() {
-        @Override
-        public void run() {
-            setMapLocation();
-            handler.postDelayed(this, 60000);
-        }
-    };
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -174,6 +154,9 @@ public class MissionRecordFragment extends BaseFragment {
                         videoadapter.notifyDataSetChanged();
                     }
                     break;
+
+                default:
+                    break;
             }
         }
     };
@@ -185,6 +168,10 @@ public class MissionRecordFragment extends BaseFragment {
     private int mSeleMattersPos;
     private Switch mSw;
     private boolean mCanSaveComplete;
+    private Bundle mSavedInstanceState;
+    private AMap mAMap;
+    private UiSettings mUiSettings;
+    private MyLocationStyle myLocationStyle;
 
     public MissionRecordFragment() {
         // Required empty public constructor
@@ -194,34 +181,8 @@ public class MissionRecordFragment extends BaseFragment {
     public View createView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_MISSIONLOG_UI_LIST));
         final View rootView = inflater.inflate(R.layout.fragment_mission_record2, container, false);
-
+        mSavedInstanceState = savedInstanceState;
         mSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        mapView = (MapView) rootView.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-
-
-        MyApp.getGlobalThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet("http://10.44.3.168:8399/arcgis/rest/services");
-                try {
-                    HttpResponse httpResponse = client.execute(httpGet);
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mapView.getMap().setMapType(AMap.MAP_TYPE_NORMAL);
-                                mapView.setVisibility(View.GONE);
-                                isArcgis = true;
-                            }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         return rootView;
     }
@@ -229,10 +190,6 @@ public class MissionRecordFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         MyApp.getApplictaion().unregisterReceiver(mReceiver);
-        if (mAgentWeb != null) {
-
-            mAgentWeb.getWebLifeCycle().onDestroy();
-        }
         mapView.onDestroy();
         super.onDestroyView();
     }
@@ -257,7 +214,19 @@ public class MissionRecordFragment extends BaseFragment {
 
     @Override
     public void initView(View rootView) {
+        mapView = (MapView) rootView.findViewById(R.id.mapView);
+        mapView.onCreate(mSavedInstanceState);
         ImageButton backBtn = rootView.findViewById(R.id.back_button);
+        mAMap = mapView.getMap();
+        mUiSettings = mAMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(false);
+//        mAMap.setMapType(AMap.MAP_TYPE_NIGHT);
+        mAMap.setMapType(AMap.MAP_TYPE_NORMAL);// MAP_TYPE_SATELLITE卫星地图模式
+        mAMap.setMinZoomLevel(10);
+        mAMap.setMaxZoomLevel(20);
+        setUpMap();
+        mAMap.setOnMyLocationChangeListener(this);
+
         mSw = rootView.findViewById(R.id.sw);
         mTv_tasktype = (TextView) rootView.findViewById(R.id.tv_tasktype);
         if (mission != null) {
@@ -356,7 +325,6 @@ public class MissionRecordFragment extends BaseFragment {
         summaryEditText = (EditText) rootView.findViewById(R.id.summary_editText);
         area_TextView = (TextView) rootView.findViewById(R.id.area_TextView);
         leaderSummaryEditText = (EditText) rootView.findViewById(R.id.leader_summary_editText);
-        mRl_web = (RelativeLayout) rootView.findViewById(R.id.rl_web);
 
         type_nature = (TextView) rootView.findViewById(R.id.type_nature);
         member_textView = (TextView) rootView.findViewById(R.id.member_textView);
@@ -868,15 +836,24 @@ public class MissionRecordFragment extends BaseFragment {
 
     }
 
+    private void setUpMap() {
+        // 如果要设置定位的默认状态，可以在此处进行设置
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.gps_point));
+        // 定位的类型为跟随模式LOCATION_TYPE_FOLLOW;  定位的类型为只定位模式模式LOCATION_TYPE_SHOW
+        mAMap.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER));
+        mAMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+        mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+//        mAMap.setMapCustomEnable(true); //开启自定义样式
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        handler.post(updateLocationRunnable);//启动更新定位线程
     }
 
     @Override
     public void onStop() {
-        handler.removeCallbacks(updateLocationRunnable);
         super.onStop();
     }
 
@@ -955,6 +932,8 @@ public class MissionRecordFragment extends BaseFragment {
                     localSaveRecord();
                     break;
 
+                default:
+                    break;
             }
         }
 
@@ -963,52 +942,52 @@ public class MissionRecordFragment extends BaseFragment {
 
     private void setMapLocation() {
 
-        Point p = FileUtil.getLastLocationFromFile(System.currentTimeMillis(), 30 * 60 * 1000);
+//        Point p = FileUtil.getLastLocationFromFile(System.currentTimeMillis(), 30 * 60 * 1000);
 
 
-        if (p != null) {
-            String urlMap = DefaultContants.SERVER_HOST + "/arcgis/xcdgl/xclog.jsp?x=" + p.getLongitude() + "&y=" + p.getLatitude() + "&level=3";
-            DefaultContants.syncCookie(urlMap);
-            mAgentWeb = AgentWeb.with(this)//传入Activity or Fragment
-                    .setAgentWebParent(mRl_web, new LinearLayout.LayoutParams(-1, -1))//传入AgentWeb 的父控件 ，如果父控件为 RelativeLayout ， 那么第二参数需要传入 RelativeLayout.LayoutParams ,第一个参数和第二个参数应该对应。
-                    .useDefaultIndicator()//
-                    .setReceivedTitleCallback(new ChromeClientCallbackManager.ReceivedTitleCallback() {
-                        @Override
-                        public void onReceivedTitle(WebView webView, String s) {
+//        if (p != null) {
+//            String urlMap = DefaultContants.SERVER_HOST + "/arcgis/xcdgl/xclog.jsp?x=" + p.getLongitude() + "&y=" + p.getLatitude() + "&level=3";
+//            DefaultContants.syncCookie(urlMap);
+//            mAgentWeb = AgentWeb.with(this)//传入Activity or Fragment
+//                    .setAgentWebParent(mRl_web, new LinearLayout.LayoutParams(-1, -1))//传入AgentWeb 的父控件 ，如果父控件为 RelativeLayout ， 那么第二参数需要传入 RelativeLayout.LayoutParams ,第一个参数和第二个参数应该对应。
+//                    .useDefaultIndicator()//
+//                    .setReceivedTitleCallback(new ChromeClientCallbackManager.ReceivedTitleCallback() {
+//                        @Override
+//                        public void onReceivedTitle(WebView webView, String s) {
+//
+//                        }
+//                    }) //设置 Web 页面的 title 回调
+//                    .createAgentWeb()//
+//                    .ready()
+//                    .go(urlMap);
+//
+//
+//        }
 
-                        }
-                    }) //设置 Web 页面的 title 回调
-                    .createAgentWeb()//
-                    .ready()
-                    .go(urlMap);
-
-
-        }
-
-        if ((isArcgis && DefaultContants.ISHTTPLOGIN) || mapView == null) {
-            return;
-        }
-
-        mapView.setVisibility(View.VISIBLE);
-        mRl_web.setVisibility(View.GONE);
-        if (p != null) {
-            CoordinateConverter converter = new CoordinateConverter(getContext());
-            converter.from(CoordinateConverter.CoordType.GPS);
-            LatLng sourceLatLng = new LatLng(p.getLatitude(), p.getLongitude());
-            converter.coord(sourceLatLng);
-            LatLng desLatLng = converter.convert();
-            mapView.getMap().moveCamera(CameraUpdateFactory.newLatLng(desLatLng));
-
-            mapView.getMap().clear();
-
-            Marker marker = mapView.getMap().addMarker(new MarkerOptions()
-                    .position(desLatLng)
-                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                            .decodeResource(getResources(), R.drawable.location)))
-                    .draggable(true));
-        } else {
-            mapView.getMap().clear();
-        }
+//        if ((isArcgis && DefaultContants.ISHTTPLOGIN) || mapView == null) {
+//            return;
+//        }
+//
+//        mapView.setVisibility(View.VISIBLE);
+////        mRl_web.setVisibility(View.GONE);
+//        if (p != null) {
+//            CoordinateConverter converter = new CoordinateConverter(getContext());
+//            converter.from(CoordinateConverter.CoordType.GPS);
+//            LatLng sourceLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+//            converter.coord(sourceLatLng);
+//            LatLng desLatLng = converter.convert();
+//            mapView.getMap().moveCamera(CameraUpdateFactory.newLatLng(desLatLng));
+//
+//            mapView.getMap().clear();
+//
+//            Marker marker = mapView.getMap().addMarker(new MarkerOptions()
+//                    .position(desLatLng)
+//                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+//                            .decodeResource(getResources(), R.drawable.location)))
+//                    .draggable(true));
+//        } else {
+//            mapView.getMap().clear();
+//        }
     }
 
     //检查是否所有图片已上传
@@ -1682,7 +1661,7 @@ public class MissionRecordFragment extends BaseFragment {
         }
         params.task_id = mission.getId();
         params.name = DefaultContants.CURRENTUSER.getUserId();
-        params.time = mSdf.format(new Date());
+        params.time = mSdf.format(System.currentTimeMillis());
         params.plan = mSelePlanPos;
         params.item = mSeleMattersPos;
         params.type = mission.getTask_type();
@@ -1989,6 +1968,43 @@ public class MissionRecordFragment extends BaseFragment {
         }
     }
 
+    private LatLng mLng;
 
+    @Override
+    public void onMyLocationChange(Location location) {
+
+        if (location != null) {
+            mLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Log.e("amap", "onMyLocationChange 定位成功， lat: " + location.getLatitude() + " lon: " + location.getLongitude());
+            Bundle bundle = location.getExtras();
+            if (bundle != null) {
+                int errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);
+                String errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
+                // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
+                int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
+                /*
+                errorCode
+                errorInfo
+                locationType
+                */
+
+                changeCamera(
+                        CameraUpdateFactory.newCameraPosition(new CameraPosition(
+                                mLng, 18, 30, 30)));
+                Log.e("amap", "定位信息， code: " + errorCode + " errorInfo: " + errorInfo + " locationType: " + locationType);
+            } else {
+                Log.e("amap", "定位信息， bundle is null ");
+
+            }
+
+        } else {
+            Log.e("amap", "定位失败");
+        }
+
+    }
+
+    private void changeCamera(CameraUpdate cameraUpdate) {
+        mAMap.moveCamera(cameraUpdate);
+    }
 }
 

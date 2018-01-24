@@ -1,5 +1,6 @@
 package com.yinghe.whiteboardlib.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,10 +19,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -28,19 +33,23 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yinghe.whiteboardlib.MultiImageSelector;
 import com.yinghe.whiteboardlib.R;
 import com.yinghe.whiteboardlib.Utils.BitmapUtils;
+import com.yinghe.whiteboardlib.Utils.DensityUtil;
 import com.yinghe.whiteboardlib.Utils.ScreenUtils;
 import com.yinghe.whiteboardlib.Utils.TimeUtils;
 import com.yinghe.whiteboardlib.adapter.SketchDataGridAdapter;
@@ -68,6 +77,8 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
     private GridView materialGv;
     private int mHeightPixels;
     private int mWidthPixels;
+    private StrokeRecord mStrokeRecord;
+    private EditText mEt;
 
     public interface SendBtnCallback {
         void onSendBtnClick(File filePath);
@@ -369,11 +380,13 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
     private void initPopupWindows() {
         initStrokePop();
         initEraserPop();
-        initTextPop();
+//        initTextPop();
     }
 
 
     private void initTextPop() {
+
+
         textPopupWindow = new PopupWindow(activity);
         textPopupWindow.setContentView(popupTextLayout);
         textPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);//宽度200dp
@@ -527,10 +540,10 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         mHeightPixels = getResources().getDisplayMetrics().heightPixels;
         mWidthPixels = getResources().getDisplayMetrics().widthPixels;
         sketchGV = (GridView) view.findViewById(R.id.sketch_data_gv);
-
+        mEt = (EditText) view.findViewById(R.id.et);
         //画板整体布局
         mSketchView = (SketchView) view.findViewById(R.id.sketch_view);
-
+        mSketchView.mEditText = mEt;
         controlLayout = view.findViewById(R.id.controlLayout);
 
         btn_add = (ImageView) view.findViewById(R.id.btn_add);
@@ -551,6 +564,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
             btn_send_space.setVisibility(View.VISIBLE);
         }
 
+
         //设置点击监听
         mSketchView.setOnDrawChangedListener(this);//设置撤销动作监听器
         btn_add.setOnClickListener(this);
@@ -564,14 +578,16 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         btn_background.setOnClickListener(this);
         btn_drag.setOnClickListener(this);
         btn_send.setOnClickListener(this);
-        mSketchView.setTextWindowCallback(new SketchView.TextWindowCallback() {
-            @Override
-            public void onText(View anchor, StrokeRecord record) {
-                textOffX = record.textOffX;
-                textOffY = record.textOffY;
-                showTextPopupWindow(anchor, record);
-            }
-        });
+//        mSketchView.setTextWindowCallback(new SketchView.TextWindowCallback() {
+//            @Override
+//            public void onText(View anchor, StrokeRecord record) {
+//                System.out.println("添加文字");
+//                mStrokeRecord = record;
+//                textOffX = record.textOffX;
+//                textOffY = record.textOffY;
+////                showTextPopupWindow(anchor, record);
+//            }
+//        });
 
         // popupWindow布局
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Activity
@@ -583,6 +599,19 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         strokeAlphaImage = (ImageView) popupStrokeLayout.findViewById(R.id.stroke_alpha_circle);
         strokeSeekBar = (SeekBar) (popupStrokeLayout.findViewById(R.id.stroke_seekbar));
         strokeAlphaSeekBar = (SeekBar) (popupStrokeLayout.findViewById(R.id.stroke_alpha_seekbar));
+        Switch sw = (Switch) popupStrokeLayout.findViewById(R.id.sw);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    PathEffect effects = new DashPathEffect(new float[]{8, 8, 8, 8}, 8);
+                    mSketchView.strokePaint.setPathEffect(effects);
+
+                } else {
+                    mSketchView.strokePaint.setPathEffect(null);
+                }
+            }
+        });
         //画笔颜色
         strokeTypeRG = (RadioGroup) popupStrokeLayout.findViewById(R.id.stroke_type_radio_group);
         strokeColorRG = (RadioGroup) popupStrokeLayout.findViewById(R.id.stroke_color_radio_group);
@@ -596,7 +625,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         strokeET = (EditText) popupTextLayout.findViewById(R.id.text_pupwindow_et);
         getSketchSize();//计算选择图片弹窗的高宽
 
-        final String[] maters = {"m1.png", "m2.png","m3.png","m4.png","m5.png","m6.png","m7.png"};
+        final String[] maters = {"m1.png", "m2.png", "m3.png", "m4.png", "m5.png", "m6.png", "m7.png"};
         materialGv.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
@@ -844,6 +873,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         }
     }
 
+
     private void showParamsPopupWindow(View anchor, int drawMode) {
         if (BitmapUtils.isLandScreen(activity)) {
             if (drawMode == STROKE_TYPE_DRAW) {
@@ -862,6 +892,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         }
     }
 
+    @SuppressLint("WrongConstant")
     private void showTextPopupWindow(View anchor, final StrokeRecord record) {
         strokeET.requestFocus();
         textPopupWindow.showAsDropDown(anchor, record.textOffX, record.textOffY - mSketchView.getHeight());
@@ -874,7 +905,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
             public void onDismiss() {
                 if (!strokeET.getText().toString().equals("")) {
                     record.text = strokeET.getText().toString();
-                    record.textPaint.setTextSize(strokeET.getTextSize());
+                    record.textPaint.setTextSize(DensityUtil.dip2px(getContext(), 10));
                     record.textWidth = strokeET.getMaxWidth();
                     mSketchView.addStrokeRecord(record);
                 }

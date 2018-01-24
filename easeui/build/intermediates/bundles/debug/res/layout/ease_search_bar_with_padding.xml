@@ -2,17 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/padding_search_bar"
-    android:paddingRight="27dp"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp"
+    android:paddingTop="14px"
+    android:paddingBottom="14px"
     android:background="#ededed"
      >
 
     <EditText
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
+        android:paddingTop="10px"
+        android:paddingBottom="10px"
+        android:paddingLeft="10px"
         android:id="@+id/query"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,8 +20,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:hint="@string/search"
-         android:textSize="16sp"
-         android:layout_marginLeft="4dp"
+         android:textSize="36px"
         android:singleLine="true"
          />
 
@@ -33,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="3dp"
+        android:layout_marginRight="6px"
         android:background="@android:color/transparent"
-        android:padding="6dp"
+        android:padding="12px"
         android:src="@drawable/ease_search_clear"
         android:visibility="invisible" />
 

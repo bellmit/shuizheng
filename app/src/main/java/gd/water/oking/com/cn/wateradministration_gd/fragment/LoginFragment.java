@@ -22,9 +22,6 @@ import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.google.gson.reflect.TypeToken;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 import com.vondear.rxtools.RxDeviceUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogLoading;
@@ -265,7 +262,6 @@ public class LoginFragment extends BaseFragment {
                         if (isOk) {
 
 
-                            loginChatServer();
 
                             MyApp.getGlobalThreadPool().execute(new Runnable() {
                                 @Override
@@ -612,43 +608,5 @@ public class LoginFragment extends BaseFragment {
         });
     }
 
-    private void loginChatServer() {
-        MyApp.getGlobalThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().createAccount(mName, "888888");
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                    if (e.getErrorCode() == 203) {
-
-                        EMClient.getInstance().login(mName, "888888", new EMCallBack() {//回调
-                            @Override
-                            public void onSuccess() {
-                                System.out.println(" 环信登录成功");
-                                EMClient.getInstance().groupManager().loadAllGroups();
-                                EMClient.getInstance().chatManager().loadAllConversations();
-
-                            }
-
-                            @Override
-                            public void onProgress(int progress, String status) {
-
-                            }
-
-                            @Override
-                            public void onError(int code, String message) {
-                                System.out.println("环信登录失败" + code + message);
-
-                            }
-
-                        });
-                    }
-                }
-            }
-        });
-
-
-    }
 
 }

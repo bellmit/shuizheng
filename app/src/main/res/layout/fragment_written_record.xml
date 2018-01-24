@@ -50,6 +50,7 @@
                 android:textColorHint="@color/colorMain4">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_content"
+                    android:maxLength="30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -183,6 +184,7 @@
             android:id="@+id/et_addrdetail"
             android:layout_width="match_parent"
             android:layout_height="115px"
+            android:maxLength="20"
             android:layout_below="@id/ll_02"
             android:layout_marginRight="40px"
             android:layout_marginTop="6px"
@@ -209,6 +211,7 @@
                     android:id="@+id/tet_ask_person"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -225,6 +228,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
+                    android:maxLength="15"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -238,6 +242,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_recorder"
                     android:layout_width="match_parent"
+                    android:maxLength="10"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
@@ -253,6 +258,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_recorder_number"
                     android:layout_width="match_parent"
+                    android:maxLength="15"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
@@ -321,6 +327,7 @@
                     android:id="@+id/tet_asking_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="5"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -353,6 +360,7 @@
                 android:textColorHint="@color/colorMain4">
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
+                    android:maxLength="10"
                     android:id="@+id/tet_asking_position"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -370,6 +378,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_asking_work_units"
                     android:layout_width="match_parent"
+                    android:maxLength="15"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
@@ -450,6 +459,7 @@
                   android:layout_marginTop="6px"
                   android:layout_toRightOf="@id/tv_tag17"
                   android:paddingTop="15px"
+                  android:maxLength="10"
                   android:textColor="@color/white"
                   android:textSize="32px"/>
         <TextView android:id="@+id/tv_tag18"
@@ -472,6 +482,7 @@
                   android:layout_marginTop="6px"
                   android:layout_toRightOf="@id/tv_tag18"
                   android:paddingTop="15px"
+                  android:maxLength="20"
                   android:textColor="@color/white"
                   android:textSize="32px"/>
 
@@ -487,6 +498,7 @@
         />
         <EditText android:id="@+id/et_enforcement_name"
                   android:layout_width="100px"
+                  android:maxLength="10"
                   android:layout_height="115px"
                   android:layout_below="@id/et_addrdetail2"
                   android:layout_marginTop="6px"

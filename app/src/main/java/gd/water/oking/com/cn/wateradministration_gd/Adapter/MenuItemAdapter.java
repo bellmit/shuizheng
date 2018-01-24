@@ -25,6 +25,6 @@ public class MenuItemAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
         AutoUtils.autoSize(helper.getConvertView());
         helper.getView(R.id.tv).setBackgroundColor(Color.TRANSPARENT);
         helper.setText(R.id.tv, item);
-
     }
+
 }

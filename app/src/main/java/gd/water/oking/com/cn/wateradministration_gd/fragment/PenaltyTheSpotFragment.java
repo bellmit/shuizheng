@@ -190,6 +190,40 @@ public class PenaltyTheSpotFragment extends BaseFragment implements View.OnClick
     }
 
     private void initData() {
+
+        Utils.setEditTextInhibitInputSpace(mTet_parties_concerned_natural);
+        Utils.setEditTextInhibitInputSpeChat(mTet_parties_concerned_natural);
+
+        Utils.setEditTextInhibitInputSpace(mTet_address_natural);
+        Utils.setEditTextInhibitInputSpeChat(mTet_address_natural);
+
+        Utils.setEditTextInhibitInputSpace(mTet_parties_concerned_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_parties_concerned_other);
+
+          Utils.setEditTextInhibitInputSpace(mTet_position_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_position_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_representative_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_representative_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_address_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_address_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_punishment_place_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_punishment_place_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_enforcement1);
+        Utils.setEditTextInhibitInputSpeChat(mTet_enforcement1);
+
+        Utils.setEditTextInhibitInputSpace(mTet_enforcement2);
+        Utils.setEditTextInhibitInputSpeChat(mTet_enforcement2);
+
+        Utils.setEditTextInhibitInputSpace(mTet_addr);
+        Utils.setEditTextInhibitInputSpeChat(mTet_addr);
+
+        Utils.setEditTextInhibitInputSpace(mTet_sign_people);
+        Utils.setEditTextInhibitInputSpeChat(mTet_sign_people);
+
         Calendar c = Calendar.getInstance();//
         // 获取当前年份
         mMYear = c.get(Calendar.YEAR);
@@ -236,7 +270,7 @@ public class PenaltyTheSpotFragment extends BaseFragment implements View.OnClick
             @Override
             public void onError(OCRError error) {
                 error.printStackTrace();
-                RxToast.error(MyApp.getApplictaion(), "licence方式获取token失败" + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                RxToast.error(MyApp.getApplictaion(), "licence方式获取token失败" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, MyApp.getApplictaion());
     }

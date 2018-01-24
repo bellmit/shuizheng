@@ -104,12 +104,12 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
     private EditText mEt_enforcement_name;
     private ArrayList<AnswBean> mAnswBeans;
     private Gson mGson;
-    private int[]countyIds = {R.array.lv_county_01,R.array.lv_county_02,R.array.lv_county_03
-            ,R.array.lv_county_04,R.array.lv_county_05,0,R.array.lv_county_07
-            ,R.array.lv_county_08,R.array.lv_county_09,R.array.lv_county_10
-            ,R.array.lv_county_11,R.array.lv_county_12,R.array.lv_county_13
-            ,R.array.lv_county_14,R.array.lv_county_15,0,0,R.array.lv_county_18
-            ,R.array.lv_county_19,R.array.lv_county_20,R.array.lv_county_21};
+    private int[] countyIds = {R.array.lv_county_01, R.array.lv_county_02, R.array.lv_county_03
+            , R.array.lv_county_04, R.array.lv_county_05, 0, R.array.lv_county_07
+            , R.array.lv_county_08, R.array.lv_county_09, R.array.lv_county_10
+            , R.array.lv_county_11, R.array.lv_county_12, R.array.lv_county_13
+            , R.array.lv_county_14, R.array.lv_county_15, 0, 0, R.array.lv_county_18
+            , R.array.lv_county_19, R.array.lv_county_20, R.array.lv_county_21};
     private RxDialogLoading mRxDialogLoading;
     private EditText mEt_town;
 
@@ -213,9 +213,9 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
                 mProblemContent = LawDao.getProblemContent(mCasetypeName);
                 if (mAskAdapter == null) {
 
-                    mAskAdapter = new AskAdapter(getActivity(),mProblemContent);
+                    mAskAdapter = new AskAdapter(getActivity(), mProblemContent);
                     mLv_ask.setAdapter(mAskAdapter);
-                }else {
+                } else {
 
                     mAskAdapter.setDatas(mProblemContent);
 
@@ -229,9 +229,8 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
         });
 
 
-        citySpinnerData(mSp_city,mSp_county);
-        citySpinnerData(mSp_city2,mSp_county2);
-
+        citySpinnerData(mSp_city, mSp_county);
+        citySpinnerData(mSp_city2, mSp_county2);
 
 
     }
@@ -244,11 +243,11 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 int countyId = countyIds[position];
-                if (countyId==0){
-                    String[]countyArray = {"无"};
+                if (countyId == 0) {
+                    String[] countyArray = {"无"};
                     SpinnerArrayAdapter countyAdapter = new SpinnerArrayAdapter(countyArray);
                     countySpinner.setAdapter(countyAdapter);
-                }else {
+                } else {
 
                     String[] countyArray = getResources().getStringArray(countyIds[position]);
                     SpinnerArrayAdapter countyAdapter = new SpinnerArrayAdapter(countyArray);
@@ -280,9 +279,13 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
                 }
                 mBt_select_endtime.setText("选择");
                 mBeginDialogAll.show(getFragmentManager(), "beginTime");
+
                 break;
             case R.id.bt_select_endtime:
-                initEndWheelYearMonthDayDialog();
+                if (mEndDialogAll==null){
+
+                    initEndWheelYearMonthDayDialog();
+                }
                 mEndDialogAll.show(getFragmentManager(), "endTime");
                 break;
             default:
@@ -316,197 +319,194 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
         String addrdetail2 = mEt_addrdetail2.getText().toString().trim();
         String enforcementName = mEt_enforcement_name.getText().toString().trim();
 
-
-        if (mAnswBeans==null){
-
+        if (mAnswBeans == null) {
             mAnswBeans = new ArrayList<>();
         }
         for (int i = 0; i < mProblemContent.size(); i++) {
-            RelativeLayout layout = (RelativeLayout)mLv_ask.getChildAt(i);// 获得子item的layout
+            RelativeLayout layout = (RelativeLayout) mLv_ask.getChildAt(i);// 获得子item的layout
             TextView tv_ask = (TextView) layout.findViewById(R.id.tv_ask_content);
             EditText et_answer = (EditText) layout.findViewById(R.id.et_answer_content);// 从layout中获得控件,根据其id
             String ask = tv_ask.getText().toString().trim();
             String answ = et_answer.getText().toString().trim();
-            if (TextUtils.isEmpty(answ)){
-                RxToast.warning(MyApp.getApplictaion(),"问题笔录不能有空",Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(answ)) {
+                RxToast.warning(MyApp.getApplictaion(), "问题笔录不能有空", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            AnswBean answBean = new AnswBean(ask,answ,i);
+            AnswBean answBean = new AnswBean(ask, answ, i);
             mAnswBeans.add(answBean);
 
         }
 
-        if(TextUtils.isEmpty(askContent) ){
+        if (TextUtils.isEmpty(askContent)) {
             RxToast.warning("询问内容不能为空");
             return;
         }
 
 
-
-        if(TextUtils.isEmpty(addrdetail)){
+        if (TextUtils.isEmpty(addrdetail)) {
             RxToast.warning("询问地点不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askPerson)){
+        if (TextUtils.isEmpty(askPerson)) {
             RxToast.warning("询问人不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askEnforcementNumber)){
+        if (TextUtils.isEmpty(askEnforcementNumber)) {
             RxToast.warning("询问人执法编号不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(recorder)){
+        if (TextUtils.isEmpty(recorder)) {
             RxToast.warning("记录人不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(recorderNumber)){
+        if (TextUtils.isEmpty(recorderNumber)) {
             RxToast.warning("记录人执法编号不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askingPeople)){
+        if (TextUtils.isEmpty(askingPeople)) {
             RxToast.warning("被询问人姓名不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askingIdcard)){
+        if (TextUtils.isEmpty(askingIdcard)) {
             RxToast.warning("被询问人身份证号码不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askingPosition)){
+        if (TextUtils.isEmpty(askingPosition)) {
             RxToast.warning("被询问人职务不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(askingWorkUnits)){
+        if (TextUtils.isEmpty(askingWorkUnits)) {
             RxToast.warning("被询问人工作单位不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(town)){
+        if (TextUtils.isEmpty(town)) {
             RxToast.warning("被询问人住址不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(addrdetail2)){
+        if (TextUtils.isEmpty(addrdetail2)) {
             RxToast.warning("被询问人住址不能为空");
             return;
         }
 
-        if(TextUtils.isEmpty(enforcementName)){
+        if (TextUtils.isEmpty(enforcementName)) {
             RxToast.warning("执法人员姓名不能为空");
             return;
         }
 
         String address1;
-        if(county.equals("无")){
-            address1=  "广东省" + city + "市"  + addrdetail;
-        }else {
-            address1=  "广东省" + city + "市" + county + "县" + addrdetail;
+        if (county.equals("无")) {
+            address1 = "广东省" + city + "市" + addrdetail;
+        } else {
+            address1 = "广东省" + city + "市" + county + "县" + addrdetail;
 
         }
         String address2;
-        if(county2.equals("无")){
-            address2=  "广东省" + city2 + "市"  + town+addrdetail2;
-        }else {
-            address2=  "广东省" + city2 + "市" + county2 + "县" +town+"镇"+addrdetail2;
+        if (county2.equals("无")) {
+            address2 = "广东省" + city2 + "市" + town + addrdetail2;
+        } else {
+            address2 = "广东省" + city2 + "市" + county2 + "县" + town + "镇" + addrdetail2;
 
         }
 
 
-            if (mRxDialogLoading == null) {
+        if (mRxDialogLoading == null) {
 
-                mRxDialogLoading = new RxDialogLoading(getActivity(), false, new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        dialogInterface.cancel();
-                    }
-                });
-                mRxDialogLoading.setLoadingText("提交数据中...");
-            }
-            mRxDialogLoading.show();
-            RequestParams params = new RequestParams(DefaultContants.SERVER_HOST + "/dcblxx/addDcblForAN");
-            params.addBodyParameter("ajlx", mCasetypeName);
-            params.addBodyParameter("xwnr", askContent);
-            params.addBodyParameter("blbegindate", begintime);
-            params.addBodyParameter("blenddate", endtime);
-            params.addBodyParameter("xwdd", address1);
-            params.addBodyParameter("xwrname", askPerson);
-            params.addBodyParameter("xwrcode", askEnforcementNumber);
-            params.addBodyParameter("jlrname", recorder);
-            params.addBodyParameter("jlrcode", recorderNumber);
-            params.addBodyParameter("bxwrtype", mBxwrtype);
-            params.addBodyParameter("bxwrname", askingPeople);
-            params.addBodyParameter("bxwridcode", askingIdcard);
-            params.addBodyParameter("bxwrposition", askingPosition);
-            params.addBodyParameter("bxwrdept", askingPosition);
-            params.addBodyParameter("bxwraddr", address2);
-            params.addBodyParameter("zfryintroduction", "我是"+enforcementName+"执法人员，现在我需要问一些问题，你要如实回答。");
-            params.addBodyParameter("jllrrid", DefaultContants.CURRENTUSER.getUserId());
-            if (mGson ==null){
-                mGson = new Gson();
-
-            }
-            params.addBodyParameter("dcblnr", mGson.toJson(mAnswBeans));
-            x.http().post(params, new Callback.CommonCallback<String>() {
-
+            mRxDialogLoading = new RxDialogLoading(getActivity(), false, new DialogInterface.OnCancelListener() {
                 @Override
-                public void onSuccess(String result) {
-                    mRxDialogLoading.cancel();
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        boolean success = jsonObject.getBoolean("success");
-                        if (success){
-                            RxToast.success(MyApp.getApplictaion(),"数据提交成功",Toast.LENGTH_SHORT).show();
-                            mTet_content.setText("");
-                            mEt_addrdetail.setText("");
-                            mTet_ask_person.setText("");
-                            mTet_ask_enforcement_number.setText("");
-                            mTet_recorder.setText("");
-                            mTet_recorder_number.setText("");
-                            mTet_asking_people.setText("");
-                            mTet_asking_idcard.setText("");
-                            mTet_asking_position.setText("");
-                            mTet_asking_work_units.setText("");
-                            mEt_addrdetail2.setText("");
-                            mEt_enforcement_name.setText("");
-
-                            for (ProblemBean problemBean:mProblemContent){
-                                problemBean.setContent("");
-                            }
-
-                            mAskAdapter.notifyDataSetChanged();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        RxToast.error(MyApp.getApplictaion(),"数据提交失败,服务器错误",Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    mRxDialogLoading.cancel();
-                    RxToast.error(MyApp.getApplictaion(),"数据提交失败",Toast.LENGTH_SHORT).show();
-
-                }
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-
-                }
-
-                @Override
-                public void onFinished() {
-
+                public void onCancel(DialogInterface dialogInterface) {
+                    dialogInterface.cancel();
                 }
             });
+            mRxDialogLoading.setLoadingText("提交数据中...");
+        }
+        mRxDialogLoading.show();
+        RequestParams params = new RequestParams(DefaultContants.SERVER_HOST + "/dcblxx/addDcblForAN");
+        params.addBodyParameter("ajlx", mCasetypeName);
+        params.addBodyParameter("xwnr", askContent);
+        params.addBodyParameter("blbegindate", begintime);
+        params.addBodyParameter("blenddate", endtime);
+        params.addBodyParameter("xwdd", address1);
+        params.addBodyParameter("xwrname", askPerson);
+        params.addBodyParameter("xwrcode", askEnforcementNumber);
+        params.addBodyParameter("jlrname", recorder);
+        params.addBodyParameter("jlrcode", recorderNumber);
+        params.addBodyParameter("bxwrtype", mBxwrtype);
+        params.addBodyParameter("bxwrname", askingPeople);
+        params.addBodyParameter("bxwridcode", askingIdcard);
+        params.addBodyParameter("bxwrposition", askingPosition);
+        params.addBodyParameter("bxwrdept", askingPosition);
+        params.addBodyParameter("bxwraddr", address2);
+        params.addBodyParameter("zfryintroduction", "我是" + enforcementName + "执法人员，现在我需要问一些问题，你要如实回答。");
+        params.addBodyParameter("jllrrid", DefaultContants.CURRENTUSER.getUserId());
+        if (mGson == null) {
+            mGson = new Gson();
+
+        }
+        params.addBodyParameter("dcblnr", mGson.toJson(mAnswBeans));
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                mRxDialogLoading.cancel();
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    boolean success = jsonObject.getBoolean("success");
+                    if (success) {
+                        RxToast.success(MyApp.getApplictaion(), "数据提交成功", Toast.LENGTH_SHORT).show();
+                        mTet_content.setText("");
+                        mEt_addrdetail.setText("");
+                        mTet_ask_person.setText("");
+                        mTet_ask_enforcement_number.setText("");
+                        mTet_recorder.setText("");
+                        mTet_recorder_number.setText("");
+                        mTet_asking_people.setText("");
+                        mTet_asking_idcard.setText("");
+                        mTet_asking_position.setText("");
+                        mTet_asking_work_units.setText("");
+                        mEt_addrdetail2.setText("");
+                        mEt_enforcement_name.setText("");
+
+                        for (ProblemBean problemBean : mProblemContent) {
+                            problemBean.setContent("");
+                        }
+
+                        mAskAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    RxToast.error(MyApp.getApplictaion(), "数据提交失败,服务器错误", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                mRxDialogLoading.cancel();
+                RxToast.error(MyApp.getApplictaion(), "数据提交失败", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
 
     }
 

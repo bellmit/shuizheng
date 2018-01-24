@@ -28,6 +28,7 @@ public class WebViewFragment extends BaseFragment {
 
     public WebViewFragment() {
         // Required empty public constructor
+
     }
 
     @Override

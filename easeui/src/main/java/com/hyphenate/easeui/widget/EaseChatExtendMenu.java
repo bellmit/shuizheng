@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hyphenate.easeui.R;
 import com.hyphenate.util.DensityUtil;
+import com.zhy.autolayout.utils.AutoUtils;
 
 /**
  * Extend menu when user want send image, voice clip, etc
@@ -113,6 +114,7 @@ public class EaseChatExtendMenu extends GridView{
             ChatMenuItem menuItem = null;
             if(convertView == null){
                 convertView = new ChatMenuItem(context);
+                AutoUtils.auto(convertView);
             }
             menuItem = (ChatMenuItem) convertView;
             menuItem.setImage(getItem(position).image);

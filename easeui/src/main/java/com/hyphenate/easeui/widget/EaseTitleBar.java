@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.easeui.R;
+import com.zhy.autolayout.utils.AutoLayoutHelper;
 
 /**
  * title bar
@@ -23,7 +24,7 @@ public class EaseTitleBar extends RelativeLayout{
     protected ImageView rightImage;
     protected TextView titleView;
     protected RelativeLayout titleLayout;
-
+    private final AutoLayoutHelper mHelper = new AutoLayoutHelper(this);
     public EaseTitleBar(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
     }
@@ -112,5 +113,14 @@ public class EaseTitleBar extends RelativeLayout{
     
     public RelativeLayout getRightLayout(){
         return rightLayout;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!isInEditMode())
+        {
+            mHelper.adjustChildren();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

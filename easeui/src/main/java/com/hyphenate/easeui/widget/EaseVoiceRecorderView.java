@@ -19,12 +19,14 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.EaseVoiceRecorder;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayClickListener;
+import com.zhy.autolayout.utils.AutoLayoutHelper;
 
 /**
  * Voice recorder view
  *
  */
 public class EaseVoiceRecorderView extends RelativeLayout {
+    private final AutoLayoutHelper mHelper = new AutoLayoutHelper(this);
     protected Context context;
     protected LayoutInflater inflater;
     protected Drawable[] micImages;
@@ -223,5 +225,12 @@ public class EaseVoiceRecorderView extends RelativeLayout {
     public boolean isRecording() {
         return voiceRecorder.isRecording();
     }
-
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!isInEditMode())
+        {
+            mHelper.adjustChildren();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 }

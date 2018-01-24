@@ -38,6 +38,7 @@ import com.hyphenate.easeui.widget.chatrow.EaseChatRowText;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVideo;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoice;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
+import com.zhy.autolayout.utils.AutoUtils;
 
 public class EaseMessageAdapter extends BaseAdapter{
 
@@ -148,6 +149,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 	    handler.sendMessage(handler.obtainMessage(HANDLER_MESSAGE_REFRESH_LIST));
     }
 
+	@Override
 	public EMMessage getItem(int position) {
 		if (messages != null && position < messages.length) {
 			return messages[position];
@@ -155,6 +157,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 		return null;
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return position;
 	}
@@ -162,13 +165,15 @@ public class EaseMessageAdapter extends BaseAdapter{
 	/**
      * get count of messages
      */
-    public int getCount() {
+    @Override
+	public int getCount() {
         return messages == null ? 0 : messages.length;
     }
 	
 	/**
 	 * get number of message type, here 14 = (EMMessage.Type) * 2
 	 */
+	@Override
 	public int getViewTypeCount() {
 	    if(customRowProvider != null && customRowProvider.getCustomChatRowTypeCount() > 0){
 	        return customRowProvider.getCustomChatRowTypeCount() + 14;
@@ -180,6 +185,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 	/**
 	 * get type of item
 	 */
+	@Override
 	public int getItemViewType(int position) {
 		EMMessage message = getItem(position); 
 		if (message == null) {
@@ -252,11 +258,13 @@ public class EaseMessageAdapter extends BaseAdapter{
     }
     
 
+	@Override
 	@SuppressLint("NewApi")
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		EMMessage message = getItem(position);
 		if(convertView == null){
 			convertView = createChatRow(context, message, position);
+			AutoUtils.auto(convertView);
 		}
 
 		//refresh ui with messages

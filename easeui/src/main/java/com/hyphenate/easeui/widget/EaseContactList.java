@@ -1,8 +1,5 @@
 package com.hyphenate.easeui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -17,10 +14,14 @@ import android.widget.RelativeLayout;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.zhy.autolayout.utils.AutoLayoutHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EaseContactList extends RelativeLayout {
     protected static final String TAG = EaseContactList.class.getSimpleName();
-    
+    private final AutoLayoutHelper mHelper = new AutoLayoutHelper(this);
     protected Context context;
     protected ListView listView;
     protected EaseContactAdapter adapter;
@@ -125,6 +126,13 @@ public class EaseContactList extends RelativeLayout {
             sidebar.setVisibility(View.GONE);
         }
     }
-
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!isInEditMode())
+        {
+            mHelper.adjustChildren();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 
 }

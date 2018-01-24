@@ -26,7 +26,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,14 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.exceptions.HyphenateException;
 import com.vondear.rxtools.RxDeviceUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
@@ -66,7 +59,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +71,6 @@ import gd.water.oking.com.cn.wateradministration_gd.View.CustomPopWindow;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuBean;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuBund;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuGsonBean;
-import gd.water.oking.com.cn.wateradministration_gd.db.LawDao;
 import gd.water.oking.com.cn.wateradministration_gd.http.CheckConnectParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.LoginParams;
@@ -105,7 +96,7 @@ public class MainFragment extends BaseFragment {
     private ImageView user_imageView;
     private TextView user_textView, signal_tv, gpsStar_tv;
     private UpcomingFragment mUpcomingFragment;
-
+    private Map<String, EaseUser> mContacts;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -221,6 +212,15 @@ public class MainFragment extends BaseFragment {
                     fm.beginTransaction().replace(R.id.fragment_root, caseManagerFragment).commit();
 
                     break;
+                case MainActivity.UNRE_ADMSG_COUNT:
+                    int unreadMsgCount = intent.getIntExtra("unreadMsgCount",0);
+                    if (unreadMsgCount==0) {
+                        mTv_tilecunt.setVisibility(View.GONE);
+                    } else {
+                        mTv_tilecunt.setVisibility(View.VISIBLE);
+                        mTv_tilecunt.setText(unreadMsgCount+"");
+                    }
+                    break;
                 default:
                     break;
             }
@@ -237,11 +237,9 @@ public class MainFragment extends BaseFragment {
     private double mDateTime;
 
     private int mUseCount;
-    private int mUnreadMsgCount = 0;
     private TextView mTv_tilecunt;
     private DrawerLayout mDrawer_layout;
     private RigthChatFragment mRigthChatFragment;
-    private MsgListener mMsgListener;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private MenuBund mMenuBund;
@@ -286,6 +284,7 @@ public class MainFragment extends BaseFragment {
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.CALL_CASE_MANAGER));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_GPS_STATE_UI));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_SIGNAL_UI));
+        MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UNRE_ADMSG_COUNT));
 
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
@@ -293,10 +292,10 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         MyApp.getApplictaion().unregisterReceiver(mReceiver);
-        if (mSubscription!=null){
+        if (mSubscription != null) {
 
             mSubscription.cancel();
-            mSubscription=null;
+            mSubscription = null;
         }
         super.onDestroyView();
     }
@@ -321,9 +320,8 @@ public class MainFragment extends BaseFragment {
 
             }
         });
-        loginChatServer();
-        mMsgListener = new MsgListener();
-        EMClient.getInstance().chatManager().addMessageListener(mMsgListener);
+//        loginChatServer();
+
         mDrawer_layout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         if (mUpcomingFragment == null) {
 
@@ -351,10 +349,8 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                mUnreadMsgCount = 0;
+                mTv_tilecunt.setText("");
                 mTv_tilecunt.setVisibility(View.GONE);
-                mMsgListener = new MsgListener();
-                EMClient.getInstance().chatManager().addMessageListener(mMsgListener);
                 if (mRigthChatFragment != null) {
 
                     getChildFragmentManager().beginTransaction().replace(R.id.fragment_chat, mRigthChatFragment).commit();
@@ -365,8 +361,7 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                EMClient.getInstance().chatManager().removeMessageListener(mMsgListener);
-                mMsgListener = null;
+
             }
 
             @Override
@@ -403,7 +398,7 @@ public class MainFragment extends BaseFragment {
                 view.setBackgroundColor(Color.DKGRAY);
                 mSelePos = position;
                 ArrayList<Fragment> fragmentArrayList = menus.get(mPostion).getFragments();
-                if (fragmentArrayList.get(position)!=null){
+                if (fragmentArrayList.get(position) != null) {
 
                     getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, fragmentArrayList.get(position)).commit();
                 }
@@ -485,8 +480,13 @@ public class MainFragment extends BaseFragment {
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRigthChatFragment != null) {
-                    mRigthChatFragment.addData(mContacts);
+                mContacts = activity.getEMContacts();
+                if (mContacts != null) {
+                    if (mRigthChatFragment == null) {
+                        mRigthChatFragment = new RigthChatFragment();
+                        mRigthChatFragment.addData(mContacts);
+
+                    }
                     if (mDrawer_layout.isDrawerOpen(chatContainer)) {
                         mDrawer_layout.closeDrawer(chatContainer);
                     } else {
@@ -494,7 +494,9 @@ public class MainFragment extends BaseFragment {
                         mDrawer_layout.openDrawer(chatContainer);
 
                     }
+
                 }
+
 
             }
         });
@@ -579,54 +581,6 @@ public class MainFragment extends BaseFragment {
     }
 
 
-    private Map<String, EaseUser> mContacts;
-
-    //获取联系人
-    public void getContacts() {
-
-
-        mContacts = new HashMap<String, EaseUser>();
-        List<String> usernames = null;
-        try {
-            usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
-        if (usernames != null && usernames.size() > 0) {
-            for (String s : usernames) {
-                String nick = LawDao.getGdWaterContact(s);
-                EaseUser easeUser = new EaseUser(s + "(" + nick + ")");
-                easeUser.setNickname(nick);
-                mContacts.put(s, easeUser);
-                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(s);
-
-                if (conversation != null) {
-
-                    mUnreadMsgCount = mUnreadMsgCount + conversation.getUnreadMsgCount();
-                }
-            }
-
-        }
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mRigthChatFragment == null) {
-                    mRigthChatFragment = new RigthChatFragment(mContacts);
-
-                }
-                if (mUnreadMsgCount == 0) {
-                    mTv_tilecunt.setVisibility(View.GONE);
-                } else {
-                    mTv_tilecunt.setVisibility(View.VISIBLE);
-                    mTv_tilecunt.setText(mUnreadMsgCount + "");
-                }
-            }
-        });
-
-
-    }
-
-
     @NonNull
     private ArrayList<MenuBean> initMenuData() {
         mMenus = new ArrayList<MenuBean>();
@@ -689,6 +643,9 @@ public class MainFragment extends BaseFragment {
 
 
                 }
+
+
+
 
                 menuBean1.setItems(item1);
                 menuBean1.setFragments(fragments1);
@@ -785,7 +742,6 @@ public class MainFragment extends BaseFragment {
                 ArrayList<Fragment> fragments3 = new ArrayList<Fragment>();
                 LawEnforcementProcessGuidanceFragment enforcementProcessFragment = LawEnforcementProcessGuidanceFragment.newInstance(null, null);
                 fragments3.add(enforcementProcessFragment);
-
                 LawsAndRegulationsFragment lawFragment = LawsAndRegulationsFragment.newInstance(null, null);
                 fragments3.add(lawFragment);
 
@@ -881,7 +837,6 @@ public class MainFragment extends BaseFragment {
 
         }
 
-
         //设置中心
         MenuBean menuBean5 = new MenuBean();
         menuBean5.setIcon(R.mipmap.setting);
@@ -916,51 +871,6 @@ public class MainFragment extends BaseFragment {
         activity = (MainActivity) context;//保存Context引用
     }
 
-    private void loginChatServer() {
-        if (!TextUtils.isEmpty(username)) {
-            EMClient.getInstance().logout(true, new EMCallBack() {
-                @Override
-                public void onSuccess() {
-                    MyApp.getGlobalThreadPool().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            EMClient.getInstance().login(username, "888888", new EMCallBack() {//回调
-                                @Override
-                                public void onSuccess() {
-
-                                    getContacts();
-
-                                }
-
-                                @Override
-                                public void onProgress(int progress, String status) {
-
-                                }
-
-                                @Override
-                                public void onError(int code, String message) {
-                                }
-                            });
-                        }
-                    });
-
-                }
-
-                @Override
-                public void onError(int i, String s) {
-
-                }
-
-                @Override
-                public void onProgress(int i, String s) {
-
-                }
-            });
-
-        }
-
-
-    }
 
     private void reLogin() {
         //测试与服务器通讯
@@ -1082,48 +992,4 @@ public class MainFragment extends BaseFragment {
     }
 
 
-    class MsgListener implements EMMessageListener {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> list) {
-            mUnreadMsgCount++;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mTv_tilecunt.isShown()) {
-                        mTv_tilecunt.setVisibility(View.VISIBLE);
-                    }
-                    mTv_tilecunt.setText(mUnreadMsgCount + "");
-                }
-            });
-
-
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> list) {
-
-        }
-
-        @Override
-        public void onMessageRead(List<EMMessage> list) {
-
-        }
-
-        @Override
-        public void onMessageDelivered(List<EMMessage> list) {
-
-        }
-
-        @Override
-        public void onMessageRecalled(List<EMMessage> list) {
-
-        }
-
-
-        @Override
-        public void onMessageChanged(EMMessage emMessage, Object o) {
-
-        }
-    }
 }

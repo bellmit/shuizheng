@@ -82,6 +82,8 @@ public class UpcomingFragment extends BaseFragment {
     };
     private TextView mTv_time;
     private PatrolLogManagementFragment mPatrolLogManagementFragment;
+    private ArrangeMissionFragment mArrangeMissionFragment;
+    private MissionFragment mMissionFragment;
 
     public UpcomingFragment() {
         // Required empty public constructor
@@ -151,14 +153,18 @@ public class UpcomingFragment extends BaseFragment {
                 Mission mission = missionList.get(position);
                 FragmentManager fm = UpcomingFragment.this.getParentFragment().getChildFragmentManager();
                 switch (mission.getStatus()) {
-
                     case 2:
-                        ArrangeMissionFragment arrangeMissionFragment = new ArrangeMissionFragment();
-                        arrangeMissionFragment.setDefaultTaskID(missionList.get(position).getId());
-                        fm.beginTransaction().replace(R.id.fragment_root, arrangeMissionFragment).commit();
-                        break;
                     case 3:
+
                     case 4:
+
+                        if (mMissionFragment==null){
+
+                            mMissionFragment = new MissionFragment();
+                        }
+                        mMissionFragment.setDefaultTaskID(missionList.get(position).getId());
+                        fm.beginTransaction().replace(R.id.fragment_root, mMissionFragment).commit();
+                        break;
                     case 5:
                         if (mPatrolLogManagementFragment==null){
 
@@ -167,9 +173,12 @@ public class UpcomingFragment extends BaseFragment {
                         fm.beginTransaction().replace(R.id.fragment_root, mPatrolLogManagementFragment).commit();
                         break;
                     case 9:
-                        MissionFragment missionFragment = new MissionFragment();
-                        missionFragment.setDefaultTaskID(missionList.get(position).getId());
-                        fm.beginTransaction().replace(R.id.fragment_root, missionFragment).commit();
+                        if (mMissionFragment==null){
+
+                            mMissionFragment = new MissionFragment();
+                        }
+                        mMissionFragment.setDefaultTaskID(missionList.get(position).getId());
+                        fm.beginTransaction().replace(R.id.fragment_root, mMissionFragment).commit();
                         break;
                     case MainActivity.Mission_Completed:
                         MissionReportFragment missionReportFragment = new MissionReportFragment();

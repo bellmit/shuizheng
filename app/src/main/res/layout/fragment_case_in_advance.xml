@@ -52,6 +52,7 @@
                 android:layout_marginRight="10px"
                 android:layout_weight="1"
                 android:background="@null"
+                android:maxLength="20"
                 android:ellipsize="end"
                 android:gravity="left|center_vertical"
                 android:hint="请输入..."
@@ -108,6 +109,7 @@
             <EditText
                 android:id="@+id/et_scene"
                 android:layout_width="0dp"
+                android:maxLength="30"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"
@@ -213,6 +215,7 @@
             <EditText android:layout_width="120dp"
                       android:id="@+id/et_other"
                       android:paddingTop="15px"
+                      android:maxLength="20"
                       android:layout_height="115px"
                       android:textColor="@color/gray1"
                       android:textSize="@dimen/task_input_textsize"/>
@@ -254,6 +257,7 @@
                   android:background="@color/login_bg"></View>
             <EditText
                 android:id="@+id/et_situation"
+                android:maxLength="150"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10px"
@@ -303,6 +307,7 @@
             <EditText
                 android:id="@+id/et_case_brief"
                 android:layout_width="0dp"
+                android:maxLength="150"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"
@@ -353,6 +358,7 @@
             <EditText
                 android:id="@+id/et_opinion"
                 android:layout_width="0dp"
+                android:maxLength="150"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"

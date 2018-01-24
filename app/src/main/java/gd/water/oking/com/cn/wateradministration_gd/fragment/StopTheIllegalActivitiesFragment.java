@@ -139,6 +139,21 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
     }
 
     private void initData() {
+        Utils.setEditTextInhibitInputSpace(mTet_representative_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_representative_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_address_natural);
+        Utils.setEditTextInhibitInputSpeChat(mTet_address_natural);
+
+        Utils.setEditTextInhibitInputSpace(mTet_address_other);
+        Utils.setEditTextInhibitInputSpeChat(mTet_address_other);
+
+        Utils.setEditTextInhibitInputSpace(mTet_addr);
+        Utils.setEditTextInhibitInputSpeChat(mTet_addr);
+
+        Utils.setEditTextInhibitInputSpace(mTet_contact);
+        Utils.setEditTextInhibitInputSpeChat(mTet_contact);
+
         Calendar c = Calendar.getInstance();//
         // 获取当前年份
         mMYear = c.get(Calendar.YEAR);
@@ -249,7 +264,7 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
             @Override
             public void onError(OCRError error) {
                 error.printStackTrace();
-                RxToast.error(MyApp.getApplictaion(), "licence方式获取token失败" + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                RxToast.error(MyApp.getApplictaion(), "licence方式获取token失败" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, MyApp.getApplictaion());
     }
@@ -363,12 +378,12 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
                     }
 
 
-                  final String illegalFacts  = mEt_illegal_facts.getText().toString().trim();
-                  final String legalProvisions1 =  mEt_legal_provisions1.getText().toString().trim();
-                  final String legalProvisions2 =  mEt_legal_provisions2.getText().toString().trim();
-                  final String contact =  mTet_contact.getText().toString().trim();
-                  final String phone =  mTet_phone.getText().toString().trim();
-                  final String addr =  mTet_addr.getText().toString().trim();
+                    final String illegalFacts = mEt_illegal_facts.getText().toString().trim();
+                    final String legalProvisions1 = mEt_legal_provisions1.getText().toString().trim();
+                    final String legalProvisions2 = mEt_legal_provisions2.getText().toString().trim();
+                    final String contact = mTet_contact.getText().toString().trim();
+                    final String phone = mTet_phone.getText().toString().trim();
+                    final String addr = mTet_addr.getText().toString().trim();
                     if (!TextUtils.isEmpty(illegalFacts)
                             && !TextUtils.isEmpty(legalProvisions1) && !TextUtils.isEmpty(legalProvisions2)
                             && !TextUtils.isEmpty(contact) && !TextUtils.isEmpty(phone)
@@ -441,12 +456,12 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
                 "<body>\n" +
                 "<h1 align=\"center\">水行政责令停止违法行为通知书</h1>\n" +
                 "<p align=\"right\">x水当罚字[&nbsp;]第&nbsp;&nbsp;号</p>\n" +
-                mNaturalInfo+
-                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;据初步调查,你(单位)&nbsp; <u>&nbsp;"+illegalFacts+"&nbsp;</u>&nbsp;涉嫌违反了 &nbsp;<u>&nbsp;"+legalProvisions1+"&nbsp;</u>&nbsp;\n" +
-                "    的规定,现根据:<u>&nbsp;"+legalProvisions2+"&nbsp;</u>的规定,责令你(单位)立即停止违法行为,听后处理。</p>\n" +
+                mNaturalInfo +
+                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;据初步调查,你(单位)&nbsp; <u>&nbsp;" + illegalFacts + "&nbsp;</u>&nbsp;涉嫌违反了 &nbsp;<u>&nbsp;" + legalProvisions1 + "&nbsp;</u>&nbsp;\n" +
+                "    的规定,现根据:<u>&nbsp;" + legalProvisions2 + "&nbsp;</u>的规定,责令你(单位)立即停止违法行为,听后处理。</p>\n" +
                 "\n" +
                 "<p align=\"right\">" + mMYear + "年" + mMMonth + "月" + mMDay + "日&nbsp;&nbsp;</p>\n" +
-                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系人:<u>&nbsp;"+contact+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话:&nbsp;<u>&nbsp;"+phone+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系地址:&nbsp;<u>&nbsp;"+addr+"&nbsp;</u></p>\n" +
+                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系人:<u>&nbsp;" + contact + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话:&nbsp;<u>&nbsp;" + phone + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系地址:&nbsp;<u>&nbsp;" + addr + "&nbsp;</u></p>\n" +
                 "</body>\n" +
                 "</html>";
         RxFileUtils.writeFileFromString(destDir, contetnt, false);

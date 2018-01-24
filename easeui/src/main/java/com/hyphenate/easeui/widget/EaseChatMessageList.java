@@ -16,10 +16,12 @@ import com.hyphenate.easeui.adapter.EaseMessageAdapter;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
+import com.zhy.autolayout.utils.AutoLayoutHelper;
 
 public class EaseChatMessageList extends RelativeLayout{
 
     protected static final String TAG = "EaseChatMessageList";
+    private final AutoLayoutHelper mHelper = new AutoLayoutHelper(this);
     protected ListView listView;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected Context context;
@@ -166,5 +168,14 @@ public class EaseChatMessageList extends RelativeLayout{
         if (messageAdapter != null) {
             messageAdapter.setCustomChatRowProvider(rowProvider);
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!isInEditMode())
+        {
+            mHelper.adjustChildren();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

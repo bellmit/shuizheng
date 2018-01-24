@@ -126,7 +126,6 @@ public class SubUpcomingFragment extends BaseFragment {
                             MainActivity.missionList.get(i).getFbr(), simpleDateFormat.format(new Date(MainActivity.missionList.get(i).getApproved_time())));
                     upcomings.add(upcoming);
                 }
-
                 if ((MainActivity.missionList.get(i).getStatus() == 3 ||
                         MainActivity.missionList.get(i).getStatus() == 4) &&
                         MainActivity.missionList.get(i).getEnd_time() > date.getTime()) {

@@ -22,9 +22,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -35,23 +37,25 @@ import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.yinghe.whiteboardlib.R;
 import com.yinghe.whiteboardlib.Utils.BitmapUtils;
+import com.yinghe.whiteboardlib.Utils.DensityUtil;
 import com.yinghe.whiteboardlib.Utils.ScreenUtils;
 import com.yinghe.whiteboardlib.bean.PhotoRecord;
 import com.yinghe.whiteboardlib.bean.SketchData;
 import com.yinghe.whiteboardlib.bean.StrokeRecord;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import static com.yinghe.whiteboardlib.Utils.BitmapUtils.createBitmapThumbnail;
 import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_CIRCLE;
@@ -80,7 +84,7 @@ public class SketchView extends View implements OnTouchListener {
     public static float SCALE_MIN_LEN;
     public final String TAG = getClass().getSimpleName();
     public Paint boardPaint;
-
+    public EditText mEditText;
     public Bitmap mirrorMarkBM = BitmapFactory.decodeResource(getResources(), R.drawable.mark_copy);
     public Bitmap deleteMarkBM = BitmapFactory.decodeResource(getResources(), R.drawable.mark_delete);
     public Bitmap rotateMarkBM = BitmapFactory.decodeResource(getResources(), R.drawable.mark_rotate);
@@ -108,6 +112,7 @@ public class SketchView extends View implements OnTouchListener {
     public Paint strokePaint;
     public float downX, downY, preX, preY, curX, curY;
     public int mWidth, mHeight;
+
     //    public List<PhotoRecord> curSketchData.photoRecordList;
 //    public List<StrokeRecord> curSketchData.strokeRecordList;
 //    public List<StrokeRecord> curSketchData.strokeRedoList;
@@ -118,6 +123,10 @@ public class SketchView extends View implements OnTouchListener {
      */
     public ScaleGestureDetector mScaleGestureDetector = null;
     public OnDrawChangedListener onDrawChangedListener;
+    private TextPaint mTp;
+    private boolean mIsEd = true;
+    private float mMcurX;
+    private float mMcurY;
 
     public SketchView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -168,9 +177,12 @@ public class SketchView extends View implements OnTouchListener {
     }
 
     public void updateSketchData(SketchData sketchData) {
-        if (curSketchData != null)
+        if (curSketchData != null) {
+
             curSketchData.thumbnailBM = getThumbnailResultBitmap();//更新数据前先保存上一份数据的缩略图
+        }
         setSketchData(sketchData);
+
     }
 
     public void initParams(Context context) {
@@ -189,11 +201,19 @@ public class SketchView extends View implements OnTouchListener {
         strokePaint.setStrokeWidth(strokeSize);
 
         boardPaint = new Paint();
+        boardPaint.setAntiAlias(true);
         boardPaint.setColor(Color.GRAY);
         boardPaint.setStrokeWidth(ScreenUtils.dip2px(mContext, 0.8f));
         boardPaint.setStyle(Paint.Style.STROKE);
 
+        PathEffect effects = new DashPathEffect(new float[]{8, 8, 8, 8}, 8);
+        boardPaint.setPathEffect(effects);
+
         SCALE_MIN_LEN = ScreenUtils.dip2px(context, 20);
+
+        mTp = new TextPaint();
+        mTp.setAntiAlias(true);
+        mTp.setColor(strokeRealColor);
     }
 
     public void setStrokeAlpha(int mAlpha) {
@@ -241,7 +261,7 @@ public class SketchView extends View implements OnTouchListener {
                     actionMode = ACTION_SCALE;
                 break;
             case MotionEvent.ACTION_DOWN:
-                touch_down();
+                touch_down(event);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -249,9 +269,12 @@ public class SketchView extends View implements OnTouchListener {
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                touch_up();
+                touch_up(event);
                 invalidate();
                 break;
+            default:
+                break;
+
         }
         preX = curX;
         preY = curY;
@@ -268,8 +291,10 @@ public class SketchView extends View implements OnTouchListener {
     protected void onDraw(Canvas canvas) {
         drawBackground(canvas);
         drawRecord(canvas);
-        if (onDrawChangedListener != null)
+        if (onDrawChangedListener != null) {
+
             onDrawChangedListener.onDrawChanged();
+        }
     }
 
     public void drawBackground(Canvas canvas) {
@@ -455,7 +480,7 @@ public class SketchView extends View implements OnTouchListener {
         invalidate();
     }
 
-    public void touch_down() {
+    public void touch_down(MotionEvent event) {
         downX = curX;
         downY = curY;
         if (curSketchData.editMode == EDIT_STROKE) {
@@ -488,12 +513,31 @@ public class SketchView extends View implements OnTouchListener {
                 strokePaint.setStrokeWidth(strokeSize);
                 curStrokeRecord.paint = new Paint(strokePaint); // Clones the mPaint object
             } else if (curSketchData.strokeType == STROKE_TYPE_TEXT) {
-                curStrokeRecord.textOffX = (int) downX;
-                curStrokeRecord.textOffY = (int) downY;
-                TextPaint tp = new TextPaint();
-                tp.setColor(strokeRealColor);
-                curStrokeRecord.textPaint = tp; // Clones the mPaint object
-                textWindowCallback.onText(this, curStrokeRecord);
+
+                if (mIsEd){
+                    mMcurX = (event.getRawX() - location[0]) / drawDensity;
+                    mMcurY = (event.getRawY() - location[1]) / drawDensity;
+                    mEditText.setX(event.getX());
+                    mEditText.setY(event.getY());
+                    mEditText.setVisibility(VISIBLE);
+                    mIsEd = false;
+                }else {
+                    mEditText.setVisibility(GONE);
+                    mIsEd = true;
+
+                    if (mEditText != null && !TextUtils.isEmpty(mEditText.getText().toString().trim())) {
+                        StrokeRecord strokeRecord = new StrokeRecord(STROKE_TYPE_TEXT);
+                        strokeRecord.text = mEditText.getText().toString();
+                        strokeRecord.textOffX = (int) mMcurX;
+                        strokeRecord.textOffY = (int) mMcurY;
+                        strokeRecord.textPaint = mTp;
+                        strokeRecord.textPaint.setTextSize(DensityUtil.dip2px(getContext(), 10));
+                        strokeRecord.textWidth = mEditText.getMaxWidth();
+                        addStrokeRecord(strokeRecord);
+                    }
+                }
+
+
                 return;
             }
             curSketchData.strokeRecordList.add(curStrokeRecord);
@@ -581,7 +625,12 @@ public class SketchView extends View implements OnTouchListener {
             } else if (curSketchData.strokeType == STROKE_TYPE_CIRCLE || curSketchData.strokeType == STROKE_TYPE_RECTANGLE) {
                 curStrokeRecord.rect.set(downX < curX ? downX : curX, downY < curY ? downY : curY, downX > curX ? downX : curX, downY > curY ? downY : curY);
             } else if (curSketchData.strokeType == STROKE_TYPE_TEXT) {
-
+                mMcurX = (event.getRawX() - location[0]) / drawDensity;
+                mMcurY = (event.getRawY() - location[1]) / drawDensity;
+                if (mEditText != null) {
+                    mEditText.setX(event.getX());
+                    mEditText.setY(event.getY());
+                }
             }
         } else if (curSketchData.editMode == EDIT_PHOTO && curPhotoRecord != null) {
             if (actionMode == ACTION_DRAG) {
@@ -676,7 +725,8 @@ public class SketchView extends View implements OnTouchListener {
         curPhotoRecord.matrix.postTranslate((int) distanceX, (int) distanceY);
     }
 
-    public void touch_up() {
+    public void touch_up(MotionEvent event) {
+
     }
 
     @NonNull
@@ -913,6 +963,6 @@ public class SketchView extends View implements OnTouchListener {
 
     public interface OnDrawChangedListener {
 
-        public void onDrawChanged();
+        void onDrawChanged();
     }
 }

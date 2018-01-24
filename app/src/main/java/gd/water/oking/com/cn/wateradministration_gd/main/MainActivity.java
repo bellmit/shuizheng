@@ -27,15 +27,21 @@ import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.google.gson.reflect.TypeToken;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.exceptions.HyphenateException;
 import com.vondear.rxtools.RxLocationUtils;
+import com.vondear.rxtools.RxNetUtils;
 import com.vondear.rxtools.RxPermissionTool;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 import org.xutils.common.Callback;
 import org.xutils.x;
 
@@ -45,10 +51,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Area;
@@ -57,6 +63,7 @@ import gd.water.oking.com.cn.wateradministration_gd.bean.Member;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Mission;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Point;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Question;
+import gd.water.oking.com.cn.wateradministration_gd.db.LawDao;
 import gd.water.oking.com.cn.wateradministration_gd.fragment.LoginFragment;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetCaseListParams;
@@ -70,7 +77,6 @@ import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
 import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
-import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AutoLayoutActivity implements MyCallBack {
@@ -87,40 +93,42 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     public static final String CALL_CASE_MANAGER = "oking.callCaseManager";
     public static final String UPDATE_TEMP_UI = "oking.updatetempui";
     public static final String UPDATE_MISSION_GET = "oking.missionGet";
+    public static final String UNRE_ADMSG_COUNT = "oking.unreadMsgCount";
 
     public static final int Mission_Completed = 100;
     public static final String Area = "广东省";
-
+    private MsgListener mMsgListener;
     public static ArrayList<Mission> missionList = new ArrayList<>();
     public static ArrayList<Case> caseList = new ArrayList<>();
     public static String tempStr = "";
     public static String selectCaseId = "";
     public static int arrangeNum, inspectNum, reportNum;
-    private Subscription mSubscription;
+    private int mUnreadMsgCount = 0;
+//    private Subscription mSubscription;
     private PhoneStateListener mylistener;
 
     private long missionTime = 0;
-    private Comparator<Mission> comparator = new Comparator<Mission>() {
-        @Override
-        public int compare(Mission o1, Mission o2) {
-
-            if (o1.getStatus() == 4 && o2.getStatus() != 4) {
-                return -1;
-            } else if (o2.getStatus() == 4 && o1.getStatus() != 4) {
-                return 1;
-            } else if (o1.getStatus() == MainActivity.Mission_Completed && o2.getStatus() != MainActivity.Mission_Completed) {
-                return -1;
-            } else if (o2.getStatus() == MainActivity.Mission_Completed && o1.getStatus() != MainActivity.Mission_Completed) {
-                return 1;
-            } else if (o1.getStatus() != o2.getStatus()) {
-                return o1.getStatus() - o2.getStatus();
-            } else if (o2.getEnd_time().equals(o1.getEnd_time())) {
-                return (int) (o2.getEnd_time() - o1.getEnd_time());
-            } else {
-                return 1;
-            }
-        }
-    };
+//    private Comparator<Mission> comparator = new Comparator<Mission>() {
+//        @Override
+//        public int compare(Mission o1, Mission o2) {
+//
+//            if (o1.getStatus() == 4 && o2.getStatus() != 4) {
+//                return -1;
+//            } else if (o2.getStatus() == 4 && o1.getStatus() != 4) {
+//                return 1;
+//            } else if (o1.getStatus() == MainActivity.Mission_Completed && o2.getStatus() != MainActivity.Mission_Completed) {
+//                return -1;
+//            } else if (o2.getStatus() == MainActivity.Mission_Completed && o1.getStatus() != MainActivity.Mission_Completed) {
+//                return 1;
+//            } else if (o1.getStatus() != o2.getStatus()) {
+//                return o1.getStatus() - o2.getStatus();
+//            } else if (o2.getEnd_time().equals(o1.getEnd_time())) {
+//                return (int) (o2.getEnd_time() - o1.getEnd_time());
+//            } else {
+//                return 1;
+//            }
+//        }
+//    };
     private long mMTime;
     private GetMissionListRecever mGetMissionListRecever;
     private Callback.Cancelable mGetCaseCancelable;
@@ -131,7 +139,8 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     private Callback.Cancelable mGetMissionAreaCancelable;
     private long mRefreshTemEndTime;
     private Intent mIntent;
-
+    private long mEndTime=0;
+    private Map<String, EaseUser> mContacts;
 
     private static void execshell(String command) {
 
@@ -362,7 +371,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                         @Override
                         public void onError(Throwable ex, boolean isOnCallback) {
 
-                            Collections.sort(missionList, comparator);
+//                            Collections.sort(missionList, comparator);
                             sendBroadcast(new Intent(UPDATE_MISSION_LIST));
 
                             getMissionTypeNum();
@@ -421,7 +430,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                     }
 
-                    Collections.sort(missionList, comparator);
+//                    Collections.sort(missionList, comparator);
                     sendBroadcast(new Intent(UPDATE_MISSION_LIST));
 
                     getMissionTypeNum();
@@ -521,7 +530,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                                     new TypeToken<ArrayList<Question>>() {
                                     });
 
-
+                            mEndTime = System.currentTimeMillis();
                             if (qList != null) {
                                 for (int i = 0; i < qList.size(); i++) {
                                     Question question = qList.get(i);
@@ -598,7 +607,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 editor.putLong("missionTime", missionTime);
                 editor.commit();
                 //Log.i("missionTime", missionTime + "");
-                Collections.sort(missionList, comparator);
+//                Collections.sort(missionList, comparator);
                 getMissionTypeNum();
                 sendBroadcast(new Intent(UPDATE_MISSION_LIST));
             }
@@ -638,7 +647,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 editor.putLong("missionTime", missionTime);
                 editor.commit();
                 //Log.i("missionTime", missionTime + "");
-                Collections.sort(missionList, comparator);
+//                Collections.sort(missionList, comparator);
                 getMissionTypeNum();
                 sendBroadcast(new Intent(UPDATE_MISSION_LIST));
             }
@@ -663,7 +672,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
             @Override
             public void onSuccess(String result) {
-                Log.i("GetMissionArea", "onSuccess>>>>>>" + result);
 
                 if (result == null || "".equals(result) || "[]".equals(result)) {
                     return;
@@ -836,11 +844,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
             stopService(mIntent);
         }
-        if (mSubscription!=null){
-
-            mSubscription.cancel();
-            mSubscription=null;
-        }
+//        if (mSubscription!=null){
+//
+//            mSubscription.cancel();
+//            mSubscription=null;
+//        }
         File StorageDir = new File(Environment.getExternalStorageDirectory(), "oking/System_log/");
         if (!StorageDir.exists()) {
             StorageDir.mkdirs();
@@ -1008,54 +1016,57 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mSubscription != null) {
-                mSubscription.cancel();
-                mSubscription=null;
-            }
+//            if (mSubscription != null) {
+//                mSubscription.cancel();
+//                mSubscription=null;
+//            }
 
 
-            Flowable.interval(1, 10, TimeUnit.SECONDS)
-                    .onBackpressureDrop()
-                    .subscribe(new Subscriber<Long>() {
-                        @Override
-                        public void onSubscribe(Subscription s) {
-                            mSubscription = s;
-                            s.request(Long.MAX_VALUE);
-                        }
-
-                        @Override
-                        public void onNext(Long aLong) {
-                            if (DefaultContants.CURRENTUSER != null && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getUserId())) {
-
-                                getHttpMissionList();
-                                getHttpCaseList();
-                                getHttpAlarm();
-                                getHttpQuestionList();
-                                getTempData();
-                            }
-
-//                            System.out.println("第" + aLong + "次网络请求");
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+//            Flowable.interval(1, 10, TimeUnit.SECONDS)
+//                    .onBackpressureDrop()
+//                    .doOnNext(new Consumer<Long>() {
+//                        @Override
+//                        public void accept(Long aLong) throws Exception {
+//                        }
+//                    })
+//                    .subscribe(new Subscriber<Long>() {
+//                        @Override
+//                        public void onSubscribe(Subscription s) {
+//                            mSubscription = s;
+//                            s.request(Long.MAX_VALUE);
+//                        }
+//
+//                        @Override
+//                        public void onNext(Long aLong) {
+////                            if (DefaultContants.CURRENTUSER != null && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getUserId())) {
+////                                getHttpMissionList();
+////                                getHttpCaseList();
+////                                getHttpAlarm();
+////                                getHttpQuestionList();
+////                                getTempData();
+////                            }
+////                            System.out.println("第" + aLong + "次网络请求");
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable t) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//
+//                        }
+//                    });
         }
     }
 
     public void stopGetNetServer() {
-        if (mSubscription!=null){
-
-            mSubscription.cancel();
-            mSubscription=null;
-        }
+//        if (mSubscription!=null){
+//
+//            mSubscription.cancel();
+//            mSubscription=null;
+//        }
 
         if (mGetCaseCancelable != null&&mGetCaseCancelable.isCancelled()) {
 
@@ -1092,5 +1103,119 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     public void onUserInteraction() {
         super.onUserInteraction();
 
+        if (System.currentTimeMillis()-mEndTime>6000&&RxNetUtils.isConnected(MyApp.getApplictaion())){
+            if (DefaultContants.CURRENTUSER != null && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getUserId())
+                    &&!TextUtils.isEmpty(DefaultContants.CURRENTUSER.getAccount())) {
+                getHttpMissionList();
+                getHttpCaseList();
+                getHttpAlarm();
+                getHttpQuestionList();
+                getTempData();
+
+                if (EMClient.getInstance().isConnected()){
+                    System.out.println("环信已经登录");
+               }else {
+                    Schedulers.io().createWorker().schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            EMClient.getInstance().login(DefaultContants.CURRENTUSER.getAccount(), "888888", new EMCallBack() {
+                                @Override
+                                public void onSuccess() {
+                                    System.out.println("环信登录成功");
+                                    mMsgListener = new MsgListener();
+                                    EMClient.getInstance().chatManager().addMessageListener(mMsgListener);
+                                    EMClient.getInstance().groupManager().loadAllGroups();
+                                    EMClient.getInstance().chatManager().loadAllConversations();
+                                    getContacts();
+
+                                }
+
+                                @Override
+                                public void onError(int i, String s) {
+                                    System.out.println("环信登录失败"+s);
+                                }
+
+                                @Override
+                                public void onProgress(int i, String s) {
+
+                                }
+                            });
+                        }
+                    });
+
+                }
+
+            }
+        }
+
+    }
+
+    private void getContacts() {
+        mContacts = new HashMap<String, EaseUser>();
+        List<String> usernames = null;
+        try {
+            usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        if (usernames != null && usernames.size() > 0) {
+            for (String s : usernames) {
+                String nick = LawDao.getGdWaterContact(s);
+                EaseUser easeUser = new EaseUser(s + "(" + nick + ")");
+                easeUser.setNickname(nick);
+                mContacts.put(s, easeUser);
+                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(s);
+
+                if (conversation != null) {
+                    mUnreadMsgCount = mUnreadMsgCount + conversation.getUnreadMsgCount();
+                }
+            }
+
+        }
+
+    }
+
+   public  Map<String, EaseUser> getEMContacts(){
+       mUnreadMsgCount = 0;
+        return mContacts;
+    }
+
+
+    class MsgListener implements EMMessageListener {
+
+        @Override
+        public void onMessageReceived(List<EMMessage> list) {
+            mUnreadMsgCount++;
+            Intent intent = new Intent(UNRE_ADMSG_COUNT);
+            intent.putExtra("unreadMsgCount",mUnreadMsgCount);
+            MyApp.getApplictaion().sendBroadcast(intent);
+
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageRead(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageDelivered(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageRecalled(List<EMMessage> list) {
+
+        }
+
+
+        @Override
+        public void onMessageChanged(EMMessage emMessage, Object o) {
+
+        }
     }
 }

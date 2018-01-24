@@ -41,6 +41,7 @@ import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.bean.ApproverBean;
 import gd.water.oking.com.cn.wateradministration_gd.bean.InspectTaskBean;
+import gd.water.oking.com.cn.wateradministration_gd.bean.RecipientBean;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.ApproverPinyinComparator;
@@ -89,7 +90,6 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
     private ArrayList<String> mRecipients;      //接收人数据源
     private String mSelecRecipient;         //选中的接收人名称
     private String mEmergency;
-    private ApproverBean.CBRBean mSelectRecipientsBean;   //选中的接收人
     private String mMcoordinateJson;
 
     private Spinner mSp_tasktype;       //任务类型
@@ -99,6 +99,8 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
     private FrameLayout mFl_web;
     private AgentWeb mAgentWeb;
     private View mInflate;
+    private ArrayList<RecipientBean> mRecipientBeans;
+    private RecipientBean mReBean;
 
     public PatrolsToReleaseFragment() {
         // Required empty public constructor
@@ -246,17 +248,34 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
                 ApproverBean approverBean = gson.fromJson(result, ApproverBean.class);
                 List<ApproverBean.SZJCBean> szjc = approverBean.getSZJC();
                 mCbr = approverBean.getCBR();
-                mRecipients = new ArrayList<>();
-
+                mRecipientBeans = new ArrayList<>();
                 for (ApproverBean.CBRBean cbrBean:mCbr){
-                    mRecipients.add(cbrBean.getUSERNAME());
+                    RecipientBean recipientBean = new RecipientBean();
+                    recipientBean.setDEPTID(cbrBean.getDEPTID());
+                    recipientBean.setDEPTNAME(cbrBean.getDEPTNAME());
+                    recipientBean.setREMARK(cbrBean.getREMARK());
+                    recipientBean.setUSERID(cbrBean.getUSERID());
+                    recipientBean.setUSERNAME(cbrBean.getUSERNAME());
+                    recipientBean.setZFZH(cbrBean.getZFZH());
+                    mRecipientBeans.add(recipientBean);
                 }
 
                 for (ApproverBean.SZJCBean szjcBean:szjc){
-                    mRecipients.add(szjcBean.getUSERNAME());
+                    RecipientBean recipientBean = new RecipientBean();
+                    recipientBean.setDEPTID(szjcBean.getDEPTID());
+                    recipientBean.setDEPTNAME(szjcBean.getDEPTNAME());
+                    recipientBean.setREMARK(szjcBean.getREMARK());
+                    recipientBean.setUSERID(szjcBean.getUSERID());
+                    recipientBean.setUSERNAME(szjcBean.getUSERNAME());
+                    recipientBean.setZFZH(szjcBean.getZFZH());
+                    mRecipientBeans.add(recipientBean);
                 }
 
-                Collections.sort(mRecipients,new CBRPinyinComparator());
+                Collections.sort(mRecipientBeans,new CBRPinyinComparator());
+                mRecipients= new ArrayList<>();
+                for (RecipientBean bean:mRecipientBeans){
+                    mRecipients.add(bean.getUSERNAME());
+                }
                 String[] objects = mRecipients.toArray(new String[0]);
 
                 SpinnerArrayAdapter recipientsAdapter = new SpinnerArrayAdapter(objects);
@@ -307,8 +326,6 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
         mSp_approver.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView tv = (TextView)view;
-                tv.setTextSize(12.0f);
                 mApproverId = mSzjc.get(i).getUSERID();
                 mApprover = mSzjc.get(i).getUSERNAME();
             }
@@ -389,10 +406,8 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
         mSp_recipient.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                TextView tv = (TextView)view;
-                tv.setTextSize(12.0f);
                 mSelecRecipient = mRecipients.get(position);
-                mSelectRecipientsBean = mCbr.get(position);
+                mReBean = mRecipientBeans.get(position);
             }
 
             @Override
@@ -403,8 +418,6 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
         mSp_tasktype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView tv = (TextView)view;
-                tv.setTextSize(12.0f);
                 if ("河道管理".equals(mTasktypeArray[i])) {
                     mTasktype = "0";
                 } else if ("河道采砂".equals(mTasktypeArray[i])) {
@@ -509,7 +522,7 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
             params.addBodyParameter("fbrid", DefaultContants.CURRENTUSER.getUserId());
             params.addBodyParameter("sjq", beginTime);
             params.addBodyParameter("sjz", endTime);
-            params.addBodyParameter("jsrid", mSelectRecipientsBean.getUSERID());
+            params.addBodyParameter("jsrid", mReBean.getUSERID());
             params.addBodyParameter("rwlx", mTasknature);
             params.addBodyParameter("sprid", mApproverId);
             params.addBodyParameter("zt", "1");
@@ -518,13 +531,13 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
             params.addBodyParameter("jjcd", mEmergency);
             params.addBodyParameter("rwly", mSource);
             params.addBodyParameter("jsr", mSelecRecipient);
-            params.addBodyParameter("jsdw", mSelectRecipientsBean.getDEPTNAME());
+            params.addBodyParameter("jsdw", mReBean.getDEPTNAME());
             params.addBodyParameter("fbr", DefaultContants.CURRENTUSER.getUserName());
             params.addBodyParameter("fbdw", DefaultContants.CURRENTUSER.getDeptName());
             params.addBodyParameter("spr", mApprover);
             params.addBodyParameter("rwcd", "0");
             params.addBodyParameter("typeoftask", mTasktype);
-            params.addBodyParameter("receiver", mSelectRecipientsBean.getUSERID());
+            params.addBodyParameter("receiver", mReBean.getUSERID());
             params.addBodyParameter("coordinateJson", mMcoordinateJson);
             x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
@@ -609,7 +622,7 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
             params.addBodyParameter("fbrid", DefaultContants.CURRENTUSER.getUserId());
             params.addBodyParameter("sjq", beginTime);
             params.addBodyParameter("sjz", endTime);
-            params.addBodyParameter("jsrid", mSelectRecipientsBean.getUSERID());
+            params.addBodyParameter("jsrid", mReBean.getUSERID());
             params.addBodyParameter("rwlx", mTasknature);
             params.addBodyParameter("sprid", mApproverId);
             params.addBodyParameter("zt", "1");
@@ -618,13 +631,13 @@ public class PatrolsToReleaseFragment extends BaseFragment implements View.OnCli
             params.addBodyParameter("jjcd", mEmergency);
             params.addBodyParameter("rwly", mSource);
             params.addBodyParameter("jsr", mSelecRecipient);
-            params.addBodyParameter("jsdw", mSelectRecipientsBean.getDEPTNAME());
+            params.addBodyParameter("jsdw", mReBean.getDEPTNAME());
             params.addBodyParameter("fbr", DefaultContants.CURRENTUSER.getUserName());
             params.addBodyParameter("fbdw", DefaultContants.CURRENTUSER.getDeptName());
             params.addBodyParameter("spr", mApprover);
             params.addBodyParameter("rwcd", "0");
             params.addBodyParameter("typeoftask", mTasktype);
-            params.addBodyParameter("receiver", mSelectRecipientsBean.getUSERID());
+            params.addBodyParameter("receiver", mReBean.getUSERID());
             params.addBodyParameter("coordinateJson", mMcoordinateJson);
 
             x.http().post(params, new Callback.CommonCallback<String>() {

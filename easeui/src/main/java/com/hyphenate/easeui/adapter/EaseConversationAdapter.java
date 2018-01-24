@@ -30,6 +30,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseConversationList.EaseConversationListHelper;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.util.DateUtils;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,6 +97,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
             holder.list_itease_layout = (RelativeLayout) convertView.findViewById(R.id.list_itease_layout);
             holder.motioned = (TextView) convertView.findViewById(R.id.mentioned);
             convertView.setTag(holder);
+            AutoUtils.auto(convertView);
         }
         holder.list_itease_layout.setBackgroundResource(R.drawable.ease_mm_listitem);
 

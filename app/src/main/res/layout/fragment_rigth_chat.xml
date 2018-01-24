@@ -5,7 +5,7 @@
                 android:choiceMode="singleChoice"
                 tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.RigthChatFragment">
     <RelativeLayout android:id="@+id/rl" android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="120px"
                     android:layout_alignParentBottom="true">
         <RadioGroup android:id="@+id/rg"
                     android:layout_width="match_parent"
@@ -37,19 +37,19 @@
     <FrameLayout android:id="@+id/fl_chat"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:layout_marginBottom="60dp">
+                 android:layout_marginBottom="120px">
 
     </FrameLayout>
     <TextView android:id="@+id/tv_tag"
-              android:layout_width="10dp"
-              android:layout_height="10dp"
+              android:layout_width="20px"
+              android:layout_height="20px"
               android:layout_alignParentBottom="true"
               android:layout_alignParentRight="true"
-              android:layout_marginBottom="45dp"
+              android:layout_marginBottom="90px"
               android:background="@drawable/ease_unread_count_bg"
               android:gravity="center"
               android:textColor="@android:color/white"
-              android:textSize="8sp"
+              android:textSize="28px"
               android:visibility="gone"/>
 
 </RelativeLayout>

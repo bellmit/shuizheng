@@ -1,9 +1,5 @@
 package com.hyphenate.easeui.widget;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
@@ -24,6 +20,11 @@ import com.hyphenate.easeui.widget.EaseChatPrimaryMenuBase.EaseChatPrimaryMenuLi
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenuBase;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenuBase.EaseEmojiconMenuListener;
+import com.zhy.autolayout.utils.AutoLayoutHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * input menu
@@ -34,6 +35,7 @@ import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenuBase.EaseEmojiconMen
  *    EaseEmojiconMenu: emoji icons
  */
 public class EaseChatInputMenu extends LinearLayout {
+    private final AutoLayoutHelper mHelper = new AutoLayoutHelper(this);
     FrameLayout primaryMenuContainer, emojiconMenuContainer;
     protected EaseChatPrimaryMenuBase chatPrimaryMenu;
     protected EaseEmojiconMenuBase emojiconMenu;
@@ -358,6 +360,15 @@ public class EaseChatInputMenu extends LinearLayout {
          * @return
          */
         boolean onPressToSpeakBtnTouch(View v, MotionEvent event);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!isInEditMode())
+        {
+            mHelper.adjustChildren();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
     
 }

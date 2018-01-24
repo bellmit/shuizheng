@@ -17,13 +17,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogSure;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -37,15 +36,14 @@ import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.View.SearchMissionEditText;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Member;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Mission;
+import gd.water.oking.com.cn.wateradministration_gd.bean.ReceptionStaffBean;
 import gd.water.oking.com.cn.wateradministration_gd.http.AddMissionMemberParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
-import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionCanSelectMemberParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.QRMissionParams;
 import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.ArrangeMissionPinyinComparator;
-import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
 
 /**
  * 任务接收安排
@@ -88,16 +86,13 @@ public class ArrangeMissionFragment extends BaseFragment {
                         missionListAdapter.setDataList(missionList);
                     }
 
-                    if (selectMission != null) {
-
-
-                    }
 
                     break;
             }
         }
     };
     private Mission mMission;
+    private Gson mGson;
 
     public ArrangeMissionFragment() {
         // Required empty public constructor
@@ -190,7 +185,7 @@ public class ArrangeMissionFragment extends BaseFragment {
             public void onClick(View v) {
 
                 if (canSelectMemberAdapter.getCheckName().size() < 1) {
-                    Toast.makeText(MyApp.getApplictaion(), "请选择队员", Toast.LENGTH_SHORT).show();
+                    RxToast.warning(MyApp.getApplictaion(), "请选择队员", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -221,37 +216,51 @@ public class ArrangeMissionFragment extends BaseFragment {
 
     private void httpGetCanSelectMember(Mission mission) {
 
-        GetMissionCanSelectMemberParams params = new GetMissionCanSelectMemberParams();
-        params.dzid = DefaultContants.CURRENTUSER.getUserId();
-        params.dept_id = DefaultContants.CURRENTUSER.getDeptId();
-        params.task_id = mission.getId();
+        RequestParams params = new RequestParams(DefaultContants.SERVER_HOST + "/cs/getUserByPosition");
+        params.addBodyParameter("lx", "SZJC,CBR");
+
 
         Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-
-                try {
-                    JSONArray objects = new JSONArray(result);
-
-                    canSelectMemberList.clear();
-                    ArrayList<Member> mbList = DataUtil.praseJson(objects.toString(),
-                            new TypeToken<ArrayList<Member>>() {
-                            });
-
-                    if (mbList!=null&&mbList.size()>0){
-                        for (int i = 0; i < mbList.size(); i++) {
-                            Member member = mbList.get(i);
-
-                            canSelectMemberList.add(member);
-                        }
-                        qrMission_button.setVisibility(View.VISIBLE);
-                        Collections.sort(canSelectMemberList,new ArrangeMissionPinyinComparator());
-                        canSelect_listView.setAdapter(canSelectMemberAdapter);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (mGson==null){
+                    mGson = new Gson();
                 }
+
+                ReceptionStaffBean receptionStaff = mGson.fromJson(result, ReceptionStaffBean.class);
+                List<ReceptionStaffBean.SZJCBean> szjc = receptionStaff.getSZJC();
+                List<ReceptionStaffBean.CBRBean> cbr = receptionStaff.getCBR();
+                ArrayList<Member> mbList =new ArrayList<>();
+                for (ReceptionStaffBean.SZJCBean szjcBean:szjc){
+                    Member member = new Member();
+                    member.setUsername(szjcBean.getUSERNAME());
+                    member.setUserid(szjcBean.getUSERID());
+                    member.setId(szjcBean.getUSERID());
+                    mbList.add(member);
+                }
+
+                for (ReceptionStaffBean.CBRBean cbrBean:cbr){
+                    Member member = new Member();
+                    member.setUsername(cbrBean.getUSERNAME());
+                    member.setUserid(cbrBean.getUSERID());
+                    member.setId(cbrBean.getUSERID());
+                    mbList.add(member);
+                }
+
+
+                canSelectMemberList.clear();
+
+                if (mbList!=null&&mbList.size()>0){
+                    for (int i = 0; i < mbList.size(); i++) {
+                        Member member = mbList.get(i);
+
+                        canSelectMemberList.add(member);
+                    }
+                    qrMission_button.setVisibility(View.VISIBLE);
+                    Collections.sort(canSelectMemberList,new ArrangeMissionPinyinComparator());
+                    canSelect_listView.setAdapter(canSelectMemberAdapter);
+                }
+
 
             }
 

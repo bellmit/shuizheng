@@ -89,7 +89,7 @@
         <activity
             android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Dialog"/>
 
         <!-- 百度地图所需的 -->
         <meta-data
@@ -100,8 +100,6 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"/>
-
-        <activity android:name=".main.SignatureActivity"/>
 
         <service
             android:name=".main.LocationService"
@@ -117,7 +115,7 @@
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity
             android:name=".main.ImageGridActivity"
             android:screenOrientation="landscape"
@@ -162,10 +160,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
-        <activity
-            android:name=".main.ExceptionActivity"
-            android:theme="@android:style/Theme.Dialog">
         </activity>
     </application>
 

@@ -591,6 +591,7 @@ public class TemporaryEmergencyTaskFragment extends BaseFragment implements View
         final Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                System.out.println(result+">>>>>>>>>>>>>>>");
                 mRxDialogLoading.cancel();
                 mLv_members.setVisibility(View.VISIBLE);
                 mBt_okselect.setVisibility(View.VISIBLE);

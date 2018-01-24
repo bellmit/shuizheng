@@ -45,7 +45,7 @@ public class RigthChatFragment extends Fragment implements EMMessageListener {
     private TextView mTv_tag;
 
     public static RigthChatFragment newInstance(String param1, String param2) {
-        RigthChatFragment fragment = new RigthChatFragment(null);
+        RigthChatFragment fragment = new RigthChatFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,9 +53,6 @@ public class RigthChatFragment extends Fragment implements EMMessageListener {
         return fragment;
     }
 
-    public RigthChatFragment(Map<String, EaseUser> mContacts) {
-        this.mContacts = mContacts;
-    }
 
 
     @Override
