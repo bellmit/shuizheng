@@ -37,6 +37,7 @@ public class LawDao {
             bean.setRulesContent(cursor.getString(cursor.getColumnIndex("rules_content")));
             bean.setTitle(cursor.getString(cursor.getColumnIndex("title")));
             lawBeans.add(bean);
+
         }
         cursor.close();
         db.close();
