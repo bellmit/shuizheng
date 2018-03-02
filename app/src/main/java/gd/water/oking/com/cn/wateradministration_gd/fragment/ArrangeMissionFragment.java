@@ -1,10 +1,7 @@
 package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +37,7 @@ import gd.water.oking.com.cn.wateradministration_gd.bean.ReceptionStaffBean;
 import gd.water.oking.com.cn.wateradministration_gd.http.AddMissionMemberParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.QRMissionParams;
-import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
+import gd.water.oking.com.cn.wateradministration_gd.interfaces.OkingCallBack;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.ArrangeMissionPinyinComparator;
@@ -50,7 +47,7 @@ import gd.water.oking.com.cn.wateradministration_gd.util.ArrangeMissionPinyinCom
  * A simple {@link Fragment} subclass.
  */
 public class ArrangeMissionFragment extends BaseFragment {
-    private MyCallBack mMyCallBack;
+    private OkingCallBack.MyCallBack mMyCallBack;
     private Button qrMission_button;
     private TextView arrange_title_textView;
     private ListView canSelect_listView;
@@ -69,28 +66,29 @@ public class ArrangeMissionFragment extends BaseFragment {
     private int selectItemIndex = -1;
     private String defaultTaskID = null;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()) {
-                case MainActivity.UPDATE_MISSION_LIST:
-
-                    missionList.clear();
-                    for (int i = 0; i < allMissionList.size(); i++) {
-                        if (allMissionList.get(i).getStatus() == 2 || allMissionList.get(i).getStatus() == 3) {
-                            missionList.add(allMissionList.get(i));
-                        }
-                    }
-
-                    if (missionListAdapter != null && missionList.size() > 0) {
-                        missionListAdapter.setDataList(missionList);
-                    }
-
-
-                    break;
-            }
-        }
-    };
+//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            switch (intent.getAction()) {
+//                case MainActivity.UPDATE_MISSION_LIST:
+//
+//                    missionList.clear();
+//                    for (int i = 0; i < allMissionList.size(); i++) {
+//                        if (allMissionList.get(i).getStatus() == 2 || allMissionList.get(i).getStatus() == 3) {
+//                            missionList.add(allMissionList.get(i));
+//                        }
+//                    }
+//
+//                    if (missionListAdapter != null && missionList.size() > 0) {
+//                        missionListAdapter.setDataList(missionList);
+//                    }
+//
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    };
     private Mission mMission;
     private Gson mGson;
 
@@ -101,7 +99,7 @@ public class ArrangeMissionFragment extends BaseFragment {
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_MISSION_LIST));
+//        MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_MISSION_LIST));
 
         missionList.clear();
         for (int i = 0; i < allMissionList.size(); i++) {
@@ -114,7 +112,7 @@ public class ArrangeMissionFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        MyApp.getApplictaion().unregisterReceiver(mReceiver);
+//        MyApp.getApplictaion().unregisterReceiver(mReceiver);
         super.onDestroyView();
     }
 
@@ -127,7 +125,6 @@ public class ArrangeMissionFragment extends BaseFragment {
 
 
         canSelectMemberAdapter = new MemberAdapter(getActivity(), canSelectMemberList);
-
 
 
         missionListView = (ExpandableListView) rootView.findViewById(R.id.mission_listView);
@@ -223,15 +220,15 @@ public class ArrangeMissionFragment extends BaseFragment {
         Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                if (mGson==null){
+                if (mGson == null) {
                     mGson = new Gson();
                 }
 
                 ReceptionStaffBean receptionStaff = mGson.fromJson(result, ReceptionStaffBean.class);
                 List<ReceptionStaffBean.SZJCBean> szjc = receptionStaff.getSZJC();
                 List<ReceptionStaffBean.CBRBean> cbr = receptionStaff.getCBR();
-                ArrayList<Member> mbList =new ArrayList<>();
-                for (ReceptionStaffBean.SZJCBean szjcBean:szjc){
+                ArrayList<Member> mbList = new ArrayList<>();
+                for (ReceptionStaffBean.SZJCBean szjcBean : szjc) {
                     Member member = new Member();
                     member.setUsername(szjcBean.getUSERNAME());
                     member.setUserid(szjcBean.getUSERID());
@@ -239,7 +236,7 @@ public class ArrangeMissionFragment extends BaseFragment {
                     mbList.add(member);
                 }
 
-                for (ReceptionStaffBean.CBRBean cbrBean:cbr){
+                for (ReceptionStaffBean.CBRBean cbrBean : cbr) {
                     Member member = new Member();
                     member.setUsername(cbrBean.getUSERNAME());
                     member.setUserid(cbrBean.getUSERID());
@@ -250,14 +247,14 @@ public class ArrangeMissionFragment extends BaseFragment {
 
                 canSelectMemberList.clear();
 
-                if (mbList!=null&&mbList.size()>0){
+                if (mbList != null && mbList.size() > 0) {
                     for (int i = 0; i < mbList.size(); i++) {
                         Member member = mbList.get(i);
 
                         canSelectMemberList.add(member);
                     }
                     qrMission_button.setVisibility(View.VISIBLE);
-                    Collections.sort(canSelectMemberList,new ArrangeMissionPinyinComparator());
+                    Collections.sort(canSelectMemberList, new ArrangeMissionPinyinComparator());
                     canSelect_listView.setAdapter(canSelectMemberAdapter);
                 }
 
@@ -292,7 +289,7 @@ public class ArrangeMissionFragment extends BaseFragment {
         params.task_id = member.getTaskid();
         params.userids = member.getUserid();
 
-        Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
 
@@ -325,15 +322,13 @@ public class ArrangeMissionFragment extends BaseFragment {
 
     //确认
     private void QRMission(Mission mission) {
-        List<Member> checkName = canSelectMemberAdapter.getCheckName();
-
+        final List<Member> checkName = canSelectMemberAdapter.getCheckName();
         for (Member m : checkName) {
             if (!m.getUsername().equals(mMission.getReceiver_name())) {
 
                 addMember(m);
             }
         }
-
 
         QRMissionParams params = new QRMissionParams();
         params.id = mission.getId();
@@ -368,7 +363,7 @@ public class ArrangeMissionFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context != null) {
-            mMyCallBack = (MyCallBack) context;
+            mMyCallBack = (OkingCallBack.MyCallBack) context;
         }
     }
 

@@ -1,8 +1,6 @@
 package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,17 +9,25 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hyphenate.util.PathUtil;
+import com.vondear.rxtools.RxNetUtils;
+import com.vondear.rxtools.view.RxToast;
+import com.vondear.rxtools.view.dialog.RxDialogLoading;
+import com.vondear.rxtools.view.dialog.RxDialogSure;
+import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -34,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import gd.water.oking.com.cn.wateradministration_gd.Adapter.CaseAudioVideoEvidenceListRecyAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Case;
@@ -42,7 +49,11 @@ import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.EvidenceSaveParams;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
-import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -50,26 +61,17 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
-
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private String mParam2;
     private Case mycase;
 
-    private ListView main_listView;
+    private RecyclerView ryMain;
     private ArrayList<Evidence> evidences = new ArrayList<>();
-    private BaseAdapter adapter;
     private Button add_evidence_button;
 
     private boolean uploadPic, uploadSound, uploadVideo;
     private int uploadPicCount, uploadSoundCount, uploadVideoCount;
-    private ProgressDialog progressDialog;
-
-    private Runnable DialogDismissRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-            }
-        }
-    };
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -87,24 +89,48 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
                     localSaveCase();
 
                     loadEvidence();
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
+                    if (mCaseAudioVideoEvidenceListRecyAdapter != null) {
+                        mCaseAudioVideoEvidenceListRecyAdapter.notifyDataSetChanged();
                     }
 
                     break;
+                default:
+                    break;
             }
+
         }
     };
-    private SimpleDateFormat mSimpleDateFormat;
+    private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    ;
+    private CaseAudioVideoEvidenceListRecyAdapter mCaseAudioVideoEvidenceListRecyAdapter;
+    private RxDialogSureCancel mRxDialogSureCancel;
+    private RxDialogLoading mRxDialogLoading;
 
     public CaseAudioVideoEvidenceListFragment() {
         // Required empty public constructor
     }
 
+    public static CaseAudioVideoEvidenceListFragment newInstance(Case aCase, String param2) {
+        CaseAudioVideoEvidenceListFragment fragment = new CaseAudioVideoEvidenceListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM1, aCase);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mycase = (Case) getArguments().getParcelable(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(CaseEvidenceFragment.DELETE_EVIDENCE_ACTION));
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return inflater.inflate(R.layout.fragment_case_audio_video_evidence_list, container, false);
     }
 
@@ -116,125 +142,89 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
 
     @Override
     public void initView(View rootView) {
-        main_listView = (ListView) rootView.findViewById(R.id.main_listView);
-
+        ryMain = rootView.findViewById(R.id.ry_main);
+        ryMain.setLayoutManager(new LinearLayoutManager(MyApp.getApplictaion(), LinearLayoutManager.VERTICAL, false));
+        ryMain.setItemAnimator(new DefaultItemAnimator());
         loadEvidence();
-
-        adapter = new BaseAdapter() {
+        mCaseAudioVideoEvidenceListRecyAdapter = new CaseAudioVideoEvidenceListRecyAdapter(R.layout.list_item_audiovideoevidence, evidences);
+        ryMain.setAdapter(mCaseAudioVideoEvidenceListRecyAdapter);
+        mCaseAudioVideoEvidenceListRecyAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public int getCount() {
-                return evidences.size();
-            }
+            public void onItemChildClick(final BaseQuickAdapter adapter, View view, final int position) {
+                switch (view.getId()) {
+                    case R.id.upload_button:            //上传
+                        if (RxNetUtils.isConnected(MyApp.getApplictaion())) {
 
-            @Override
-            public Object getItem(int position) {
-                return evidences.get(position);
-            }
+                            saveEvidence(evidences.get(position));
+                        } else {
+                            RxToast.warning(MyApp.getApplictaion(), "网络无连接", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.delete_button:            //删除
+                        if (mRxDialogSureCancel == null) {
 
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
+                            mRxDialogSureCancel = new RxDialogSureCancel(getActivity());
+                            mRxDialogSureCancel.setTitle("提示");
+                            mRxDialogSureCancel.setContent("是否删除证据");
+                        }
+                        mRxDialogSureCancel.getTvSure().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                deleteEvidence(evidences.get(position));
+                                mycase.getEvidenceList().remove(evidences.get(position));
+                                localSaveCase();
 
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                View view = View.inflate(getContext(), R.layout.list_item_audiovideoevidence, null);
+                                loadEvidence();
+                                adapter.notifyDataSetChanged();
+                                mRxDialogSureCancel.cancel();
+                            }
+                        });
+                        mRxDialogSureCancel.getTvCancel().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mRxDialogSureCancel.cancel();
+                            }
+                        });
+                        mRxDialogSureCancel.show();
 
-                TextView zjmc_tv = (TextView) view.findViewById(R.id.zjmc_tv);
-                TextView cjdd_tv = (TextView) view.findViewById(R.id.cjdd_tv);
-                TextView zjnr_tv = (TextView) view.findViewById(R.id.zjnr_tv);
-                TextView lx_tv = (TextView) view.findViewById(R.id.lx_tv);
+                        break;
+                    case R.id.edit_button:            //查看编辑
+                        if (((Button) view).getText().equals("查看")) {
+                            FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
+                            ft.addToBackStack(null);
 
-                Button edit_button = (Button) view.findViewById(R.id.edit_button);
-                Button delete_button = (Button) view.findViewById(R.id.delete_button);
-                Button upload_button = (Button) view.findViewById(R.id.upload_button);
+                            CaseAudioVideoEvidenceFragment caseAudioVideoEvidenceFragment = CaseAudioVideoEvidenceFragment.newInstance(mycase, evidences.get(position), 0);
+                            ft.replace(R.id.sub_fragment_root, caseAudioVideoEvidenceFragment).commit();
+                        } else {
+                            FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
+                            ft.addToBackStack(null);
 
-                zjmc_tv.setText(evidences.get(position).getZJMC());
-                cjdd_tv.setText(evidences.get(position).getCJDD());
-                zjnr_tv.setText(evidences.get(position).getZJNR());
-                if (evidences.get(position).getPicList().size() > 0) {
-                    lx_tv.setText("图片");
-                } else if (evidences.get(position).getVideoList().size() > 0) {
-                    lx_tv.setText("视频");
-                } else if (evidences.get(position).getSoundList().size() > 0) {
-                    lx_tv.setText("语音");
+                            CaseAudioVideoEvidenceFragment caseAudioVideoEvidenceFragment = CaseAudioVideoEvidenceFragment.newInstance(mycase, evidences.get(position), 1);
+                            ft.replace(R.id.sub_fragment_root, caseAudioVideoEvidenceFragment).commit();
+                        }
+
+                        break;
+                    default:
+                        break;
                 }
-
-                if (evidences.get(position).isUpload()) {
-                    upload_button.setVisibility(View.GONE);
-                    delete_button.setVisibility(View.GONE);
-                    edit_button.setText("查看");
-                }
-
-                edit_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                        ft.addToBackStack(null);
-
-                        CaseAudioVideoEvidenceFragment f = new CaseAudioVideoEvidenceFragment();
-                        f.setMyEvidence(evidences.get(position));
-                        f.setMycase(mycase);
-                        f.setAdd(false);
-                        ft.replace(R.id.sub_fragment_root, f).commit();
-                    }
-                });
-
-                delete_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        AlertDialog dialog = new AlertDialog.Builder(getContext()).setTitle("是否删除证据？").
-                                setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        deleteEvidence(evidences.get(position));
-                                        mycase.getEvidenceList().remove(evidences.get(position));
-                                        localSaveCase();
-
-                                        loadEvidence();
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }).setNegativeButton("否", null).create();
-                        dialog.show();
-
-                    }
-
-                });
-
-                upload_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SaveEvidence(evidences.get(position));
-                    }
-                });
-
-                return view;
             }
-        };
-
-        main_listView.setAdapter(adapter);
+        });
 
         add_evidence_button = (Button) rootView.findViewById(R.id.add_evidence_button);
         add_evidence_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft = CaseAudioVideoEvidenceListFragment.this.getParentFragment().getChildFragmentManager().beginTransaction();
-                ft.addToBackStack(null);
 
-                CaseAudioVideoEvidenceFragment f = new CaseAudioVideoEvidenceFragment();
-                f.setMycase(mycase);
-                f.setAdd(true);
-                ft.replace(R.id.sub_fragment_root, f).commit();
+                FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
+                ft.addToBackStack(null);
+                CaseAudioVideoEvidenceFragment caseAudioVideoEvidenceFragment = CaseAudioVideoEvidenceFragment.newInstance(mycase, null, 2);
+
+                ft.replace(R.id.sub_fragment_root, caseAudioVideoEvidenceFragment).commit();
 
             }
         });
     }
 
-    public void setMycase(Case mycase) {
-        this.mycase = mycase;
-    }
 
     private void deleteEvidence(Evidence evidence) {
         SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("evidence", MODE_PRIVATE);
@@ -252,17 +242,19 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
         editor.commit();
     }
 
-    private void SaveEvidence(final Evidence evidence) {
+    private void saveEvidence(final Evidence evidence) {
 
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getContext());
+        if (mRxDialogLoading == null) {
+
+            mRxDialogLoading = new RxDialogLoading(getActivity(), false, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mRxDialogLoading.cancel();
+                }
+            });
         }
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("上传数据中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
+        mRxDialogLoading.setLoadingText("上传数据中...");
+        mRxDialogLoading.show();
         EvidenceSaveParams params = new EvidenceSaveParams();
         try {
             if (evidence.getZJID() != null) {
@@ -328,28 +320,25 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            getActivity().runOnUiThread(DialogDismissRunnable);
+            mRxDialogLoading.cancel();
         }
 
         Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i("EvidenceSave", "onSuccess>>>>>>" + result);
+
 
                 if ("success".equals(result)) {
                     uploadEvidenceFile(evidence);
                 } else {
-                    getActivity().runOnUiThread(DialogDismissRunnable);
-                    Toast.makeText(getContext(), "上传证据失败！", Toast.LENGTH_SHORT).show();
+                    RxToast.error(MyApp.getApplictaion(), "上传证据失败", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.i("EvidenceSave", "onError>>>>>>" + ex.toString());
 
-                getActivity().runOnUiThread(DialogDismissRunnable);
-                Toast.makeText(getContext(), "网络连接有误！", Toast.LENGTH_SHORT).show();
+                RxToast.error(MyApp.getApplictaion(), "网络连接有误！1", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -364,7 +353,7 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
         });
     }
 
-    private void uploadEvidenceFile(Evidence evidence) {
+    private void uploadEvidenceFile(final Evidence evidence) {
 
         uploadPic = true;
         uploadSound = true;
@@ -373,32 +362,59 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
         uploadVideoCount = 0;
         uploadSoundCount = 0;
 
-        for (int i = 0; i < evidence.getPicList().size(); i++) {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                for (int i = 0; i < evidence.getPicList().size(); i++) {
 
-            uploadPic = false;
-            Uri uri = evidence.getPicList().get(i);
-            uploadFile(uri, "jpg", evidence);
-        }
+                    uploadPic = false;
+                    Uri uri = evidence.getPicList().get(i);
+                    uploadFile(uri, "jpg", evidence);
+                }
 
-        for (int i = 0; i < evidence.getVideoList().size(); i++) {
+                for (int i = 0; i < evidence.getVideoList().size(); i++) {
 
-            uploadVideo = false;
-            Uri uri = evidence.getVideoList().get(i);
-            uploadFile(uri, "mp4", evidence);
-        }
+                    uploadVideo = false;
+                    Uri uri = evidence.getVideoList().get(i);
+                    uploadFile(uri, "mp4", evidence);
+                }
 
-        for (int i = 0; i < evidence.getSoundList().size(); i++) {
+                for (int i = 0; i < evidence.getSoundList().size(); i++) {
 
-            uploadSound = false;
-            Uri uri = evidence.getSoundList().get(i);
-            uploadFile(uri, "YY", evidence);
-        }
+                    uploadSound = false;
+                    Uri uri = evidence.getSoundList().get(i);
+                    uploadFile(uri, "YY", evidence);
+                }
+                e.onNext(1);
+            }
+        }).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-        checkChangeState(evidence);
+            }
+
+            @Override
+            public void onNext(Integer value) {
+                if (value == 1) {
+                    checkChangeState(evidence);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
     }
 
     private void uploadFile(Uri uri, final String type, final Evidence evidence) {
-
         //上传图片
         RequestParams params = new RequestParams(DefaultContants.SERVER_HOST + "/app/uploadfile");
         // 加到url里的参数, http://xxxx/s?wd=xUtils
@@ -410,15 +426,22 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
 
         // 使用multipart表单上传文件
         params.setMultipart(true);
-        params.addBodyParameter(
-                "files",
-                new File(FileUtil.PraseUritoPath(getContext(), uri)),
-                null); // 如果文件没有扩展名, 最好设置contentType参数.
+        if (type.equals("YY")){
+            params.addBodyParameter(
+                    "files",
+                    new File(PathUtil.getInstance().getVoicePath().getPath() + "/" + uri.getLastPathSegment()),
+                    null); // 如果文件没有扩展名, 最好设置contentType参数.
+        }else {
+            params.addBodyParameter(
+                    "files",
+                    new File(uri.getPath()),
+                    null); // 如果文件没有扩展名, 最好设置contentType参数.
+        }
+
 
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i("UploadEvidenceFile", "onSuccess>>>>>>" + result);
 
                 if ("success".equals(result)) {
                     switch (type) {
@@ -443,18 +466,20 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
                                 checkChangeState(evidence);
                             }
                             break;
+                        default:
+                            break;
                     }
                 } else {
-                    getActivity().runOnUiThread(DialogDismissRunnable);
-                    Toast.makeText(getContext(), "上传证据附件失败！", Toast.LENGTH_SHORT).show();
+                    mRxDialogLoading.cancel();
+                    RxToast.error(MyApp.getApplictaion(), "上传证据附件失败！", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.i("UploadEvidenceFile", "onError>>>>>>" + ex.toString());
-                getActivity().runOnUiThread(DialogDismissRunnable);
-                Toast.makeText(getContext(), "网络连接有误！", Toast.LENGTH_SHORT).show();
+                mRxDialogLoading.cancel();
+                RxToast.error(MyApp.getApplictaion(), "网络连接有误！2", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -470,8 +495,8 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
     }
 
     public void notifyDataSetChanged() {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
+        if (mCaseAudioVideoEvidenceListRecyAdapter != null) {
+            mCaseAudioVideoEvidenceListRecyAdapter.notifyDataSetChanged();
         }
     }
 
@@ -479,7 +504,8 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
         evidences.clear();
         if (mycase != null) {
             for (int i = 0; i < mycase.getEvidenceList().size(); i++) {
-                if ("STZL".equals(mycase.getEvidenceList().get(i).getZJLX())) {
+                if ("YYSP".equals(mycase.getEvidenceList().get(i).getOtype()) || "SP".equals(mycase.getEvidenceList().get(i).getOtype())
+                        || "YY".equals(mycase.getEvidenceList().get(i).getOtype())) {
                     evidences.add(mycase.getEvidenceList().get(i));
                 }
             }
@@ -488,34 +514,28 @@ public class CaseAudioVideoEvidenceListFragment extends BaseFragment {
 
     private void checkChangeState(Evidence evidence) {
         if (uploadSound && uploadVideo && uploadPic) {
-
+            mRxDialogLoading.cancel();
             evidence.setUpload(true);
             localSaveEvidence(evidence);
-
-            adapter.notifyDataSetChanged();
+            mCaseAudioVideoEvidenceListRecyAdapter.notifyDataSetChanged();
             localSaveCase();
 
-            AlertDialog.Builder normalDialog =
-                    new AlertDialog.Builder(getContext());
-            normalDialog.setTitle("提示");
-            normalDialog.setMessage("上传成功");
-            normalDialog.setPositiveButton("确定",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+            final RxDialogSure rxDialogSure = new RxDialogSure(getActivity());
+            rxDialogSure.setTitle("提示");
+            rxDialogSure.setContent("上传成功！");
+            rxDialogSure.show();
+            rxDialogSure.getTvSure().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rxDialogSure.cancel();
+                }
+            });
 
-            normalDialog.show();
-
-            getActivity().runOnUiThread(DialogDismissRunnable);
 //            CaseAudioVideoEvidenceListFragment.this.getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
     private void localSaveEvidence(Evidence myEvidence) {
-
         String jsonStr = DataUtil.toJson(myEvidence);
         SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("evidence", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

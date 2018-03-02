@@ -6,13 +6,17 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
@@ -23,8 +27,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.vondear.rxtools.RxDeviceUtils;
-import com.vondear.rxtools.RxLocationUtils;
-import com.vondear.rxtools.view.RxToast;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -46,21 +48,20 @@ import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.SetLocationParams;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class LocationService extends Service {
 
     private static final int cacheSize = 5;
     private final double EARTH_RADIUS = 6378137.0;
+    private LocationManager locationManager;
     private File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "oking/location");
     private Location newLocation = null;
     private ArrayList<Location> locationArrayList = new ArrayList<>();
     private ArrayList<Location> cacheLonList = new ArrayList<>();
     private Location lastLocation = null;//最后基准点
     private Subscription mSubscription;
-    private RxLocationUtils.OnLocationChangeListener mOnLocationChangeListener;
-    private GpsStatus.Listener mListener;
-    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    private NotificationCompat.Builder mBuilder;
+    private GpsStatus.Listener gl;
 
     public LocationService() {
 
@@ -73,21 +74,20 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         getLocation();
 
-        if (mSubscription != null) {
+        if (mSubscription!=null){
             mSubscription.cancel();
-            mSubscription = null;
+            mSubscription=null;
         }
         Flowable.interval(0, 1, TimeUnit.MINUTES)
                 .onBackpressureDrop()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Long>() {
                     @Override
                     public void onSubscribe(Subscription s) {
-                        mSubscription = s;
-                        s.request(Long.MAX_VALUE);
+                        mSubscription=s;
                     }
 
                     @Override
@@ -104,7 +104,7 @@ public class LocationService extends Service {
                                 mLocation.setLongitude(newLocation.getLongitude());
                                 mLocation.setDatetime(newLocation.getTime());
                                 params.COORDINATE = new Gson().toJson(mLocation);
-                                params.TIME = DateFormat.format("yyyy-MM-dd HH:mm:ss", new Date()).toString();
+                                params.TIME = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
                                 params.LOGINTIME = MyApp.getApplictaion().getSharedPreferences("logintime", Context.MODE_PRIVATE).getLong("logintime", 0);
 
                                 Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
@@ -153,175 +153,232 @@ public class LocationService extends Service {
 
 
     private void getLocation() {
-        if (mOnLocationChangeListener == null) {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-            mOnLocationChangeListener = new RxLocationUtils.OnLocationChangeListener() {
-                @Override
-                public void getLastKnownLocation(Location location) {
+        Criteria criteria = new Criteria();
+        // 设置定位精确度 Criteria.ACCURACY_COARSE比较粗略，Criteria.ACCURACY_FINE则比较精细
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        // 设置是否要求速度
+        criteria.setSpeedRequired(false);
+        // 设置是否允许运营商收费
+        criteria.setCostAllowed(true);
+        // 设置是否需要方位信息
+        criteria.setBearingRequired(false);
+        // 设置是否需要海拔信息
+        criteria.setAltitudeRequired(false);
+        // 设置对电源的需求
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        String provider = locationManager.getBestProvider(criteria, true);
 
-                }
-
-                @Override
-                public void onLocationChanged(Location location) {
-
-
-                    if (locationArrayList.size() != 4) {
-                        locationArrayList.add(location);
-                        return;
-                    }
-
-                    locationArrayList.add(location);
-                    Location aLocation = getBestLocation(locationArrayList);
-                    locationArrayList.clear();
-                    if (aLocation == null) {
-                        return;
-                    }
-                    cacheLonList.add(aLocation);
-                    if (cacheLonList.size() >= cacheSize) {
-                        writeToLogFile();
-                    }
-
-                    //校对时间
-                    SystemClock.setCurrentTimeMillis(aLocation.getTime());
-                    RxToast.success(MyApp.getApplictaion(),"最新定位"+location.getLatitude(),Toast.LENGTH_LONG).show();
-                    //记录最新定位
-                    newLocation = location;
-
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-            };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-        RxLocationUtils.register(MyApp.getApplictaion(), 5000, 1, mOnLocationChangeListener);
 
+        locationManager.requestLocationUpdates(provider, 2000, 1.0f, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
 
-        if (RxLocationUtils.mLocationManager != null) {
-            if (ActivityCompat.checkSelfPermission(MyApp.getApplictaion(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+                if (locationArrayList.size() != 4) {
+                    locationArrayList.add(location);
+                    return;
+                }
+
+                locationArrayList.add(location);
+                Location aLocation = getBestLocation(locationArrayList);
+                locationArrayList.clear();
+                if (aLocation == null) {
+                    return;
+                }
+                cacheLonList.add(aLocation);
+                if (cacheLonList.size() >= cacheSize) {
+                    writeToLogFile();
+                }
+
+                //校对时间
+                SystemClock.setCurrentTimeMillis(aLocation.getTime());
+                //记录最新定位
+                newLocation = aLocation;
             }
-            //获取当前状态  
-//获取卫星颗数的默认最大值  
-//创建一个迭代器保存所有卫星   
-//NotificationManagerCompat notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-// 更新gps界面
-//Log.i("GpsStatus", "卫星状态改变");
-            if (mListener == null) {
-                mListener = new GpsStatus.Listener() {
 
-                    @Override
-                    public void onGpsStatusChanged(int event) {
-                        switch (event) {
-                            case GpsStatus.GPS_EVENT_FIRST_FIX:
-                                Log.i("GpsStatus", "第一次定位");
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+
+        gl = new GpsStatus.Listener() {
+            @Override
+            public void onGpsStatusChanged(int event) {
+
+                switch (event) {
+                    case GpsStatus.GPS_EVENT_FIRST_FIX:
+                        Log.i("GpsStatus", "第一次定位");
+                        break;
+                    case GpsStatus.GPS_EVENT_STARTED:
+                        Log.i("GpsStatus", "定位开始");
+                        break;
+                    case GpsStatus.GPS_EVENT_STOPPED:
+                        Log.i("GpsStatus", "定位结束");
+                        break;
+                    case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                        //获取当前状态  
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        GpsStatus gpsStatus = locationManager.getGpsStatus(null);
+                        //获取卫星颗数的默认最大值  
+                        int maxSatellites = gpsStatus.getMaxSatellites();
+                        //创建一个迭代器保存所有卫星   
+                        Iterator<GpsSatellite> iters = gpsStatus.getSatellites().iterator();
+                        int count = 0;
+                        int useCount = 0;
+                        while (iters.hasNext() && count <= maxSatellites) {
+                            GpsSatellite s = iters.next();
+                            count++;
+                            if (s.usedInFix()) {
+                                useCount++;
+                            }
+                        }
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+                        //NotificationManagerCompat notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                        builder.setContentTitle("广东水政定位:").
+                                setContentText("当前在用卫星数：" + useCount + "    采样点数：" + locationArrayList.size()).
+                                setSmallIcon(R.drawable.login_logo);
+                        if (newLocation != null) {
+                            builder.setSubText("最新定位时间：" + sdf.format(newLocation.getTime()));
+                        }
+
+                        Notification notification = builder.build();
+                        notification.flags |= Notification.FLAG_NO_CLEAR;
+                        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.gpsstate_item_layout);
+
+                        if (newLocation != null) {
+                            remoteViews.setTextViewText(R.id.latitude_textView, "经度：" + newLocation.getLatitude());
+                            remoteViews.setTextViewText(R.id.longitude_textView, "纬度：" + newLocation.getLongitude());
+                            remoteViews.setTextViewText(R.id.altitude_textView, "海拔：" + newLocation.getAltitude());
+                            remoteViews.setTextViewText(R.id.speed_textView, "速度：" + newLocation.getSpeed() + "m/s");
+                            remoteViews.setTextViewText(R.id.accuracy_textView, "精度：±" + newLocation.getAccuracy() + "m");
+                            remoteViews.setTextViewText(R.id.dateTime_textView, "定位时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(newLocation.getTime())));
+                        }
+
+                        notification.bigContentView = remoteViews;
+
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                        notificationManager.notify(10000, notification);
+
+                        // 更新gps界面
+                        Intent intent = new Intent(MainActivity.UPDATE_GPS_STATE_UI);
+                        if (newLocation != null) {
+                            intent.putExtra("latitude", newLocation.getLatitude());
+                            intent.putExtra("longitude", newLocation.getLongitude());
+                            intent.putExtra("altitude", newLocation.getAltitude());
+                            intent.putExtra("speed", newLocation.getSpeed());
+                            intent.putExtra("accuracy", newLocation.getAccuracy());
+                            intent.putExtra("dateTime", newLocation.getTime());
+                        }
+
+                        intent.putExtra("useCount", useCount);
+                        switch (useCount) {
+                            case 0:
+                                intent.putExtra("SignalLevel", 0);
                                 break;
-                            case GpsStatus.GPS_EVENT_STARTED:
-                                Log.i("GpsStatus", "定位开始");
+                            case 3:
+                            case 4:
+                            case 5:
+                                intent.putExtra("SignalLevel", 1);
                                 break;
-                            case GpsStatus.GPS_EVENT_STOPPED:
-                                Log.i("GpsStatus", "定位结束");
-                                break;
-                            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                                //获取当前状态  
-                                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    return;
-                                }
-                                GpsStatus gpsStatus = RxLocationUtils.mLocationManager.getGpsStatus(null);
-                                //获取卫星颗数的默认最大值  
-                                int maxSatellites = gpsStatus.getMaxSatellites();
-                                //创建一个迭代器保存所有卫星   
-                                Iterator<GpsSatellite> iters = gpsStatus.getSatellites().iterator();
-                                int count = 0;
-                                int useCount = 0;
-                                while (iters.hasNext() && count <= maxSatellites) {
-                                    GpsSatellite s = iters.next();
-                                    count++;
-                                    if (s.usedInFix()) {
-                                        useCount++;
-                                    }
-                                }
-
-
-
-                                //NotificationManagerCompat notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-                               if (mBuilder==null){
-                                   mBuilder = new NotificationCompat.Builder(getApplicationContext());
-                               }
-                                mBuilder.setContentTitle("广东水政定位:").
-                                        setContentText("当前在用卫星数：" + useCount + "    采样点数：" + locationArrayList.size()).
-                                        setSmallIcon(R.drawable.login_logo);
-                                if (newLocation != null) {
-                                    mBuilder.setSubText("最新定位时间：" + sdf.format(newLocation.getTime()));
-                                }
-
-                                Notification notification = mBuilder.build();
-                                notification.flags |= Notification.FLAG_NO_CLEAR;
-                                RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.gpsstate_item_layout);
-
-                                if (newLocation != null) {
-                                    remoteViews.setTextViewText(R.id.latitude_textView, "经度：" + newLocation.getLatitude());
-                                    remoteViews.setTextViewText(R.id.longitude_textView, "纬度：" + newLocation.getLongitude());
-                                    remoteViews.setTextViewText(R.id.altitude_textView, "海拔：" + newLocation.getAltitude());
-                                    remoteViews.setTextViewText(R.id.speed_textView, "速度：" + newLocation.getSpeed() + "m/s");
-                                    remoteViews.setTextViewText(R.id.accuracy_textView, "精度：±" + newLocation.getAccuracy() + "m");
-                                    remoteViews.setTextViewText(R.id.dateTime_textView, "定位时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(newLocation.getTime())));
-                                }
-
-                                notification.bigContentView = remoteViews;
-
-                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                                notificationManager.notify(10000, notification);
-
-                                // 更新gps界面
-                                Intent intent = new Intent(MainActivity.UPDATE_GPS_STATE_UI);
-                                if (newLocation != null) {
-                                    intent.putExtra("latitude", newLocation.getLatitude());
-                                    intent.putExtra("longitude", newLocation.getLongitude());
-                                    intent.putExtra("altitude", newLocation.getAltitude());
-                                    intent.putExtra("speed", newLocation.getSpeed());
-                                    intent.putExtra("accuracy", newLocation.getAccuracy());
-                                    intent.putExtra("dateTime", newLocation.getTime());
-                                }
-
-                                intent.putExtra("count", count);
-                                intent.putExtra("useCount", useCount);
-                                switch (useCount) {
-                                    case 0:
-                                        intent.putExtra("SignalLevel", 0);
-                                        break;
-                                    case 3:
-                                    case 4:
-                                    case 5:
-                                        intent.putExtra("SignalLevel", 1);
-                                        break;
-                                    case 6:
-                                    case 7:
-                                    case 8:
-                                        intent.putExtra("SignalLevel", 2);
-                                        break;
-                                    default:
-                                        intent.putExtra("SignalLevel", 3);
-                                        break;
-                                }
-                                sendBroadcast(intent);
-
-                                //Log.i("GpsStatus", "卫星状态改变");
+                            case 6:
+                            case 7:
+                            case 8:
+                                intent.putExtra("SignalLevel", 2);
                                 break;
                             default:
+                                intent.putExtra("SignalLevel", 3);
                                 break;
                         }
-                    }
-                };
+                        sendBroadcast(intent);
+
+                        //Log.i("GpsStatus", "卫星状态改变");
+                        break;
+                    default:
+                        break;
+                }
             }
+        };
 
-            RxLocationUtils.mLocationManager.addGpsStatusListener(mListener);
-        }
-
+        locationManager.addGpsStatusListener(gl);
     }
 
+    private void writeToLogFile() {
+        if (!mediaStorageDir.exists()) {
+            mediaStorageDir.mkdirs();
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        File file = new File(mediaStorageDir, sdf.format(new Date()) + ".txt");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            FileWriter fw = new FileWriter(file, true);
+            long timeS = System.currentTimeMillis();
+            Log.i("WriteFile", "onLocationWrite: >>>>Start@" + timeS);
+
+            for (int i = 0; i < cacheLonList.size(); i++) {
+                Location aLocation = cacheLonList.get(i);
+
+
+                fw.write(aLocation.getLatitude() + "," + aLocation.getLongitude() + "," + aLocation.getTime() + "\n");
+
+            }
+            fw.flush();
+            fw.close();
+            cacheLonList.clear();
+            Log.i("WriteFile", "onLocationWrite: >>>>End>>" + (System.currentTimeMillis() - timeS));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+
+        locationManager.removeGpsStatusListener(gl);
+        if (mSubscription!=null){
+
+            mSubscription.cancel();
+            mSubscription=null;
+        }
+        writeToLogFile();
+        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Nullable
     private Location getBestLocation(ArrayList<Location> locationArrayList) {
 
         float limit1 = 35;//35m/s = 126km/h
@@ -420,6 +477,14 @@ public class LocationService extends Service {
                     continue;
                 }
 
+                //拐点??
+//                float abBearing = b.getBearing() - a.getBearing();
+//                float bcBearing = c.getBearing() - b.getBearing();
+//
+//                if (Math.abs(abBearing)>=180 && Math.abs(bcBearing)>=180){
+//                    removeList.add(locationArrayList.get(i + 1));
+//                    continue;
+//                }
             }
 
             Location mlocation = locationArrayList.get(0);
@@ -432,12 +497,16 @@ public class LocationService extends Service {
                 a += locationArrayList.get(i).getAccuracy() + ",";
             }
 
+//            Toast.makeText(getApplicationContext(), a + ">>>>>>    " + locationArrayList.size() + "/" + removeList.size(), Toast.LENGTH_LONG).show();
 
             //去除不及格取样点
             for (int i = 0; i < removeList.size() - 1; i++) {
                 locationArrayList.remove(removeList.get(i));
             }
 
+//            if (locationArrayList.size() == 0 && mlocation.getTime() - newLocation.getTime() > 60000) {
+//                locationArrayList.add(mlocation);
+//            }
 
             lastLocation = locationArrayList.get(locationArrayList.size() - 1);
 
@@ -445,6 +514,8 @@ public class LocationService extends Service {
             Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
 
+//        Toast.makeText(getApplicationContext(), locationArrayList.size() + "", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), ((int) Math.floor(locationArrayList.size() / 2)) + "", Toast.LENGTH_SHORT).show();
         if (locationArrayList.size() > 0) {
             Location nLocation = locationArrayList.get(0);
             for (int i = 0; i < locationArrayList.size(); i++) {
@@ -457,63 +528,6 @@ public class LocationService extends Service {
             return null;
         }
     }
-
-
-    private void writeToLogFile() {
-        if (!mediaStorageDir.exists()) {
-            mediaStorageDir.mkdirs();
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        File file = new File(mediaStorageDir, sdf.format(new Date()) + ".txt");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            FileWriter fw = new FileWriter(file, true);
-            long timeS = System.currentTimeMillis();
-            Log.i("WriteFile", "onLocationWrite: >>>>Start@" + timeS);
-
-            for (int i = 0; i < cacheLonList.size(); i++) {
-                Location aLocation = cacheLonList.get(i);
-
-
-                fw.write(aLocation.getLatitude() + "," + aLocation.getLongitude() + "," + aLocation.getTime() + "\n");
-
-            }
-            fw.flush();
-            fw.close();
-            cacheLonList.clear();
-            Log.i("WriteFile", "onLocationWrite: >>>>End>>" + (System.currentTimeMillis() - timeS));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-
-        if (mSubscription != null) {
-
-            mSubscription.cancel();
-            mSubscription = null;
-        }
-        RxLocationUtils.unregister();
-        writeToLogFile();
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
 
     private double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
         double radLat1 = (lat_a * Math.PI / 180.0);

@@ -1,11 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.xclcharts.chart"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="org.xclcharts.chart">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
 
     <application
         android:allowBackup="true"

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -35,10 +36,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import gd.water.oking.com.cn.wateradministration_gd.R;
+import gd.water.oking.com.cn.wateradministration_gd.bean.Contants;
 import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
 
 public class VideoRecordActivity extends EaseBaseActivity implements
@@ -62,6 +63,8 @@ public class VideoRecordActivity extends EaseBaseActivity implements
     Camera.Parameters cameraParameters = null;
     private SurfaceHolder mSurfaceHolder;
     int defaultVideoFrameRate = -1;
+    SimpleDateFormat	mSdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    private String mFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +228,8 @@ public class VideoRecordActivity extends EaseBaseActivity implements
                     btnStop.setVisibility(View.VISIBLE);
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
+                SharedPreferences.Editor edit = getSharedPreferences("fileLocation",MODE_PRIVATE).edit();
+                edit.putString(mFileName, Contants.LOCATIONRESULT[1]+","+Contants.LOCATIONRESULT[2]).commit();
 //                }
 
                 break;
@@ -321,10 +326,11 @@ public class VideoRecordActivity extends EaseBaseActivity implements
         if (defaultVideoFrameRate != -1) {
             mediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
         }
-        SimpleDateFormat	mSdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
         // set the path for video file
+        mFileName = mSdf.format(System.currentTimeMillis());
         localPath = "/storage/emulated/0/oking/mission_video/"
-                + mSdf.format(new Date()) + ".mp4";
+                + mFileName + ".mp4";
         mediaRecorder.setOutputFile(localPath);
         mediaRecorder.setMaxDuration(300000);
         mediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());

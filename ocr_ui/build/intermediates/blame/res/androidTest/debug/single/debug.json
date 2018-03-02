@@ -1460,10 +1460,6 @@
         "source": "C:\\Users\\Administrator\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-25.1.1.aar\\a1a460dae00948b109618a122daf4a91\\res\\drawable\\abc_seekbar_tick_mark_material.xml"
     },
     {
-        "merged": "E:\\Users\\Administrator\\AndroidStudioProjects\\shuizheng\\ocr_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout_notification_template_custom_big.xml.flat",
-        "source": "C:\\Users\\Administrator\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-25.1.1.aar\\a1a460dae00948b109618a122daf4a91\\res\\layout\\notification_template_custom_big.xml"
-    },
-    {
         "merged": "E:\\Users\\Administrator\\AndroidStudioProjects\\shuizheng\\ocr_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-25.1.1.aar\\a1a460dae00948b109618a122daf4a91\\res\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png"
     },

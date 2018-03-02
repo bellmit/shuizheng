@@ -19,8 +19,6 @@ INJECTED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf
 		INJECTED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml
 		ADDED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
 		INJECTED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml
-	xmlns:android
-		ADDED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
 INJECTED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from E:\Users\Administrator\AndroidStudioProjects\shuizheng\android-pdf-viewer\src\main\AndroidManifest.xml

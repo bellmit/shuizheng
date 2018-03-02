@@ -15,32 +15,26 @@ import java.io.IOException;
 public class MediaManager {
 
 
-    public static MediaPlayer mPlayer;
+    public static MediaPlayer mPlayer ;
 
     private static boolean isPause;
 
-    public static void playSound(String filePathString,
-                                 OnCompletionListener onCompletionListener) {
+    public static void init() {
         // TODO Auto-generated method stub
         if (mPlayer == null) {
-            mPlayer = new MediaPlayer();
-            //保险起见，设置报错监听
-            mPlayer.setOnErrorListener(new OnErrorListener() {
+            mPlayer= new MediaPlayer();
 
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    // TODO Auto-generated method stub
-                    mPlayer.reset();
-                    return false;
-                }
-            });
-        } else {
-            mPlayer.reset();
         }
+    }
+
+    public static void playSound(String filePathString,
+                                 OnCompletionListener onCompletionListener,OnErrorListener onErrorListener) {
+
 
         try {
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mPlayer.setOnCompletionListener(onCompletionListener);
+            mPlayer.setOnErrorListener(onErrorListener);
             mPlayer.setDataSource(filePathString);
             mPlayer.prepare();
             mPlayer.start();
@@ -75,18 +69,5 @@ public class MediaManager {
         }
     }
 
-
-    public static void release() {
-
-        if (mPlayer != null) {
-
-            if(mPlayer.isPlaying()){
-                mPlayer.pause();
-            }
-
-            mPlayer.release();
-            mPlayer = null;
-        }
-    }
 }
 

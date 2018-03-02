@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import gd.water.oking.com.cn.wateradministration_gd.Adapter.UpcomingAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
@@ -114,27 +113,26 @@ public class SubUpcomingFragment extends BaseFragment {
 
     private void setUpcomingData() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date date = new Date();
 
         upcomings.clear();
         for (int i = 0; i < MainActivity.missionList.size(); i++) {
             if (MainActivity.missionList.get(i).getApproved_time()!=null){
                 String jjcd = "0".equals(MainActivity.missionList.get(i).getJjcd()) ? "特急" : ("1".equals(MainActivity.missionList.get(i).getJjcd()) ? "紧急" : "一般");
-                if (MainActivity.missionList.get(i).getStatus() == 2 && MainActivity.missionList.get(i).getEnd_time() > date.getTime()) {
+                if (MainActivity.missionList.get(i).getStatus() == 2 && MainActivity.missionList.get(i).getEnd_time() > System.currentTimeMillis()) {
                     Upcoming upcoming = new Upcoming(MainActivity.missionList.get(i).getId(), jjcd, "任务安排接受",
                             MainActivity.missionList.get(i).getTask_name(),
-                            MainActivity.missionList.get(i).getFbr(), simpleDateFormat.format(new Date(MainActivity.missionList.get(i).getApproved_time())));
+                            MainActivity.missionList.get(i).getFbr(), simpleDateFormat.format(MainActivity.missionList.get(i).getApproved_time()));
                     upcomings.add(upcoming);
                 }
                 if ((MainActivity.missionList.get(i).getStatus() == 3 ||
                         MainActivity.missionList.get(i).getStatus() == 4) &&
-                        MainActivity.missionList.get(i).getEnd_time() > date.getTime()) {
+                        MainActivity.missionList.get(i).getEnd_time() > System.currentTimeMillis()) {
 
 
                     Upcoming upcoming = new Upcoming(MainActivity.missionList.get(i).getId(), jjcd, "任务执行",
                             MainActivity.missionList.get(i).getTask_name(),
                             MainActivity.missionList.get(i).getFbr(),
-                            simpleDateFormat.format(new Date(MainActivity.missionList.get(i).getApproved_time())));
+                            simpleDateFormat.format(MainActivity.missionList.get(i).getApproved_time()));
                     upcomings.add(upcoming);
                 }
 
@@ -143,7 +141,7 @@ public class SubUpcomingFragment extends BaseFragment {
                     Upcoming upcoming = new Upcoming(MainActivity.missionList.get(i).getId(), jjcd, "任务上报",
                             MainActivity.missionList.get(i).getTask_name(),
                             MainActivity.missionList.get(i).getFbr(),
-                            simpleDateFormat.format(new Date(MainActivity.missionList.get(i).getApproved_time())));
+                            simpleDateFormat.format(MainActivity.missionList.get(i).getApproved_time()));
                     upcomings.add(upcoming);
                 }
             }

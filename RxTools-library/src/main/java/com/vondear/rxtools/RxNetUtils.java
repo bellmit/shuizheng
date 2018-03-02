@@ -208,7 +208,7 @@ public class RxNetUtils {
 
         String result = null;
         try {
-            String ip = "www.baidu.com";// ping 的地址，可以换成任何一种可靠的外网
+            String ip = "10.44.21.26";// ping 的地址，可以换成任何一种可靠的外网
             Process p = Runtime.getRuntime().exec("ping -c 3 -w 100 " + ip);// ping网址3次
             // 读取ping的内容，可以不加
             InputStream input = p.getInputStream();

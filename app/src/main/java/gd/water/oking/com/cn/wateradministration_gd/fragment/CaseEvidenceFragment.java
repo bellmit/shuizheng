@@ -1,13 +1,13 @@
 package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,9 +44,10 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class CaseEvidenceFragment extends BaseCaseFragment {
-
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
     public static final String DELETE_EVIDENCE_ACTION = "com.gdWater.deleteevidence";
-
+    private String mParam2;
     private Case mycase;
 
     private ViewPager mViewPager;
@@ -59,6 +60,24 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
     private ArrayList<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<String> titleList = new ArrayList<>();
     private SimpleDateFormat mSimpleDateFormat;
+
+    public static CaseEvidenceFragment newInstance(Case aCase, String param2) {
+        CaseEvidenceFragment fragment = new CaseEvidenceFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM1, aCase);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mycase = (Case) getArguments().getParcelable(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,16 +117,14 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
         titleList.add("视听资料");
 
         fragments.clear();
-        DocumentaryEvidenceListFragment documentaryListFragment = new DocumentaryEvidenceListFragment();
-        documentaryListFragment.setMycase(mycase);
+        DocumentaryEvidenceListFragment documentaryListFragment = DocumentaryEvidenceListFragment.newInstance(mycase,null);
         fragments.add(documentaryListFragment);
-        CaseAudioVideoEvidenceListFragment caseAudioVideoListFragment = new CaseAudioVideoEvidenceListFragment();
-        caseAudioVideoListFragment.setMycase(mycase);
+        CaseAudioVideoEvidenceListFragment caseAudioVideoListFragment = CaseAudioVideoEvidenceListFragment.newInstance(mycase,null);
         fragments.add(caseAudioVideoListFragment);
 
         //mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(fragmentPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -116,13 +133,13 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
             @Override
             public void onPageSelected(int position) {
                 selectFragmentIndex = position;
-                if (position==0){
+                if (position == 0) {
                     document_tabBtn.setBackground(getResources().getDrawable(R.drawable.fast_btn_bg3));
                     document_tabBtn.setTextColor(getResources().getColor(R.color.colorMain6));
                     audioVideo_tabBtn.setBackground(getResources().getDrawable(R.drawable.fast_btn_bg2));
                     audioVideo_tabBtn.setTextColor(getResources().getColor(R.color.colorMain4));
 
-                }else {
+                } else {
                     audioVideo_tabBtn.setBackground(getResources().getDrawable(R.drawable.fast_btn_bg3));
                     audioVideo_tabBtn.setTextColor(getResources().getColor(R.color.colorMain6));
                     document_tabBtn.setBackground(getResources().getDrawable(R.drawable.fast_btn_bg2));
@@ -166,50 +183,50 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
         } else if (selectFragmentIndex == 1) {
             audioVideo_tabBtn.callOnClick();
         }
-        add_evidence_button = (Button) rootView.findViewById(R.id.add_evidence_button);
-        add_evidence_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                final String[] items = new String[]{"书证", "视听资料", "调查笔录", "勘验笔录"};
-                final String[] items = new String[]{"书证", "视听资料"};
-                selectIndex = 0;
-                new AlertDialog.Builder(getContext())
-                        .setTitle("请选择")
-                        .setIcon(android.R.drawable.ic_dialog_info)
-                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                selectIndex = which;
-                            }
-                        })
-                        .setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String eType = "";
-                                        switch (selectIndex) {
-                                            case 0:
-                                                eType = "SZ";
-                                                break;
-                                            case 1:
-                                                eType = "STZL";
-                                                break;
-                                            case 2:
-                                                eType = "DCBL";
-                                                break;
-                                            case 3:
-                                                eType = "KYBL";
-                                                break;
-                                        }
-                                        Evidence e = addEvidence(mycase, eType);
-
-                                        mViewPager.setCurrentItem(selectIndex);
-                                    }
-                                })
-                        .setNegativeButton("取消", null)
-                        .show();
-            }
-        });
+//        add_evidence_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                final String[] items = new String[]{"书证", "视听资料", "调查笔录", "勘验笔录"};
+//                final String[] items = new String[]{"书证", "视听资料"};
+//                selectIndex = 0;
+//                new AlertDialog.Builder(getContext())
+//                        .setTitle("请选择")
+//                        .setIcon(android.R.drawable.ic_dialog_info)
+//                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                selectIndex = which;
+//                            }
+//                        })
+//                        .setPositiveButton("确定",
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        String eType = "";
+//                                        switch (selectIndex) {
+//                                            case 0:
+//                                                eType = "SZ";
+//                                                break;
+//                                            case 1:
+//                                                eType = "STZL";
+//                                                break;
+//                                            case 2:
+//                                                eType = "DCBL";
+//                                                break;
+//                                            case 3:
+//                                                eType = "KYBL";
+//                                                break;
+//                                            default:
+//                                                break;
+//                                        }
+//
+//                                        mViewPager.setCurrentItem(selectIndex);
+//                                    }
+//                                })
+//                        .setNegativeButton("取消", null)
+//                        .show();
+//            }
+//        });
 
         upload_evidence_button = (Button) rootView.findViewById(R.id.upload_evidence_button);
         upload_evidence_button.setOnClickListener(new View.OnClickListener() {
@@ -217,14 +234,14 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
             public void onClick(View v) {
 
                 for (int i = 0; i < mycase.getEvidenceList().size(); i++) {
-                    SaveEvidence(mycase.getEvidenceList().get(i));
+                    saveEvidence(mycase.getEvidenceList().get(i));
                 }
             }
         });
     }
 
     private Evidence addEvidence(Case mycase, String evidenceType) {
-        Evidence evidence = new Evidence();
+        Evidence evidence = Evidence.CREATOR.createFromParcel(Parcel.obtain());
         evidence.setZJID(UUID.randomUUID().toString());
         evidence.setAJID(mycase.getAJID());
         evidence.setZJLX(evidenceType);
@@ -245,7 +262,7 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
         editor.commit();
     }
 
-    private void SaveEvidence(final Evidence evidence) {
+    private void saveEvidence(final Evidence evidence) {
 
         EvidenceSaveParams params = new EvidenceSaveParams();
         try {
@@ -400,12 +417,5 @@ public class CaseEvidenceFragment extends BaseCaseFragment {
         });
     }
 
-    @Override
-    public void setMyCase(Case mycase) {
-        this.mycase = mycase;
-    }
 
-    public Case getMycase() {
-        return mycase;
-    }
 }

@@ -1,4 +1,7 @@
-<manifest package="com.zhy.autolayout">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.zhy.autolayout"
+          >
 
 
 </manifest>

@@ -27,22 +27,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.sunfusheng.marqueeview.MarqueeView;
 import com.vondear.rxtools.RxDeviceUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
@@ -50,10 +48,8 @@ import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.xutils.common.Callback;
-import org.xutils.ex.HttpException;
 import org.xutils.x;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,10 +64,12 @@ import gd.water.oking.com.cn.wateradministration_gd.Adapter.MenuItemAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.View.CustomPopWindow;
+import gd.water.oking.com.cn.wateradministration_gd.View.DividerItemDecoration;
+import gd.water.oking.com.cn.wateradministration_gd.bean.Contants;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuBean;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuBund;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MenuGsonBean;
-import gd.water.oking.com.cn.wateradministration_gd.http.CheckConnectParams;
+import gd.water.oking.com.cn.wateradministration_gd.bean.User;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.LoginParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.MapResponse;
@@ -147,15 +145,18 @@ public class MainFragment extends BaseFragment {
                     mLatitude = intent.getDoubleExtra("latitude", 0);
                     mLongitude = intent.getDoubleExtra("longitude", 0);
                     mAltitude = intent.getDoubleExtra("altitude", 0);
-                    mSpeed = intent.getDoubleExtra("speed", 0);
-                    mAccuracy = intent.getDoubleExtra("accuracy", 0);
-                    mDateTime = intent.getDoubleExtra("dateTime", 0);
+                    mSpeed = intent.getFloatExtra("speed", 0);
+                    mAccuracy = intent.getFloatExtra("accuracy", 0);
+                    mDateTime = intent.getStringExtra("dateTime");
                     mUseCount = intent.getIntExtra("useCount", 0);
                     int level = intent.getIntExtra("SignalLevel", 0);
 
                     switch (level) {
-                        case 0:
+                        case -1:
                             gpsBtn.setImageResource(R.drawable.gpsfailure);
+                            break;
+                        case 0:
+                            gpsBtn.setImageResource(R.drawable.gpssuccess);
                             break;
                         case 1:
                             gpsBtn.setImageResource(R.drawable.gpssuccess);
@@ -204,21 +205,21 @@ public class MainFragment extends BaseFragment {
                     }
 
                     break;
-                case MainActivity.CALL_CASE_MANAGER:
-
-
-                    CaseManagerFragment caseManagerFragment = (CaseManagerFragment) mMenus.get(2).getFragments().get(1);
-                    FragmentManager fm = MainFragment.this.getChildFragmentManager();
-                    fm.beginTransaction().replace(R.id.fragment_root, caseManagerFragment).commit();
-
-                    break;
+//                case MainActivity.CALL_CASE_MANAGER:
+//
+//
+//                    CaseManagerFragment caseManagerFragment = (CaseManagerFragment) mMenus.get(2).getFragments().get(1);
+//                    FragmentManager fm = MainFragment.this.getChildFragmentManager();
+//                    fm.beginTransaction().replace(R.id.fragment_root, caseManagerFragment).commit();
+//
+//                    break;
                 case MainActivity.UNRE_ADMSG_COUNT:
-                    int unreadMsgCount = intent.getIntExtra("unreadMsgCount",0);
-                    if (unreadMsgCount==0) {
+                    int unreadMsgCount = intent.getIntExtra("unreadMsgCount", 0);
+                    if (unreadMsgCount == 0) {
                         mTv_tilecunt.setVisibility(View.GONE);
                     } else {
                         mTv_tilecunt.setVisibility(View.VISIBLE);
-                        mTv_tilecunt.setText(unreadMsgCount+"");
+                        mTv_tilecunt.setText(unreadMsgCount + "");
                     }
                     break;
                 default:
@@ -232,9 +233,9 @@ public class MainFragment extends BaseFragment {
     private double mLatitude;
     private double mLongitude;
     private double mAltitude;
-    private double mSpeed;
-    private double mAccuracy;
-    private double mDateTime;
+    private float mSpeed;
+    private float mAccuracy;
+    private String mDateTime;
 
     private int mUseCount;
     private TextView mTv_tilecunt;
@@ -253,6 +254,9 @@ public class MainFragment extends BaseFragment {
     private int mScreenWidths;
     private int mScreenHeights;
     private Subscription mSubscription;
+    private MarqueeView mMarqueeView;
+    private String mAccount;
+    private String mPwd;
 
     public MainFragment() {
         // Required empty public constructor
@@ -281,7 +285,6 @@ public class MainFragment extends BaseFragment {
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.START_ALARM_UI_LIST));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.STOP_ALARM_UI_LIST));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.NewMission));
-        MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.CALL_CASE_MANAGER));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_GPS_STATE_UI));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_SIGNAL_UI));
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UNRE_ADMSG_COUNT));
@@ -302,11 +305,19 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initView(final View rootView) {
+        mAccount = DefaultContants.CURRENTUSER.getAccount();
+        mPwd = DefaultContants.CURRENTUSER.getPassword();
+
+
         mScreenWidths = RxDeviceUtils.getScreenWidths(MyApp.getApplictaion());
         mScreenHeights = RxDeviceUtils.getScreenHeights(MyApp.getApplictaion());
         mIntentFilter = new Intent(MainActivity.UPDATE_MISSION_GET);
         MyApp.getApplictaion().sendBroadcast(mIntentFilter);
         mTv_tilecunt = (TextView) rootView.findViewById(R.id.tv_tilecunt);
+
+        mMarqueeView = (MarqueeView) rootView.findViewById(R.id.marqueeView);
+
+        mMarqueeView.startWithList(Contants.MARQUEEVIEWINFO);
         mBt_sos = (Button) rootView.findViewById(R.id.bt_sos);
         mBt_sos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -370,11 +381,13 @@ public class MainFragment extends BaseFragment {
             }
         });
         //菜单
-        ListView lv_menu = (ListView) rootView.findViewById(R.id.lv_menu);
+        final RecyclerView ry_menu = rootView.findViewById(R.id.ry_menu);
+        ry_menu.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         final ArrayList<MenuBean> menus = initMenuData();
-        final MenuAdapter menuAdapter = new MenuAdapter(menus);
-        menuAdapter.setSelectItem(0);
-        lv_menu.setAdapter(menuAdapter);
+        final MenuAdapter menuAdapter = new MenuAdapter(R.layout.menu_item, menus);
+        ry_menu.addItemDecoration(new DividerItemDecoration(MyApp.getApplictaion(), 1));
+        ry_menu.setItemAnimator(new DefaultItemAnimator());
+        ry_menu.setAdapter(menuAdapter);
         //menu子标签tabItem
         mLv_tbitem = rootView.findViewById(R.id.rc_tbitem);
         mLv_tbitem.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -383,7 +396,49 @@ public class MainFragment extends BaseFragment {
         final MenuItemAdapter menuItemAdapter = new MenuItemAdapter(R.layout.menu_tab_item, items);
         menuItemAdapter.openLoadAnimation();
         mLv_tbitem.setAdapter(menuItemAdapter);
-//        menuItemAdapter.getViewByPosition(mLv_tbitem, 0, R.id.tv).setBackgroundColor(Color.DKGRAY);
+
+
+        menuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                for (int i=0;i<menus.size();i++){
+                    if (position==i){
+                        view.setBackgroundColor(Color.DKGRAY);
+                    }else {
+                        View viewByPosition = adapter.getViewByPosition(ry_menu, i, R.id.ll);
+                        if(viewByPosition!=null){
+
+                            viewByPosition.setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+
+                }
+                mLv_tbitem.setVisibility(View.VISIBLE);
+                mPostion = position;
+                if (position == 0) {
+                    mLv_tbitem.setVisibility(View.GONE);
+                    if (mUpcomingFragment == null) {
+
+                        mUpcomingFragment = new UpcomingFragment();
+                    }
+                    FragmentManager fm = getChildFragmentManager();
+                    fm.beginTransaction().replace(R.id.fragment_root, mUpcomingFragment).commit();
+
+
+                } else {
+                    mLv_tbitem.setVisibility(View.VISIBLE);
+                    mNewItems = menus.get(position).getItems();
+                    menuItemAdapter.setNewData(mNewItems);
+
+                    ArrayList<Fragment> fragmentArrayList = menus.get(position).getFragments();
+                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, fragmentArrayList.get(0)).commit();    //默认选中第一tabitem
+
+                }
+
+
+            }
+        });
+
 
         menuItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -393,6 +448,7 @@ public class MainFragment extends BaseFragment {
                     if (viewByPosition != null) {
 
                         viewByPosition.setBackgroundColor(Color.TRANSPARENT);
+
                     }
                 }
                 view.setBackgroundColor(Color.DKGRAY);
@@ -406,39 +462,6 @@ public class MainFragment extends BaseFragment {
 
             }
         });
-
-
-        lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mLv_tbitem.setVisibility(View.VISIBLE);
-                menuAdapter.setSelectItem(i);
-                mPostion = i;
-                if (i == 0) {
-                    mLv_tbitem.setVisibility(View.GONE);
-                    if (mUpcomingFragment == null) {
-
-                        mUpcomingFragment = new UpcomingFragment();
-                    }
-                    FragmentManager fm = getChildFragmentManager();
-                    fm.beginTransaction().replace(R.id.fragment_root, mUpcomingFragment).commit();
-
-
-                } else {
-                    mLv_tbitem.setVisibility(View.VISIBLE);
-                    mNewItems = menus.get(i).getItems();
-                    menuItemAdapter.setNewData(mNewItems);
-
-                    ArrayList<Fragment> fragmentArrayList = menus.get(i).getFragments();
-                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, fragmentArrayList.get(0)).commit();    //默认选中第一tabitem
-
-                }
-                menuAdapter.notifyDataSetChanged();
-            }
-        });
-
 
         gpsBtn = (ImageButton) rootView.findViewById(R.id.gpsBtn);
         gpsBtn.setOnClickListener(new View.OnClickListener() {
@@ -457,8 +480,8 @@ public class MainFragment extends BaseFragment {
                 tv_longitude.setText("经度：" + mLongitude);
                 tv_latitude.setText("纬度：" + mLatitude);
                 tv_altitude.setText("高度：" + mAltitude);
-                tv_speed.setText("速度：" + mSpeed);
-                tv_accuracy.setText("精度：" + mAccuracy);
+                tv_speed.setText("速度：" + mSpeed + "m/s");
+                tv_accuracy.setText("精度：±" + mAccuracy + "m");
                 tv_count.setText("在用卫星：" + mUseCount);
                 tv_dateTime.setText("定位时间：" + mDateTime);
                 //PopupWindow
@@ -512,7 +535,6 @@ public class MainFragment extends BaseFragment {
                 if (mUserInfoFragment == null) {
                     mUserInfoFragment = new UserInfoFragment();
                 }
-                menuAdapter.setSelectItem(0);
                 mLv_tbitem.setVisibility(View.GONE);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_root, mUserInfoFragment).commit();
             }
@@ -549,8 +571,7 @@ public class MainFragment extends BaseFragment {
             user_textView.setText(DefaultContants.CURRENTUSER.getUserName());
         }
 
-
-//        //定时检测重新登录
+        //定时检测重新登录
         Flowable.interval(5, 10, TimeUnit.SECONDS)
                 .onBackpressureDrop()
                 .subscribe(new Subscriber<Long>() {
@@ -563,7 +584,12 @@ public class MainFragment extends BaseFragment {
 
                     @Override
                     public void onNext(Long aLong) {
-                        reLogin();
+
+                        if (!DefaultContants.ISHTTPLOGIN) {
+                            reLogin();
+                        }
+
+
                     }
 
                     @Override
@@ -580,6 +606,17 @@ public class MainFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mMarqueeView.startFlipping();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMarqueeView.stopFlipping();
+    }
 
     @NonNull
     private ArrayList<MenuBean> initMenuData() {
@@ -645,8 +682,6 @@ public class MainFragment extends BaseFragment {
                 }
 
 
-
-
                 menuBean1.setItems(item1);
                 menuBean1.setFragments(fragments1);
                 mMenus.add(menuBean1);
@@ -665,6 +700,7 @@ public class MainFragment extends BaseFragment {
                 item1.add("一般水行政处罚");
                 item1.add("预立案");
                 item1.add("现场勘验");
+                item1.add("案件管理");
 
                 menuBean2.setItems(item1);
                 ArrayList<Fragment> fragments2 = new ArrayList<Fragment>();
@@ -727,6 +763,10 @@ public class MainFragment extends BaseFragment {
                 //现场勘验
                 WhiteBoardFragment whiteBoardFragment = WhiteBoardFragment.newInstance();
                 fragments2.add(whiteBoardFragment);
+
+                //案件管理
+                CaseManagerFragment caseManagerFragment =CaseManagerFragment.newInstance(null,null);
+                fragments2.add(caseManagerFragment);
                 mMenus.add(menuBean2);
 
             } else if ("执法指导".equals(menuTag)) {
@@ -742,9 +782,11 @@ public class MainFragment extends BaseFragment {
                 ArrayList<Fragment> fragments3 = new ArrayList<Fragment>();
                 LawEnforcementProcessGuidanceFragment enforcementProcessFragment = LawEnforcementProcessGuidanceFragment.newInstance(null, null);
                 fragments3.add(enforcementProcessFragment);
+
+
+
                 LawsAndRegulationsFragment lawFragment = LawsAndRegulationsFragment.newInstance(null, null);
                 fragments3.add(lawFragment);
-
 
                 LawEnforcementSpecificationFragment lawEnforcementSpecificationFragment = LawEnforcementSpecificationFragment.newInstance(null, null);
                 fragments3.add(lawEnforcementSpecificationFragment);
@@ -871,117 +913,92 @@ public class MainFragment extends BaseFragment {
         activity = (MainActivity) context;//保存Context引用
     }
 
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     private void reLogin() {
-        //测试与服务器通讯
-//        GetContactsListParams params = new GetContactsListParams();
-//        params.deptid = "-1";
-        CheckConnectParams params = new CheckConnectParams();
-        x.http().post(params, new Callback.CommonCallback<String>() {
 
+
+        //尝试重新登录
+        LoginParams params = new LoginParams();
+        params.account = mAccount;
+        params.password = mPwd;
+        Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<MapResponse>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(MapResponse result) {
+                System.out.println("重新登录成功" + result);
+                boolean isOk = (Boolean) result.getMap().get("success");
+                if (isOk) {
+                    DefaultContants.ISHTTPLOGIN = true;
+                    SharedPreferences sharedPreferences1 = MyApp.getApplictaion().getSharedPreferences("logintime", Context.MODE_PRIVATE);
+                    long logintime = sharedPreferences1.getLong("logintime", 0);
+                    if (logintime != 0) {
 
-                if (!DefaultContants.ISHTTPLOGIN) {
-                    //尝试重新登录
-                    LoginParams params = new LoginParams();
-                    params.account = DefaultContants.CURRENTUSER.getAccount();
-                    params.password = DefaultContants.CURRENTUSER.getPassword();
-                    Cancelable cancelable = x.http().post(params, new CommonCallback<MapResponse>() {
-                        @Override
-                        public void onSuccess(MapResponse result) {
-                            boolean isOk = (Boolean) result.getMap().get("success");
-                            if (isOk) {
+                        if (!sdf.format(new Date(logintime)).equals(sdf.format(new Date(Long.valueOf((String) result.getMap().get("logintime")))))) {
+                            SharedPreferences.Editor editor = sharedPreferences1.edit();
+                            editor.putLong("logintime", Long.valueOf((String) result.getMap().get("logintime")));
+                            editor.commit();
 
-                                SharedPreferences sharedPreferences1 = MyApp.getApplictaion().getSharedPreferences("logintime", Context.MODE_PRIVATE);
-                                long logintime = sharedPreferences1.getLong("logintime", 0);
-                                if (logintime != 0) {
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                    if (!sdf.format(new Date(logintime)).equals(sdf.format(new Date(Long.valueOf((String) result.getMap().get("logintime")))))) {
-                                        SharedPreferences.Editor editor = sharedPreferences1.edit();
-                                        editor.putLong("logintime", Long.valueOf((String) result.getMap().get("logintime")));
-                                        editor.commit();
+                        }
+                    } else {
+                        SharedPreferences.Editor editor = sharedPreferences1.edit();
+                        editor.putLong("logintime", Long.valueOf((String) result.getMap().get("logintime")));
+                        editor.commit();
 
-                                    }
-                                } else {
-                                    SharedPreferences.Editor editor = sharedPreferences1.edit();
-                                    editor.putLong("logintime", Long.valueOf((String) result.getMap().get("logintime")));
-                                    editor.commit();
+                    }
 
-                                }
+                    Utils.getCookies2DB();
 
-                                Utils.getCookies2DB();
-
-                                //登录成功，本地数据库存入数据或更新数据
-                                if (DefaultContants.CURRENTUSER != null) {
-                                    DefaultContants.CURRENTUSER.setUserId((String) result.getMap().get("userid"));
-                                    DefaultContants.CURRENTUSER.setDeptId((String) result.getMap().get("dept_id"));
-                                    DefaultContants.CURRENTUSER.setUserName((String) result.getMap().get("userName"));
-                                    DefaultContants.CURRENTUSER.setDeptName((String) result.getMap().get("deptname"));
-                                    DefaultContants.CURRENTUSER.setAccount(DefaultContants.CURRENTUSER.getAccount());
-                                    DefaultContants.CURRENTUSER.setPassword(DefaultContants.CURRENTUSER.getPassword());
-                                    DefaultContants.CURRENTUSER.setPhone((String) result.getMap().get("phone"));
-                                    DefaultContants.CURRENTUSER.setProfile(Base64.decode((String) result.getMap().get("headimg"), Base64.DEFAULT));
-
-                                    MyApp.localSqlite.delete(LocalSqlite.USER_TABLE,
-                                            "uid=?", new String[]{DefaultContants.CURRENTUSER.getUserId()});
-
-                                    DefaultContants.CURRENTUSER.insertDB(MyApp.localSqlite);
+                    String userid = (String) result.getMap().get("userid");
+                    String dept_id = (String) result.getMap().get("dept_id");
+                    String userName = (String) result.getMap().get("userName");
+                    String deptname = (String) result.getMap().get("deptname");
+                    String phone = (String) result.getMap().get("phone");
+                    byte[] headimgs = Base64.decode((String) result.getMap().get("headimg"), Base64.DEFAULT);
+                    //登录成功，本地数据库存入数据或更新数据
+                    if (DefaultContants.CURRENTUSER != null) {
+                        DefaultContants.CURRENTUSER.setUserId(userid);
+                        DefaultContants.CURRENTUSER.setDeptId(dept_id);
+                        DefaultContants.CURRENTUSER.setUserName(userName);
+                        DefaultContants.CURRENTUSER.setDeptName(deptname);
+                        DefaultContants.CURRENTUSER.setAccount(mAccount);
+                        DefaultContants.CURRENTUSER.setPassword(mPwd);
+                        DefaultContants.CURRENTUSER.setPhone(phone);
+                        DefaultContants.CURRENTUSER.setProfile(headimgs);
 
 
-                                }
+                    } else {
+                        User user = new User();
+                        user.setUserId(userid);
+                        user.setDeptId(dept_id);
+                        user.setUserName(userName);
+                        user.setDeptName(deptname);
+                        user.setAccount(mAccount);
+                        user.setPassword(mPwd);
+                        user.setPhone(phone);
+                        user.setProfile(headimgs);
+                        DefaultContants.CURRENTUSER = user;
 
+                    }
+                    MyApp.localSqlite.delete(LocalSqlite.USER_TABLE,
+                            "uid=?", new String[]{DefaultContants.CURRENTUSER.getUserId()});
+
+                    DefaultContants.CURRENTUSER.insertDB(MyApp.localSqlite);
 //                                connectBtn.setImageResource(DefaultContants.isHttpLogin ? R.drawable.online : R.drawable.outline);
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable ex, boolean isOnCallback) {
-                            DefaultContants.ISHTTPLOGIN = false;
-                            DefaultContants.JSESSIONID = "";
-
-
-                            if (ex instanceof HttpException) { // 网络错误
-                                HttpException httpEx = (HttpException) ex;
-                                int responseCode = httpEx.getCode();
-                                String responseMsg = httpEx.getMessage();
-                                String errorResult = httpEx.getResult();
-                                httpEx.printStackTrace();
-                                Toast.makeText(MyApp.getApplictaion(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                            } else { // 其他错误
-                                // ...
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(CancelledException cex) {
-                            Toast.makeText(MyApp.getApplictaion(), "cancelled", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onFinished() {
-
-                        }
-                    });
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.i("CheckConnectParams", "onError>>>>>>" + ex.toString());
+                System.out.println("重新登录失败" + ex.getMessage());
+                DefaultContants.ISHTTPLOGIN = false;
+                DefaultContants.JSESSIONID = "";
 
-                if (ex instanceof EOFException) {//经常出现EOFException
-                    DefaultContants.ISHTTPLOGIN = false;
-//                    connectBtn.setImageResource(DefaultContants.isHttpLogin ? R.drawable.online : R.drawable.outline);
-                } else {
-                    DefaultContants.ISHTTPLOGIN = false;
-//                    connectBtn.setImageResource(DefaultContants.isHttpLogin ? R.drawable.online : R.drawable.outline);
-                }
+
             }
 
             @Override
-            public void onCancelled(CancelledException cex) {
-
+            public void onCancelled(Callback.CancelledException cex) {
+                Toast.makeText(MyApp.getApplictaion(), "cancelled", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -989,6 +1006,7 @@ public class MainFragment extends BaseFragment {
 
             }
         });
+
     }
 
 

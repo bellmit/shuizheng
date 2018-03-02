@@ -1,8 +1,12 @@
 package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -26,6 +30,8 @@ import com.google.gson.Gson;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
+import com.vondear.rxtools.RxAppUtils;
+import com.vondear.rxtools.RxFileUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogLoading;
 
@@ -35,6 +41,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -49,6 +56,8 @@ import gd.water.oking.com.cn.wateradministration_gd.bean.ProblemBean;
 import gd.water.oking.com.cn.wateradministration_gd.db.LawDao;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
+import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 调查笔录
@@ -112,6 +121,8 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
             , R.array.lv_county_19, R.array.lv_county_20, R.array.lv_county_21};
     private RxDialogLoading mRxDialogLoading;
     private EditText mEt_town;
+    private Button mBt_print;
+    private String mIllegalPerson;
 
 
     public WrittenRecordFragment() {
@@ -173,6 +184,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
         mEt_town = rootView.findViewById(R.id.et_town);
         mEt_addrdetail2 = rootView.findViewById(R.id.et_addrdetail2);
         mEt_enforcement_name = rootView.findViewById(R.id.et_enforcement_name);
+        mBt_print = rootView.findViewById(R.id.bt_print);
         initData();
         setListener();
     }
@@ -180,6 +192,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
     private void setListener() {
         mTv_problem.setOnClickListener(this);
         mBt_save.setOnClickListener(this);
+        mBt_print.setOnClickListener(this);
         mBt_select_begintime.setOnClickListener(this);
         mBt_select_endtime.setOnClickListener(this);
         mRb_illegal_person.setOnCheckedChangeListener(this);
@@ -288,9 +301,228 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
                 }
                 mEndDialogAll.show(getFragmentManager(), "endTime");
                 break;
+            case R.id.bt_print:                 //打印
+
+                print();
+                break;
             default:
                 break;
         }
+    }
+
+    private void print() {
+        boolean installApp = RxAppUtils.isInstallApp(MyApp.getApplictaion(), "com.dynamixsoftware.printershare");
+        if (installApp){
+            final String askContent = mTet_content.getText().toString().trim();
+            final String selectBegintime = mBt_select_begintime.getText().toString().trim();
+            final String selecEndtime = mBt_select_endtime.getText().toString().trim();
+            String city = (String) mSp_city.getSelectedItem();
+            String city2 = (String) mSp_city2.getSelectedItem();
+            final String type = (String) mSp_type.getSelectedItem();
+            String county = (String) mSp_county.getSelectedItem();
+            String county2 = (String) mSp_county2.getSelectedItem();
+            String addrdetail = mEt_addrdetail.getText().toString().trim();
+            String town = mEt_town.getText().toString().trim();
+            final String askPerson = mTet_ask_person.getText().toString().trim();
+            final String askEnforcementNumber = mTet_ask_enforcement_number.getText().toString().trim();
+            final String recorder = mTet_recorder.getText().toString().trim();
+            final String recordeNumber = mTet_recorder_number.getText().toString().trim();
+            final String askingPeople = mTet_asking_people.getText().toString().trim();
+            final String askingIdcard = mTet_asking_idcard.getText().toString().trim();
+            final String askingPosition = mTet_asking_position.getText().toString().trim();
+            final String askingWorkUnits = mTet_asking_work_units.getText().toString().trim();
+            String addrdetail2 = mEt_addrdetail2.getText().toString().trim();
+            final String enforcementName = mEt_enforcement_name.getText().toString().trim();
+            if (selectBegintime.equals("选择") || selecEndtime.equals("选择")) {
+                RxToast.warning(MyApp.getApplictaion(), "请选择笔录时间", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < mProblemContent.size(); i++) {
+                RelativeLayout layout = (RelativeLayout) mLv_ask.getChildAt(i);// 获得子item的layout
+                TextView ask_content = layout.findViewById(R.id.tv_ask_content);
+                String content = ask_content.getText().toString().trim();
+                EditText et_answer = (EditText) layout.findViewById(R.id.et_answer_content);// 从layout中获得控件,根据其id
+                String answ = et_answer.getText().toString().trim();
+                if (TextUtils.isEmpty(answ)) {
+                    RxToast.warning(MyApp.getApplictaion(), "问题笔录不能有空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sb.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;"+content+"</p>");
+                sb.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;<u>"+answ+"</u></p>");
+
+            }
+            final String askSb = sb.toString();
+
+            if (TextUtils.isEmpty(askContent)) {
+                RxToast.warning("询问内容不能为空");
+                return;
+            }
+
+
+            if (TextUtils.isEmpty(addrdetail)) {
+                RxToast.warning("询问地点不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askPerson)) {
+                RxToast.warning("询问人不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askEnforcementNumber)) {
+                RxToast.warning("询问人执法编号不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(recorder)) {
+                RxToast.warning("记录人不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(recordeNumber)) {
+                RxToast.warning("记录人执法编号不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askingPeople)) {
+                RxToast.warning("被询问人姓名不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askingIdcard)) {
+                RxToast.warning("被询问人身份证号码不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askingPosition)) {
+                RxToast.warning("被询问人职务不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(askingWorkUnits)) {
+                RxToast.warning("被询问人工作单位不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(town)) {
+                RxToast.warning("被询问人住址不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(addrdetail2)) {
+                RxToast.warning("被询问人住址不能为空");
+                return;
+            }
+
+            if (TextUtils.isEmpty(enforcementName)) {
+                RxToast.warning("执法人员姓名不能为空");
+                return;
+            }
+
+            if (mRb_illegal_person.isChecked()){
+                mIllegalPerson = "<p>被询问人：<input type=\"checkbox\" checked/>违法行为人&nbsp;<input type=\"checkbox\"/>受害人&nbsp;<input type=\"checkbox\"/>第三方\n";
+            }else if (mRb_victim.isChecked()){
+                mIllegalPerson = "<p>被询问人：<input type=\"checkbox\"/>违法行为人&nbsp;<input type=\"checkbox\" checked/>受害人&nbsp;<input type=\"checkbox\"/>第三方\n";
+            }else if(mRb_other.isChecked()){
+                mIllegalPerson = "<p>被询问人：<input type=\"checkbox\"/>违法行为人&nbsp;<input type=\"checkbox\"/>受害人&nbsp;<input type=\"checkbox\" checked/>第三方\n";
+
+            }
+
+            final String address1;
+            if (county.equals("无")) {
+                address1 = "广东省" + city + "市" + addrdetail;
+            } else {
+                address1 = "广东省" + city + "市" + county + "县" + addrdetail;
+
+            }
+            final String address2;
+            if (county2.equals("无")) {
+                address2 = "广东省" + city2 + "市" + town + addrdetail2;
+            } else {
+                address2 = "广东省" + city2 + "市" + county2 + "县" + town + "镇" + addrdetail2;
+
+            }
+            Schedulers.io().createWorker().schedule(new Runnable() {
+                @Override
+                public void run() {
+                    writeHtml(type,askContent,selectBegintime,selecEndtime,address1,askPerson,askEnforcementNumber,
+                            recorder,recordeNumber,askingPeople,askingIdcard,askingPosition,askingWorkUnits,address2,enforcementName,askSb);
+
+                }
+            });
+
+            ComponentName comp = new ComponentName("com.dynamixsoftware.printershare", "com.dynamixsoftware.printershare.ActivityWeb");
+            Intent intent = new Intent();
+            intent.setComponent(comp);
+            intent.setAction("android.intent.action.VIEW");
+            intent.setType("text/html");
+            intent.setData(Uri.parse("file:///" + Environment.getExternalStorageDirectory().getPath() + "/oking/print/temp3.html"));
+            startActivity(intent);
+        }else {
+            if (mRxDialogLoading == null) {
+
+                mRxDialogLoading = new RxDialogLoading(getActivity(), false, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        dialogInterface.cancel();
+                    }
+                });
+                mRxDialogLoading.setLoadingText("正在解压插件...");
+            }
+            mRxDialogLoading.show();
+            MyApp.getGlobalThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    final File assetFileToCacheDir = Utils.getAssetFileToCacheDir("PrinterShare.apk");
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRxDialogLoading.cancel();
+                            RxAppUtils.InstallAPK(MyApp.getApplictaion(), assetFileToCacheDir.getPath());
+                        }
+                    });
+                }
+            });
+
+
+        }
+    }
+
+    private void writeHtml(String type, String askContent, String selectBegintime, String selecEndtime,
+                           String address1, String askPerson, String askEnforcementNumber,String recorder, String recordeNumber,
+                           String askingPeople, String askingIdcard,String askingPosition, String askingWorkUnits, String address2,
+                           String enforcementName, String askSb) {
+
+        File destDir = new File(Environment.getExternalStorageDirectory().getPath() + "/oking/print/temp3.html");
+        StringBuffer sb = new StringBuffer();
+        sb.append("<!DOCTYPE HTML>\n");
+        sb.append("<html>\n");
+        sb.append("<head>\n");
+        sb.append("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n");
+        sb.append("    <style>\n");
+        sb.append("    </style>\n");
+        sb.append("</head>\n");
+        sb.append("<body>\n");
+        sb.append("<h1 align=\"center\">调查询问笔录</h1>\n");
+        sb.append("<p>案件类型："+type+"&nbsp;&nbsp;&nbsp<u>&nbsp;"+askContent+"&nbsp;</u></p>");
+        sb.append("<p>笔录时间："+selectBegintime+"&nbsp;至&nbsp;"+selecEndtime+"</p>");
+        sb.append("<p>询问地点：<u>&nbsp;"+address1+"&nbsp;</u></p>\n");
+        sb.append("<p>询问人:<u>&nbsp;"+askPerson+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;执法编号（询问人）: <u>&nbsp;"+askEnforcementNumber+"</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;记录人:<u>&nbsp;"+recorder+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;执法编号（记录人）:\n");
+        sb.append("    <u>&nbsp;"+recordeNumber+"&nbsp;</u>\n");
+        sb.append("</p>\n");
+        sb.append(mIllegalPerson);
+        sb.append("</p>\n");
+        sb.append("<p>姓名:<u>&nbsp;"+askingPeople+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;身份证号码: <u>&nbsp;"+askingIdcard+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;职务: <u>&nbsp;"+askingPosition+"&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作单位:\n");
+        sb.append("    <u>&nbsp;"+askingWorkUnits+"&nbsp;</u>\n");
+        sb.append("</p>\n");
+        sb.append("<p>住址：<u>&nbsp;"+address2+"&nbsp;</u></p>");
+        sb.append("<p>问：我是&nbsp;<u>&nbsp;"+enforcementName+"&nbsp;</u>&nbsp;执法人员，现在我需要问一些问题，你要如实回答。</p>\n");
+        sb.append(askSb);
+        sb.append("</body>\n");
+        sb.append("</html>");
+        RxFileUtils.writeFileFromString(destDir, sb.toString(), false);
+
     }
 
     private void savaData() {
@@ -659,7 +891,7 @@ public class WrittenRecordFragment extends BaseFragment implements View.OnClickL
     public void onDestroyView() {
         super.onDestroyView();
         if (mInflate != null) {
-            ((ViewGroup) mInflate.getParent()).removeView(mInflate);
+//            ((ViewGroup) mInflate.getParent()).removeView(mInflate);
         }
     }
 

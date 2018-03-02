@@ -178,6 +178,28 @@ public class LawDao {
         cursor.close();
         db.close();
         return nick;
+
     }
+
+//    public static void slectorXXX(String name,String code,String age){
+//        String CName = "";
+//        String CCode = "";
+//        String CAge = "";
+//        if (name!=null){
+//            CName = "Name";
+//        }
+//
+//        if (code==null){
+//            CCode = "Code";
+//        }
+//
+//        if (age==null){
+//            CAge = "Age";
+//        }
+//        SQLiteDatabase db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+//        Cursor cursor = db.query("contact",new String[]{CName,CCode,CAge},CName+"=?"
+//                ,new String[]{name,code,age},null,null,null);
+//
+//    }
 
 }

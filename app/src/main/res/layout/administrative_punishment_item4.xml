@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+    <ImageView android:id="@+id/iv_case_review"
+               android:layout_width="40px"
+               android:layout_height="90px"
+               android:layout_alignParentTop="true"
+               android:layout_centerHorizontal="true" android:src="@mipmap/default_icon"/>
+    <TextView android:id="@+id/tv_case_review"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/iv_case_review"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:paddingLeft="5px"
+              android:paddingRight="5px"
+              android:text="案件审查"
+              android:textColor="@color/colorAccent"
+              android:textSize="32px"/>
+    <View android:id="@+id/v_tag"
+          android:layout_width="1px"
+          android:layout_height="40px"
+          android:layout_below="@id/tv_case_review"
+          android:layout_centerHorizontal="true"
+          android:background="@color/colorAccent"></View>
+    <View android:layout_width="126px"
+          android:layout_height="2px"
+          android:layout_below="@id/v_tag"
+          android:layout_centerHorizontal="true"
+          android:background="@color/colorAccent"></View>
+    <View android:id="@+id/v_toright_case_review"
+          android:layout_width="300px"
+          android:layout_height="3px"
+          android:layout_alignParentTop="true"
+          android:layout_marginTop="50px"
+          android:layout_toEndOf="@+id/iv_case_review"
+          android:background="@color/colorAccent"></View>
+
+
+    <ImageView android:id="@+id/iv_transfer"
+               android:layout_width="40px"
+               android:layout_height="90px"
+               android:layout_alignTop="@id/iv_case_review"
+               android:layout_toEndOf="@+id/v_toright_case_review"
+               android:src="@mipmap/default_icon"/>
+
+    <TextView android:id="@+id/tv_transfer"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBottom="@id/iv_transfer"
+              android:layout_alignTop="@id/iv_transfer"
+              android:layout_toRightOf="@id/iv_transfer"
+              android:gravity="center"
+              android:text="移送"
+              android:textColor="@color/colorAccent"
+              android:textSize="32px"/>
+    <View android:id="@+id/v_toleft_case_review"
+          android:layout_width="300px"
+          android:layout_height="3px"
+          android:layout_alignParentTop="true"
+          android:layout_marginTop="50px"
+          android:layout_toStartOf="@+id/iv_case_review"
+          android:background="@color/colorAccent"></View>
+    <ImageView android:id="@+id/iv_not_punishable"
+               android:layout_width="40px"
+               android:layout_height="90px"
+               android:layout_alignTop="@id/iv_case_review"
+               android:layout_toStartOf="@+id/v_toleft_case_review"
+               android:src="@mipmap/default_icon"/>
+    <TextView android:id="@+id/tv_not_punishable"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBottom="@id/iv_not_punishable"
+              android:layout_alignTop="@id/iv_not_punishable"
+              android:layout_toLeftOf="@id/iv_not_punishable"
+              android:gravity="center"
+              android:text="不予处罚"
+              android:textColor="@color/colorAccent"
+              android:textSize="32px"/>
+
+    <View android:id="@+id/v_below_not_punishable"
+          android:layout_width="1px"
+          android:layout_height="85px"
+          android:layout_alignStart="@id/iv_not_punishable"
+          android:layout_below="@id/iv_not_punishable"
+          android:layout_marginStart="28px"
+          android:background="@color/colorAccent"></View>
+</RelativeLayout>

@@ -43,8 +43,13 @@ public class PicSimpleAdapter extends SimpleGridViewAdapter {
         this.typeName = typeName;
     }
 
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
     @Override
-    public View getItemView(final int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -117,10 +122,7 @@ public class PicSimpleAdapter extends SimpleGridViewAdapter {
         }
 
         return convertView;
-    }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 
     public interface OnClickListener {

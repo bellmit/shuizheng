@@ -4,7 +4,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 17
         targetSdkVersion 25
 
     }
@@ -18,5 +18,4 @@ android {
 }
 
 dependencies {
-    implementation project(':whiteboardlib')
 }

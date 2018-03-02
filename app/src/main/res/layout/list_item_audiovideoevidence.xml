@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:background="@drawable/member_item_bg1"
             android:gravity="center"
             android:textColor="@color/colorMain4"
-            android:textSize="16sp" />
+            android:textSize="32px" />
 
         <TextView
             android:id="@+id/cjdd_tv"
@@ -27,7 +27,7 @@
             android:background="@drawable/member_item_bg1"
             android:gravity="center"
             android:textColor="@color/colorMain4"
-            android:textSize="16sp" />
+            android:textSize="32px" />
 
         <TextView
             android:id="@+id/zjnr_tv"
@@ -37,55 +37,61 @@
             android:background="@drawable/member_item_bg1"
             android:gravity="center"
             android:textColor="@color/colorMain4"
-            android:textSize="16sp" />
+            android:textSize="32px" />
 
         <TextView
             android:id="@+id/lx_tv"
-            android:layout_width="80dp"
+            android:layout_width="120px"
             android:layout_height="match_parent"
             android:background="@drawable/member_item_bg1"
             android:gravity="center"
             android:textColor="@color/colorMain4"
-            android:textSize="16sp" />
+            android:textSize="32px" />
 
         <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:layout_width="0px"
+            android:padding="10px"
+            android:layout_height="wrap_content"
             android:background="@drawable/member_item_bg1"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/edit_button"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="60px"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+
                 android:background="@drawable/datetimeview_bg"
                 android:text="编辑"
                 android:textColor="@color/colorMain4"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <Button
                 android:id="@+id/delete_button"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="60px"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
                 android:background="@drawable/datetimeview_bg"
                 android:text="删除"
                 android:textColor="@color/colorMain4"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <Button
                 android:id="@+id/upload_button"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="60px"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+
                 android:background="@drawable/datetimeview_bg"
                 android:text="上传"
                 android:textColor="@color/colorMain4"
-                android:textSize="16sp" />
+                android:textSize="32px" />
         </LinearLayout>
     </LinearLayout>
 

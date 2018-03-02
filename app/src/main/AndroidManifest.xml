@@ -3,6 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="gd.water.oking.com.cn.wateradministration_gd">
 
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -25,10 +26,6 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".main.MyApp"
@@ -38,13 +35,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-
         <meta-data
             android:name="design_width"
-            android:value="1200" />
+            android:value="1200"/>
         <meta-data
             android:name="design_height"
-            android:value="1920" />
+            android:value="1920"/>
+
         <activity
             android:name=".main.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -59,6 +56,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.ImageViewActivity"/>
+
+        <receiver android:name=".receiver.NetworkConnectChangedReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".main.VideoActivity"
             android:screenOrientation="landscape"
@@ -100,17 +104,11 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"/>
-
         <service
             android:name=".main.LocationService"
             android:enabled="true"
             android:exported="false"/>
 
-        <receiver android:name=".main.BootBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
@@ -161,6 +159,17 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
+
+        <service
+            android:name=".service.IRemoteLocationService"
+            android:enabled="true"
+            android:process=":Remote"
+            android:exported="true">
+        </service>
+
+        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+        <service android:name="com.amap.api.location.APSService" >
+        </service>
     </application>
 
 </manifest>

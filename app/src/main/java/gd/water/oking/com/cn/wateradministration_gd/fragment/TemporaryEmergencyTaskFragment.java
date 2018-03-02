@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +99,7 @@ public class TemporaryEmergencyTaskFragment extends BaseFragment implements View
     private Spinner mSp_tasktype;       //任务类型
     private String[] mTasktypeArray;
     private String mTasktype;
+    private UpcomingFragment mUpcomingFragment;
 
     public TemporaryEmergencyTaskFragment() {
         // Required empty public constructor
@@ -453,10 +455,12 @@ public class TemporaryEmergencyTaskFragment extends BaseFragment implements View
                                 public void run() {
 
 
-                                    if (mMissionFragment == null) {
-                                        mMissionFragment = new MissionFragment();
+                                    if (mUpcomingFragment == null) {
+
+                                        mUpcomingFragment = new UpcomingFragment();
                                     }
-                                    getFragmentManager().beginTransaction().replace(R.id.fragment_root, mMissionFragment).commit();
+                                    FragmentManager fm = getFragmentManager();
+                                    fm.beginTransaction().replace(R.id.fragment_root, mUpcomingFragment).commit();
                                 }
                             }, 100);
                             RxToast.success(MyApp.getApplictaion(), "紧急任务发布成功", Toast.LENGTH_LONG).show();
@@ -591,7 +595,6 @@ public class TemporaryEmergencyTaskFragment extends BaseFragment implements View
         final Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                System.out.println(result+">>>>>>>>>>>>>>>");
                 mRxDialogLoading.cancel();
                 mLv_members.setVisibility(View.VISIBLE);
                 mBt_okselect.setVisibility(View.VISIBLE);

@@ -1,5 +1,9 @@
 package gd.water.oking.com.cn.wateradministration_gd.bean;
 
+import com.amap.api.maps.model.LatLng;
+
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2017/12/15.
  */
@@ -12,6 +16,20 @@ public class MapTaskInfo {
     private String taskApprover;
     private String taskDescription;
     private String taskAre;
+    private LatLng taskLatLng;
+    private LatLng moveCenterLatLng;
+    private LatLng startLatLng;
+    private LatLng endLatLng;
+    private ArrayList<LatLng>mPicLatLngs;
+    private ArrayList<LatLng>mRecordScreenLatLngs;
+
+    public LatLng getTaskLatLng() {
+        return taskLatLng;
+    }
+
+    public void setTaskLatLng(LatLng taskLatLng) {
+        this.taskLatLng = taskLatLng;
+    }
 
     public String getTaskName() {
         return taskName;
@@ -69,6 +87,46 @@ public class MapTaskInfo {
         this.taskAre = taskAre;
     }
 
+    public LatLng getMoveCenterLatLng() {
+        return moveCenterLatLng;
+    }
+
+    public void setMoveCenterLatLng(LatLng moveCenterLatLng) {
+        this.moveCenterLatLng = moveCenterLatLng;
+    }
+
+    public LatLng getStartLatLng() {
+        return startLatLng;
+    }
+
+    public void setStartLatLng(LatLng startLatLng) {
+        this.startLatLng = startLatLng;
+    }
+
+    public LatLng getEndLatLng() {
+        return endLatLng;
+    }
+
+    public void setEndLatLng(LatLng endLatLng) {
+        this.endLatLng = endLatLng;
+    }
+
+    public ArrayList<LatLng> getPicLatLngs() {
+        return mPicLatLngs;
+    }
+
+    public void setPicLatLngs(ArrayList<LatLng> picLatLngs) {
+        mPicLatLngs = picLatLngs;
+    }
+
+    public ArrayList<LatLng> getRecordScreenLatLngs() {
+        return mRecordScreenLatLngs;
+    }
+
+    public void setRecordScreenLatLngs(ArrayList<LatLng> recordScreenLatLngs) {
+        mRecordScreenLatLngs = recordScreenLatLngs;
+    }
+
     @Override
     public String toString() {
         return "MapTaskInfo{" +
@@ -79,6 +137,12 @@ public class MapTaskInfo {
                 ", taskApprover='" + taskApprover + '\'' +
                 ", taskDescription='" + taskDescription + '\'' +
                 ", taskAre='" + taskAre + '\'' +
+                ", taskLatLng=" + taskLatLng +
+                ", moveCenterLatLng=" + moveCenterLatLng +
+                ", startLatLng=" + startLatLng +
+                ", endLatLng=" + endLatLng +
+                ", mPicLatLngs=" + mPicLatLngs +
+                ", mRecordScreenLatLngs=" + mRecordScreenLatLngs +
                 '}';
     }
 }

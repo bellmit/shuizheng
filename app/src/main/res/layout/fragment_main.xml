@@ -45,13 +45,13 @@
                   android:layout_marginTop="30px"
                   android:background="@color/colorMain3"></View>
 
-            <ListView android:id="@+id/lv_menu"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:divider="@color/colorMain3"
-                      android:dividerHeight="1px">
+            <android.support.v7.widget.RecyclerView android:id="@+id/ry_menu"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:background="@color/colorMain2"
+            >
 
-            </ListView>
+            </android.support.v7.widget.RecyclerView>
 
 
         </LinearLayout>
@@ -94,10 +94,10 @@
                               android:background="@drawable/ease_unread_count_bg"
                               android:gravity="center"
                               android:padding="4px"
-                              android:visibility="gone"
                               android:text=""
                               android:textColor="@android:color/white"
-                              android:textSize="24px"/>
+                              android:textSize="24px"
+                              android:visibility="gone"/>
                     <ImageView
                         android:layout_width="500px"
                         android:layout_height="140px"
@@ -173,45 +173,55 @@
                             android:src="@drawable/signal0"/>
 
 
-
                     </FrameLayout>
 
                     <ImageButton
-                        android:layout_toLeftOf="@id/fl_sl"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="20px"
                         android:id="@+id/ib_vpn"
                         android:layout_width="40px"
                         android:layout_height="100px"
-                        android:padding="14px"
-                        android:background="@drawable/fast_btn_bg"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/online" />
-
-                    <Button
-                        android:layout_toLeftOf="@id/ib_vpn"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center"
                         android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@id/fl_sl"
+                        android:background="@drawable/fast_btn_bg"
+                        android:padding="14px"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/online"/>
+
+                    <Button
                         android:id="@+id/bt_sos"
                         android:layout_width="40px"
                         android:layout_height="100px"
-                        android:padding="14px"
-                        android:textSize="28px"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@id/ib_vpn"
                         android:background="@drawable/fast_btn_bg"
+                        android:padding="14px"
                         android:scaleType="fitCenter"
-                        android:textColor="#f00"
                         android:text="急"
-                         />
+                        android:textColor="#f00"
+                        android:textSize="28px"
+                    />
+
+                    <com.sunfusheng.marqueeview.MarqueeView
+                        android:id="@+id/marqueeView"
+                        android:layout_width="300px"
+                        android:layout_height="45px"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
+                        app:mvAnimDuration="1000"
+                        app:mvDirection="bottom_to_top"
+                        app:mvInterval="3000"
+                        app:mvSingleLine="true"
+                        app:mvTextColor="@color/white"
+                        app:mvTextSize="20px"/>
                 </RelativeLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rc_tbitem"
                     android:layout_width="match_parent"
                     android:layout_height="120px"
                     android:background="@color/colorMain2"
-                    android:divider="@color/colorMain4"
-                    android:dividerHeight="0.4px"
                     android:paddingLeft="20px"
                     android:visibility="gone"/>
 

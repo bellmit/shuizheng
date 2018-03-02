@@ -41,6 +41,8 @@ import gd.water.oking.com.cn.wateradministration_gd.bean.MissionLog;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -201,64 +203,89 @@ public class MemberSignFragment extends BaseFragment {
                     public void onClick(View view) {
                         rxDialogSureCancel.cancel();
                         if (selection != -1) {
-                            Bitmap bitmap = signature_View.save();
+                            Schedulers.io().createWorker().schedule(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Bitmap bitmap = signature_View.save();
 
-                            if (bitmap != null) {
+                                    if (bitmap != null) {
 
-                                if (!dir.exists()) {
-                                    dir.mkdirs();
-                                }
+                                        if (!dir.exists()) {
+                                            dir.mkdirs();
+                                        }
 
-                                File signatureFile = new File(dir, android.text.format.DateFormat
-                                        .format("yyyyMMdd_HHmmss", System.currentTimeMillis())
-                                        + ".jpg");
+                                        File signatureFile = new File(dir, android.text.format.DateFormat
+                                                .format("yyyyMMdd_HHmmss", System.currentTimeMillis())
+                                                + ".jpg");
 
-                                try {
-                                    OutputStream os = new FileOutputStream(signatureFile);
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                                    os.flush();
-                                    os.close();
+                                        try {
+                                            OutputStream os = new FileOutputStream(signatureFile);
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                            os.flush();
+                                            os.close();
 //                                            bitmap.recycle();
-                                    bitmap = null;
-                                    System.gc();
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                            bitmap = null;
+                                            System.gc();
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                if (memberList.get(selection) != null) {
+                                        if (memberList.get(selection) != null) {
 //                                            if(memberList.get(selection).getSignPic() != null){
 //                                                File file = new File(FileUtil.PraseUritoPath(getContext(),memberList.get(selection).getSignPic()));
 //                                                file.delete();
 //                                            }
-                                    if (memberList.get(selection).getSignPic() != null && new File(FileUtil.PraseUritoPath(getContext(), memberList.get(selection).getSignPic())).exists()) {
-                                        RxToast.warning(MyApp.getApplictaion(), "已签名，不能再次签名！", Toast.LENGTH_SHORT, true).show();
+                                            if (memberList.get(selection).getSignPic() != null && new File(FileUtil.PraseUritoPath(getContext(), memberList.get(selection).getSignPic())).exists()) {
 
-                                        signatureFile.delete();
+                                                AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        RxToast.warning(MyApp.getApplictaion(), "已签名，不能再次签名！", Toast.LENGTH_SHORT, true).show();
+
+                                                    }
+                                                });
+                                                signatureFile.delete();
+                                            } else {
+                                                memberList.get(selection).setSignPic(Uri.fromFile(signatureFile));
+                                            }
+
+                                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                            intent.setData(Uri.fromFile(signatureFile));
+                                            MemberSignFragment.this.getActivity().sendBroadcast(intent);
+
+                                            Intent resultIntent = new Intent();
+                                            resultIntent.setData(Uri.fromFile(signatureFile));
+                                            MemberSignFragment.this.getActivity().setResult(RESULT_OK, intent);
+
+
+
+                                            AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    memberAdapter.notifyDataSetChanged();
+                                                    clearBtn.setVisibility(View.INVISIBLE);
+                                                    saveBtn.setVisibility(View.INVISIBLE);
+                                                }
+                                            });
+
+
+                                            saveLog(log);
+                                        }
                                     } else {
-                                        memberList.get(selection).setSignPic(Uri.fromFile(signatureFile));
+                                        AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                RxToast.warning(MyApp.getApplictaion(), "未签名不能保存！", Toast.LENGTH_SHORT, true).show();
+
+                                            }
+                                        });
+
                                     }
-
-                                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                    intent.setData(Uri.fromFile(signatureFile));
-                                    MemberSignFragment.this.getActivity().sendBroadcast(intent);
-
-                                    Intent resultIntent = new Intent();
-                                    resultIntent.setData(Uri.fromFile(signatureFile));
-                                    MemberSignFragment.this.getActivity().setResult(RESULT_OK, intent);
-
-                                    memberAdapter.notifyDataSetChanged();
-
-                                    clearBtn.setVisibility(View.INVISIBLE);
-                                    saveBtn.setVisibility(View.INVISIBLE);
-
-                                    saveLog(log);
                                 }
-                            } else {
-                                RxToast.warning(MyApp.getApplictaion(), "未签名不能保存！", Toast.LENGTH_SHORT, true).show();
+                            });
 
-                            }
                         } else {
                             RxToast.warning(MyApp.getApplictaion(), "请选择要签名的人员", Toast.LENGTH_SHORT, true).show();
 

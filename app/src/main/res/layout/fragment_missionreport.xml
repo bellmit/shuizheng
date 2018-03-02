@@ -63,17 +63,6 @@
             android:background="@drawable/cardview_bg">
 
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/map"
-                android:scaleType="fitXY"
-                android:visibility="gone"/>
-
-            <com.amap.api.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
         </RelativeLayout>
 
 

@@ -1,9 +1,9 @@
 package gd.water.oking.com.cn.wateradministration_gd.BaseView;
 
         import android.net.Uri;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
@@ -25,19 +25,15 @@ public abstract class SimpleGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return uriArrayList.get(position);
+    public Object getItem(int i) {
+        return null;
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public long getItemId(int i) {
+        return 0;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getItemView(position, convertView, parent);
-    }
-
-    public abstract View getItemView(int position, View convertView, ViewGroup parent);
+    public abstract View getView(int i, View view, ViewGroup viewGroup);
 }

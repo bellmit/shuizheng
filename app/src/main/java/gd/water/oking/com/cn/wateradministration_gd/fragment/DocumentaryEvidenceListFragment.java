@@ -1,8 +1,6 @@
 package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,17 +9,24 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.vondear.rxtools.view.RxToast;
+import com.vondear.rxtools.view.dialog.RxDialogLoading;
+import com.vondear.rxtools.view.dialog.RxDialogSure;
+import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -34,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import gd.water.oking.com.cn.wateradministration_gd.Adapter.DocumentaryEvidenceListRecyAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Case;
@@ -42,7 +48,6 @@ import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.EvidenceSaveParams;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
-import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -53,23 +58,13 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
 
     private Case mycase;
 
-    private ListView main_listView;
+    private RecyclerView ryMain;
     private ArrayList<Evidence> evidences = new ArrayList<>();
-    private BaseAdapter adapter;
     private Button add_evidence_button;
 
     private boolean uploadPic;
     private int uploadPicCount;
-    private ProgressDialog progressDialog;
 
-    private Runnable DialogDismissRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-            }
-        }
-    };
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -87,18 +82,46 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
 
                     loadEvidence();
 
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
+                    if (mDocumentaryEvidenceListRecyAdapter != null) {
+                        mDocumentaryEvidenceListRecyAdapter.notifyDataSetChanged();
                     }
 
+                    break;
+                default:
                     break;
             }
         }
     };
     private SimpleDateFormat mSimpleDateFormat;
+    private DocumentaryEvidenceListRecyAdapter mDocumentaryEvidenceListRecyAdapter;
+    private RxDialogLoading mRxDialogLoading;
+    private RxDialogSure mRxDialogSure;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    private String mParam2;
+    private RxDialogSureCancel mRxDialogSureCancel;
 
     public DocumentaryEvidenceListFragment() {
         // Required empty public constructor
+    }
+
+    public static DocumentaryEvidenceListFragment newInstance(Case aCase, String param2) {
+        DocumentaryEvidenceListFragment fragment = new DocumentaryEvidenceListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM1, aCase);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mycase = (Case) getArguments().getParcelable(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
@@ -116,125 +139,96 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
 
     @Override
     public void initView(View rootView) {
-        main_listView = (ListView) rootView.findViewById(R.id.main_listView);
+        ryMain = rootView.findViewById(R.id.ry_main);
+        ryMain.setLayoutManager(new LinearLayoutManager(MyApp.getApplictaion(), LinearLayoutManager.VERTICAL, false));
+        ryMain.setItemAnimator(new DefaultItemAnimator());
 
         loadEvidence();
 
-        adapter = new BaseAdapter() {
+        mDocumentaryEvidenceListRecyAdapter = new DocumentaryEvidenceListRecyAdapter(R.layout.list_item_documentaryevidence, evidences);
+        ryMain.setAdapter(mDocumentaryEvidenceListRecyAdapter);
+        mDocumentaryEvidenceListRecyAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public int getCount() {
-                return evidences.size();
-            }
+            public void onItemChildClick(final BaseQuickAdapter adapter, View view, final int position) {
+                switch (view.getId()) {
+                    case R.id.upload_button:            //上传
+                        if (mRxDialogLoading == null) {
 
-            @Override
-            public Object getItem(int position) {
-                return evidences.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                View view = View.inflate(getContext(), R.layout.list_item_documentaryevidence, null);
-
-                TextView zjmc_tv = (TextView) view.findViewById(R.id.zjmc_tv);
-                TextView cjdd_tv = (TextView) view.findViewById(R.id.cjdd_tv);
-                TextView zjnr_tv = (TextView) view.findViewById(R.id.zjnr_tv);
-
-                Button edit_button = (Button) view.findViewById(R.id.edit_button);
-                Button delete_button = (Button) view.findViewById(R.id.delete_button);
-                Button upload_button = (Button) view.findViewById(R.id.upload_button);
-
-                if (evidences.get(position).isUpload()) {
-                    upload_button.setVisibility(View.GONE);
-                    delete_button.setVisibility(View.GONE);
-                    edit_button.setText("查看");
-                }
-
-                edit_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = DocumentaryEvidenceListFragment.this.getParentFragment().getChildFragmentManager().beginTransaction();
-                        ft.addToBackStack(null);
-
-                        DocumentaryEvidenceFragment f = new DocumentaryEvidenceFragment();
-                        f.setMycase(mycase);
-                        f.setAdd(true);
-                        ft.replace(R.id.sub_fragment_root, f).commit();
-                    }
-                });
-
-                delete_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        AlertDialog dialog = new AlertDialog.Builder(getContext()).setTitle("是否删除证据？").
-                                setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        deleteEvidence(evidences.get(position));
-                                        mycase.getEvidenceList().remove(evidences.get(position));
-                                        localSaveCase();
-
-                                        loadEvidence();
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }).setNegativeButton("否", null).create();
-                        dialog.show();
-                    }
-
-                });
-
-                upload_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (progressDialog == null) {
-                            progressDialog = new ProgressDialog(getContext());
+                            mRxDialogLoading = new RxDialogLoading(getActivity(), false, new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialogInterface) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                            mRxDialogLoading.setLoadingText("上传数据中...");
                         }
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setMessage("上传数据中...");
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                        mRxDialogLoading.show();
 
-                        SaveEvidence(evidences.get(position));
-                    }
-                });
+                        saveEvidence(evidences.get(position));
 
-                zjmc_tv.setText(evidences.get(position).getZJMC());
-                cjdd_tv.setText(evidences.get(position).getCJDD());
-                zjnr_tv.setText(evidences.get(position).getZJNR());
+                        break;
+                    case R.id.delete_button:            //删除
+                        if (mRxDialogSureCancel == null) {
 
-                return view;
+                            mRxDialogSureCancel = new RxDialogSureCancel(getActivity());
+                            mRxDialogSureCancel.setTitle("提示");
+                            mRxDialogSureCancel.setContent("是否删除证据？");
+                        }
+                        mRxDialogSureCancel.getTvSure().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                deleteEvidence(evidences.get(position));
+                                mycase.getEvidenceList().remove(evidences.get(position));
+                                localSaveCase();
+
+                                loadEvidence();
+                                adapter.notifyDataSetChanged();
+                                mRxDialogSureCancel.cancel();
+                            }
+                        });
+                        mRxDialogSureCancel.getTvCancel().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mRxDialogSureCancel.cancel();
+                            }
+                        });
+                        mRxDialogSureCancel.show();
+                        break;
+                    case R.id.edit_button:              //查看编辑
+                        if (((Button) view).getText().equals("查看")) {
+                            FragmentTransaction ft = DocumentaryEvidenceListFragment.this.getParentFragment().getChildFragmentManager().beginTransaction();
+                            ft.addToBackStack(null);
+                            DocumentaryEvidenceFragment documentaryEvidenceFragment = DocumentaryEvidenceFragment.newInstance(mycase,evidences.get(position),0);
+                            ft.replace(R.id.sub_fragment_root, documentaryEvidenceFragment).commit();
+                        }else {
+                            FragmentTransaction ft = DocumentaryEvidenceListFragment.this.getParentFragment().getChildFragmentManager().beginTransaction();
+                            ft.addToBackStack(null);
+                            DocumentaryEvidenceFragment documentaryEvidenceFragment = DocumentaryEvidenceFragment.newInstance(mycase, evidences.get(position), 1);
+                            ft.replace(R.id.sub_fragment_root, documentaryEvidenceFragment).commit();
+
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
             }
-        };
+        });
 
-        main_listView.setAdapter(adapter);
 
         add_evidence_button = (Button) rootView.findViewById(R.id.add_evidence_button);
         add_evidence_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentTransaction ft = DocumentaryEvidenceListFragment.this.getParentFragment().getChildFragmentManager().beginTransaction();
                 ft.addToBackStack(null);
 
-                DocumentaryEvidenceFragment f = new DocumentaryEvidenceFragment();
-                f.setMycase(mycase);
-                f.setAdd(true);
-                ft.replace(R.id.sub_fragment_root, f).commit();
+                DocumentaryEvidenceFragment documentaryEvidenceFragment = DocumentaryEvidenceFragment.newInstance(mycase, null, 2);
+                ft.replace(R.id.sub_fragment_root, documentaryEvidenceFragment).commit();
             }
         });
     }
 
-    public void setMycase(Case mycase) {
-        this.mycase = mycase;
-    }
 
     private void deleteEvidence(Evidence evidence) {
         SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("evidence", MODE_PRIVATE);
@@ -252,7 +246,7 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
         editor.commit();
     }
 
-    private void SaveEvidence(final Evidence evidence) {
+    private void saveEvidence(final Evidence evidence) {
 
         EvidenceSaveParams params = new EvidenceSaveParams();
         try {
@@ -319,7 +313,7 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            getActivity().runOnUiThread(DialogDismissRunnable);
+            mRxDialogLoading.cancel();
         }
 
         Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
@@ -330,8 +324,8 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
                 if ("success".equals(result)) {
                     uploadEvidenceFile(evidence);
                 } else {
-                    getActivity().runOnUiThread(DialogDismissRunnable);
-                    Toast.makeText(getContext(), "上传证据失败！", Toast.LENGTH_SHORT).show();
+                    mRxDialogLoading.cancel();
+                    RxToast.error(MyApp.getApplictaion(), "上传证据失败！", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -339,8 +333,8 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.i("EvidenceSave", "onError>>>>>>" + ex.toString());
 
-                getActivity().runOnUiThread(DialogDismissRunnable);
-                Toast.makeText(getContext(), "网络连接有误！", Toast.LENGTH_SHORT).show();
+                mRxDialogLoading.cancel();
+                RxToast.error(MyApp.getApplictaion(), "网络连接有误！", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -384,7 +378,7 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
         params.setMultipart(true);
         params.addBodyParameter(
                 "files",
-                new File(FileUtil.PraseUritoPath(getContext(), uri)),
+                new File(uri.getPath()),
                 null); // 如果文件没有扩展名, 最好设置contentType参数.
 
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -401,18 +395,20 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
                                 checkChangeState(evidence);
                             }
                             break;
+                        default:
+                            break;
                     }
                 } else {
-                    getActivity().runOnUiThread(DialogDismissRunnable);
-                    Toast.makeText(getContext(), "上传证据附件失败！", Toast.LENGTH_SHORT).show();
+                    mRxDialogLoading.cancel();
+                    RxToast.error(MyApp.getApplictaion(), "上传附件失败！", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.i("UploadEvidenceFile", "onError>>>>>>" + ex.toString());
-                getActivity().runOnUiThread(DialogDismissRunnable);
-                Toast.makeText(getContext(), "网络连接有误！", Toast.LENGTH_SHORT).show();
+                mRxDialogLoading.cancel();
+                RxToast.error(MyApp.getApplictaion(), "网络连接有误！", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -428,8 +424,8 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
     }
 
     public void notifyDataSetChanged() {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
+        if (mDocumentaryEvidenceListRecyAdapter != null) {
+            mDocumentaryEvidenceListRecyAdapter.notifyDataSetChanged();
         }
     }
 
@@ -459,24 +455,24 @@ public class DocumentaryEvidenceListFragment extends BaseFragment {
             evidence.setUpload(true);
             localSaveEvidence(evidence);
 
-            adapter.notifyDataSetChanged();
+            mDocumentaryEvidenceListRecyAdapter.notifyDataSetChanged();
             localSaveCase();
+            mRxDialogLoading.cancel();
 
-            AlertDialog.Builder normalDialog =
-                    new AlertDialog.Builder(getContext());
-            normalDialog.setTitle("提示");
-            normalDialog.setMessage("上传成功");
-            normalDialog.setPositiveButton("确定",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+            if (mRxDialogSure == null) {
 
-            normalDialog.show();
+                mRxDialogSure = new RxDialogSure(getActivity());
+                mRxDialogSure.setContent("上传成功");
+                mRxDialogSure.setTitle("提示");
+            }
+            mRxDialogSure.getTvSure().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRxDialogSure.cancel();
+                }
+            });
+            mRxDialogSure.show();
 
-            getActivity().runOnUiThread(DialogDismissRunnable);
 //            CaseAudioVideoEvidenceListFragment.this.getActivity().getSupportFragmentManager().popBackStack();
         }
     }

@@ -1,16 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorMain2"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorMain2"
+              android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="10dp">
+        android:padding="10px">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,10 +23,10 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/member_item_bg3"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="10px"
                 android:text="视听资料"
                 android:textColor="@color/colorMain4"
-                android:textSize="16sp" />
+                android:textSize="32px"/>
 
 
             <LinearLayout
@@ -35,7 +35,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -48,7 +48,7 @@
                         android:gravity="right|center_vertical"
                         android:text="*"
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                         android:gravity="center"
                         android:text="类型："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
 
@@ -65,15 +65,19 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3">
 
-                        <Spinner
+                    <Spinner
                         android:id="@+id/type_spinner"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="4px"
+                        android:layout_weight="2"
                         android:gravity="left|center_vertical"
-                        android:textSize="15sp"
-                         />
+                        android:overlapAnchor="false"
+                        android:saveEnabled="false"
+                        android:spinnerMode="dropdown"
+                        android:textSize="32px"
+                    />
                 </LinearLayout>
             </LinearLayout>
 
@@ -83,18 +87,33 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
-
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:text="*"
+                        android:textColor="@color/colorMain7"
+                        android:textSize="32px"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="资源："
+                        android:textColor="@color/colorMain4"
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="200px"
                     android:background="@drawable/member_item_bg3"
-                    android:padding="10dp">
+                    android:padding="10px">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -107,15 +126,7 @@
                             android:horizontalSpacing="5px"
                             android:numColumns="6"
                             android:verticalSpacing="5px"
-                            android:visibility="invisible" />
-
-                        <GridView
-                            android:id="@+id/pic_gridView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:horizontalSpacing="5px"
-                            android:numColumns="6"
-                            android:verticalSpacing="5px" />
+                            android:visibility="invisible"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -128,25 +139,26 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:horizontalSpacing="3px"
                                 android:numColumns="7"
                                 android:scrollbars="vertical"
-                                android:verticalSpacing="3px" />
+                                android:verticalSpacing="3px"/>
 
-                            <gd.water.oking.com.cn.wateradministration_gd.View.AudioRecordButton
+                            <!--<gd.water.oking.com.cn.wateradministration_gd.View.AudioRecordButton
                                 android:id="@+id/audio_record_button"
                                 android:layout_width="match_parent"
-                                android:layout_height="30dp"
-                                android:layout_marginBottom="2dp"
-                                android:layout_marginLeft="180dp"
-                                android:layout_marginRight="180dp"
-                                android:layout_marginTop="2dp"
+                                android:layout_height="60px"
+                                android:visibility="gone"
+                                android:layout_marginBottom="4px"
+                                android:layout_marginLeft="20px"
+                                android:layout_marginRight="20px"
+                                android:layout_marginTop="4px"
                                 android:background="@drawable/datetimeview_bg"
                                 android:gravity="center"
                                 android:minHeight="0dp"
-                                android:padding="5dp"
+                                android:padding="10px"
                                 android:text="点击开始录音"
-                                android:textColor="@color/colorMain4" />
+                                android:textColor="@color/colorMain4" />-->
+
 
                         </LinearLayout>
                     </FrameLayout>
@@ -159,7 +171,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -172,7 +184,7 @@
                         android:gravity="right|center_vertical"
                         android:text="*"
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -180,7 +192,7 @@
                         android:gravity="center"
                         android:text="证据名称："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -191,16 +203,16 @@
                     <EditText
                         android:id="@+id/evidence_name_tv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|center_vertical"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:singleLine="true"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -210,7 +222,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -223,7 +235,7 @@
                         android:gravity="right|center_vertical"
                         android:text="*"
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -231,7 +243,7 @@
                         android:gravity="center"
                         android:text="证据来源："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -242,13 +254,16 @@
                     <Spinner
                         android:id="@+id/evidence_source_spinner"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="4px"
+                        android:layout_weight="2"
                         android:gravity="left|center_vertical"
+                        android:overlapAnchor="false"
                         android:saveEnabled="false"
-                        android:textSize="16sp"
-                        />
+                        android:spinnerMode="dropdown"
+                        android:textSize="32px"
+                    />
                 </LinearLayout>
 
             </LinearLayout>
@@ -259,7 +274,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -272,7 +287,7 @@
                         android:gravity="right|center_vertical"
                         android:text="*"
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -280,7 +295,7 @@
                         android:gravity="center"
                         android:text="证据内容："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -293,14 +308,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|top"
                         android:minLines="5"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -311,7 +326,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -324,7 +339,7 @@
                         android:gravity="right|center_vertical"
                         android:text=""
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -332,7 +347,7 @@
                         android:gravity="center"
                         android:text="页数："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -343,18 +358,18 @@
                     <EditText
                         android:id="@+id/evidence_pagerCount_tv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|center_vertical"
                         android:inputType="numberSigned"
                         android:lines="1"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:singleLine="true"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -365,7 +380,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -378,7 +393,7 @@
                         android:gravity="right|center_vertical"
                         android:text=""
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -386,7 +401,7 @@
                         android:gravity="center"
                         android:text="见证人："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -397,17 +412,17 @@
                     <EditText
                         android:id="@+id/evidence_man_textView"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|center_vertical"
                         android:lines="1"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:singleLine="true"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -418,7 +433,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -431,7 +446,7 @@
                         android:gravity="right|center_vertical"
                         android:text=""
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -439,7 +454,7 @@
                         android:gravity="center"
                         android:text="备注："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -452,14 +467,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|top"
                         android:minLines="5"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -470,7 +485,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="150px"
                     android:layout_height="match_parent"
                     android:background="@drawable/member_item_bg3"
                     android:orientation="horizontal">
@@ -483,7 +498,7 @@
                         android:gravity="right|center_vertical"
                         android:text="*"
                         android:textColor="@color/colorMain7"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -491,7 +506,7 @@
                         android:gravity="center"
                         android:text="采集地点："
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -502,17 +517,17 @@
                     <EditText
                         android:id="@+id/evidence_getLocation_tv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="80px"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="10px"
                         android:background="@drawable/memo_edittext_bg"
                         android:gravity="left|center_vertical"
                         android:lines="1"
-                        android:padding="5dp"
+                        android:padding="10px"
                         android:saveEnabled="false"
                         android:singleLine="true"
                         android:textColor="@color/colorMain4"
-                        android:textSize="16sp" />
+                        android:textSize="32px"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -529,16 +544,16 @@
                     android:layout_gravity="center"
                     android:gravity="right"
                     android:text="单位:"
-                    android:textSize="25sp" />
+                    android:textSize="25sp"/>
 
                 <EditText
                     android:id="@+id/evidence_dept_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10px"
                     android:saveEnabled="false"
-                    android:textSize="20sp" />
+                    android:textSize="32px"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -546,8 +561,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@color/colorLine1" />
+        android:layout_height="1px"
+        android:background="@color/colorLine1"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -557,24 +572,24 @@
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
+            android:layout_width="300px"
+            android:layout_height="80px"
             android:layout_gravity="center"
-            android:layout_margin="5dp"
+            android:layout_margin="10px"
             android:background="@drawable/btn_waiting_selector"
             android:text="保 存"
             android:textColor="@color/colorMain6"
-            android:textSize="16sp" />
+            android:textSize="32px"/>
 
         <Button
             android:id="@+id/close_button"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
+            android:layout_width="300px"
+            android:layout_height="80px"
             android:layout_gravity="center"
-            android:layout_margin="5dp"
+            android:layout_margin="10px"
             android:background="@drawable/btn_msg_selector"
             android:text="关 闭"
             android:textColor="@color/colorMain6"
-            android:textSize="16sp" />
+            android:textSize="32px"/>
     </LinearLayout>
 </LinearLayout>

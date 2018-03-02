@@ -84,9 +84,9 @@ public class LocalSqlite extends SQLiteOpenHelper {
 
         switch (newVersion) {
             case 2:
-                System.out.println("数据库更新了》》》》》》》》》》");
 
-                db.execSQL("drop table "+ MISSION_TABLE);
+
+                db.execSQL("drop table " + MISSION_TABLE);
 
                 String missionSqlStr = "CREATE TABLE " + MISSION_TABLE + " (mid VARCHAR PRIMARY KEY NOT NULL, task_name VARCHAR NOT NULL," +
                         " delivery_time BIGINT NOT NULL, begin_time BIGINT NOT NULL, end_time BIGINT NOT NULL," +
@@ -100,12 +100,14 @@ public class LocalSqlite extends SQLiteOpenHelper {
                 db.execSQL(missionSqlStr);
                 break;
             case 3:
-                System.out.println("更新数据库++33333");
-                db.execSQL("drop table "+ EQUIPMENT_TABLE);
+                db.execSQL("drop table " + EQUIPMENT_TABLE);
                 String equipmentSqlStr = "CREATE TABLE " + EQUIPMENT_TABLE + " (deptid VARCHAR NOT NULL," +
                         " type VARCHAR, value VARCHAR, remarks VARCHAR, ly VARCHAR," +
                         " type2 VARCHAR, mc1 VARCHAR, mc2 VARCHAR)";
                 db.execSQL(equipmentSqlStr);
+                break;
+
+            default:
                 break;
         }
     }

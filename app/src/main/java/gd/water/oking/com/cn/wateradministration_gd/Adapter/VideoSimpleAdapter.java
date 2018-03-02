@@ -44,9 +44,13 @@ public class VideoSimpleAdapter extends SimpleGridViewAdapter {
         this.typeName = typeName;
     }
 
-    @Override
-    public View getItemView(final int position, View convertView, ViewGroup parent) {
 
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -125,10 +129,7 @@ public class VideoSimpleAdapter extends SimpleGridViewAdapter {
         }
 
         return convertView;
-    }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 
     public interface OnClickListener {

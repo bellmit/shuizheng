@@ -4,28 +4,31 @@ package gd.water.oking.com.cn.wateradministration_gd.fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.amap.api.maps.AMapException;
 import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.offlinemap.OfflineMapCity;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.api.maps.offlinemap.OfflineMapStatus;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 
+import gd.water.oking.com.cn.wateradministration_gd.Adapter.OfflineMapRecyAdapter;
 import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
+import gd.water.oking.com.cn.wateradministration_gd.View.DividerItemDecoration;
 import gd.water.oking.com.cn.wateradministration_gd.bean.OfflineMapDownload;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
+import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,9 +39,9 @@ public class OfflineMapManagerFragment extends BaseFragment {
     private ArrayList<OfflineMapDownload> offlineMapDownloads = new ArrayList<>();
     private OfflineMapManager aMapManager;
 
-    private ListView offlineMap_ListView;
+    private RecyclerView offlineMap_ry;
     private Button checkUpdateBtn;
-    private BaseAdapter adapter;
+    private OfflineMapRecyAdapter mOfflineMapRecyAdapter;
 
     public OfflineMapManagerFragment() {
         // Required empty public constructor
@@ -70,7 +73,6 @@ public class OfflineMapManagerFragment extends BaseFragment {
                         } else if (i == OfflineMapStatus.UNZIP) {
                             omp.setState(OfflineMapDownload.OnUnZIP);
                         } else if (i == OfflineMapStatus.SUCCESS) {
-                            Log.i("OfflineMapManager", "onDownload>>>>Success>>>>" + s);
                             omp.setState(OfflineMapDownload.Normal);
                         } else if (i == OfflineMapStatus.ERROR ||
                                 i == OfflineMapStatus.EXCEPTION_NETWORK_LOADING ||
@@ -79,7 +81,7 @@ public class OfflineMapManagerFragment extends BaseFragment {
                             omp.setState(OfflineMapDownload.Error);
                         }
 
-                        adapter.notifyDataSetChanged();
+                        mOfflineMapRecyAdapter.notifyDataSetChanged();
 
                         break;
                     }
@@ -98,7 +100,7 @@ public class OfflineMapManagerFragment extends BaseFragment {
                         }
                     }
 
-                    adapter.notifyDataSetChanged();
+                    mOfflineMapRecyAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -111,72 +113,19 @@ public class OfflineMapManagerFragment extends BaseFragment {
         cityList = aMapManager.getItemByProvinceName(MainActivity.Area).getCityList();
         setOfflineMapDownloads();
 
-        offlineMap_ListView = (ListView) rootView.findViewById(R.id.offlineMap_listView);
-        adapter = new BaseAdapter() {
+        offlineMap_ry = rootView.findViewById(R.id.offlineMap_listView);
+        offlineMap_ry.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        offlineMap_ry.setItemAnimator(new DefaultItemAnimator());
+        offlineMap_ry.addItemDecoration(new DividerItemDecoration(MyApp.getApplictaion(), 1));
+        mOfflineMapRecyAdapter = new OfflineMapRecyAdapter(R.layout.list_item_offlinemaps, offlineMapDownloads);
+        mOfflineMapRecyAdapter.openLoadAnimation();
+        offlineMap_ry.setAdapter(mOfflineMapRecyAdapter);
+        mOfflineMapRecyAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public int getCount() {
-                return offlineMapDownloads.size();
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                downloadOffLoadMap(offlineMapDownloads.get(position).getCity());
             }
-
-            @Override
-            public Object getItem(int position) {
-                return offlineMapDownloads.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_offlinemaps, null);
-
-                TextView cityName_tv = (TextView) view.findViewById(R.id.cityName_tv);
-                TextView state_tv = (TextView) view.findViewById(R.id.state_tv);
-                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-                Button download_btn = (Button) view.findViewById(R.id.download_btn);
-                download_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        downloadOffLoadMap(offlineMapDownloads.get(position).getCity());
-                    }
-                });
-
-                cityName_tv.setText(offlineMapDownloads.get(position).getCity().getCity());
-                progressBar.setProgress(offlineMapDownloads.get(position).getProgress());
-                switch (offlineMapDownloads.get(position).getState()) {
-                    case OfflineMapDownload.Normal:
-                        progressBar.setVisibility(View.INVISIBLE);
-                        download_btn.setVisibility(View.INVISIBLE);
-                        break;
-                    case OfflineMapDownload.OnDownload:
-                        state_tv.setText("下载中：" + offlineMapDownloads.get(position).getProgress() + "%");
-                        progressBar.setVisibility(View.VISIBLE);
-                        download_btn.setVisibility(View.INVISIBLE);
-                        break;
-                    case OfflineMapDownload.OnUnZIP:
-                        state_tv.setText("解压中：" + offlineMapDownloads.get(position).getProgress() + "%");
-                        progressBar.setVisibility(View.VISIBLE);
-                        download_btn.setVisibility(View.INVISIBLE);
-                        break;
-                    case OfflineMapDownload.NewVersionOrUnDownload:
-                        progressBar.setVisibility(View.INVISIBLE);
-                        download_btn.setVisibility(View.VISIBLE);
-                        break;
-                    case OfflineMapDownload.Waiting:
-                        state_tv.setText("等待下载");
-                        progressBar.setVisibility(View.INVISIBLE);
-                        download_btn.setVisibility(View.INVISIBLE);
-                        break;
-                }
-
-                return view;
-            }
-        };
-        offlineMap_ListView.setAdapter(adapter);
+        });
 
         checkUpdateBtn = (Button) rootView.findViewById(R.id.checkUpdate_btn);
         checkUpdateBtn.setOnClickListener(new View.OnClickListener() {

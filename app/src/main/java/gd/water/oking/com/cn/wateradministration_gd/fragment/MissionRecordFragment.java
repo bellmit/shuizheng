@@ -44,9 +44,9 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hhl.library.FlowTagLayout;
 import com.hhl.library.OnTagSelectListener;
+import com.vondear.rxtools.RxNetUtils;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogLoading;
 import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
@@ -83,15 +83,17 @@ import gd.water.oking.com.cn.wateradministration_gd.bean.MissionLog;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Point;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionRecordFilePathParams;
-import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionRecordParams;
-import gd.water.oking.com.cn.wateradministration_gd.http.SetMissionRecordParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.UpdateMissionRecordStateParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.UpdateMissionStateParams;
-import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
+import gd.water.oking.com.cn.wateradministration_gd.interfaces.OkingCallBack;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.main.ShootActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.VideoRecordActivity;
+import gd.water.oking.com.cn.wateradministration_gd.model.CheckPicForServerModel;
+import gd.water.oking.com.cn.wateradministration_gd.model.GetJobLogModel;
+import gd.water.oking.com.cn.wateradministration_gd.model.UploadJobLogForPicModel;
+import gd.water.oking.com.cn.wateradministration_gd.model.UploadJobLogTextModel;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import io.reactivex.Observable;
@@ -107,11 +109,13 @@ import static android.app.Activity.RESULT_OK;
  * A simple {@link BaseFragment} subclass.
  */
 public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLocationChangeListener {
-    private MyCallBack mMyCallBack;
+    private OkingCallBack.MyCallBack mMyCallBack;
     private static final int PHOTO_FROM_CAMERA = 100;
     private static final int PHOTO_FROM_GALLERY = 101;
     private static final int VIDEO_FROM_CAMERA = 102;
     private static final int VIDEO_FROM_GALLERY = 103;
+
+    SimpleDateFormat videosdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private Mission mission;
     private int picSize;
     private int picComPostion = 0;
@@ -160,6 +164,26 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
             }
         }
     };
+
+    private BroadcastReceiver mNetWokReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean connected = RxNetUtils.isConnected(MyApp.getApplictaion());
+            if (connected) {
+                RxToast.error(MyApp.getApplictaion(), "连接", Toast.LENGTH_SHORT).show();
+
+            } else {
+                if (mRxDialogLoading != null) {
+                    RxToast.error(MyApp.getApplictaion(), "网络断开了~~请检查网络再进行提交数据", Toast.LENGTH_SHORT).show();
+                    mRxDialogLoading.cancel();
+                }
+                if (mPicDisposable != null && mPicDisposable.isDisposed()) {
+                    mPicDisposable.dispose();
+                }
+
+            }
+        }
+    };
     //    private File mDataPicFile;
     private SimpleDateFormat mSdf;
     private RxDialogLoading mRxDialogLoading;
@@ -172,7 +196,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
     private AMap mAMap;
     private UiSettings mUiSettings;
     private MyLocationStyle myLocationStyle;
-
+    private  SharedPreferences mSp;
     public MissionRecordFragment() {
         // Required empty public constructor
     }
@@ -180,6 +204,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         MyApp.getApplictaion().registerReceiver(mReceiver, new IntentFilter(MainActivity.UPDATE_MISSIONLOG_UI_LIST));
+        MyApp.getApplictaion().registerReceiver(mNetWokReceiver, new IntentFilter("oking.network"));
         final View rootView = inflater.inflate(R.layout.fragment_mission_record2, container, false);
         mSavedInstanceState = savedInstanceState;
         mSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -190,6 +215,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
     @Override
     public void onDestroyView() {
         MyApp.getApplictaion().unregisterReceiver(mReceiver);
+        MyApp.getApplictaion().unregisterReceiver(mNetWokReceiver);
         mapView.onDestroy();
         super.onDestroyView();
     }
@@ -214,6 +240,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
 
     @Override
     public void initView(View rootView) {
+        mSp = MyApp.getApplictaion().getSharedPreferences("fileLocation", Context.MODE_PRIVATE);
         mapView = (MapView) rootView.findViewById(R.id.mapView);
         mapView.onCreate(mSavedInstanceState);
         ImageButton backBtn = rootView.findViewById(R.id.back_button);
@@ -551,15 +578,19 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                 return;
                             }
 
-                            mRxDialogLoading = new RxDialogLoading(getContext(), false, new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    dialogInterface.cancel();
-                                }
-                            });
+                            if (mRxDialogLoading == null) {
+
+                                mRxDialogLoading = new RxDialogLoading(getContext(), false, new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        dialogInterface.cancel();
+                                    }
+                                });
+                            }
                             rxDialogSureCancel.cancel();
-                            mRxDialogLoading.setLoadingText("上传数据中...图片：0/" + log.getPhotoUriList().size() + "视频：0/" + log.getVideoUriList().size());
+                            mRxDialogLoading.setLoadingText("上传数据中...图片："+picComPostion+"/" + log.getPhotoUriList().size() + "视频："+veodComPosion+"/" + log.getVideoUriList().size());
                             mRxDialogLoading.show();
+                            //先保存数据
                             localSaveRecord();
                             //上传数据
                             httpSaveRecord();
@@ -1003,14 +1034,10 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
 
     //
     private void uploadPic() {
-        //搜索服务器已存在的图片
-        final GetMissionRecordFilePathParams params = new GetMissionRecordFilePathParams();
-        params.log_id = log.getId();
-        params.type = 0;//日志照片
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
 
+        new CheckPicForServerModel(log, new OkingCallBack.CheckPicForServer() {
+            @Override
+            public void checkedSucc(String result) {
                 ArrayList<Uri> photoUriList = new ArrayList<>();
                 try {
                     JSONArray paths = new JSONArray(result);
@@ -1029,7 +1056,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                     if (mRxDialogLoading != null) {
                         mRxDialogLoading.cancel();
                     }
-                    RxToast.error(MyApp.getApplictaion(), "数据检索失败！", Toast.LENGTH_SHORT, true).show();
+                    RxToast.error(MyApp.getApplictaion(), "服务器内部错误", Toast.LENGTH_SHORT, true).show();
 
                 }
 
@@ -1068,51 +1095,12 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                         }
 
                         @Override
-                        public void onNext(Uri value) {
-                            //上传图片
-
-                            RequestParams upPicParams = new RequestParams(DefaultContants.SERVER_HOST + "/taskLog/mobile/uploadfile");
-                            // 使用multipart表单上传文件
-                            upPicParams.setMultipart(true);
-                            // 加到url里的参数, http://xxxx/s?wd=xUtils
-                            upPicParams.addQueryStringParameter("logId", log.getId());
-                            upPicParams.addQueryStringParameter("type", "0");
-                            upPicParams.addQueryStringParameter("smallImg", "");
-                            // 添加到请求body体的参数, 只有POST, PUT, PATCH, DELETE请求支持.
-
-
-                            File file = new File(FileUtil.PraseUritoPath(getContext(), value));
-                            upPicParams.addBodyParameter(
-                                    "files", file, null); // 如果文件没有扩展名, 最好设置contentType参数.
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                            String filename = file.getName().split("\\.")[0];
-                            try {
-                                Point location = FileUtil.getLastLocationFromFile(sdf.parse(filename).getTime(), 3 * 60 * 1000);
-                                if (location != null) {
-                                    location.setDatetime(sdf.parse(filename).getTime());
-                                }
-                                String ext = new Gson().toJson(location);
-                                if ("null".equals(ext)) {
-                                    Map<String, String> map = new HashMap<>();
-                                    map.put("datetime", mSdf.format(sdf.parse(filename)));
-                                    ext = new Gson().toJson(map);
-                                }
-                                upPicParams.addBodyParameter("ext", ext);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                                if (mRxDialogLoading != null) {
-                                    mRxDialogLoading.cancel();
-                                }
-                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
-
-                            }
-
-                            x.http().post(upPicParams, new Callback.CommonCallback<String>() {
+                        public void onNext(Uri uri) {
+                            new UploadJobLogForPicModel(mSp,log, uri, mSdf, new OkingCallBack.UploadJobLogForPic() {
                                 @Override
-                                public void onSuccess(String result) {
+                                public void uploadSucc(String result) {
                                     picComPostion++;
                                     mRxDialogLoading.getTextView().setText("上传数据中...图片：" + picComPostion + "/" + log.getPhotoUriList().size() + "视频：" + veodComPosion + "/" + log.getVideoUriList().size());
-                                    Log.i("UploadLogPic", "onSuccess>>>>>>" + result);
                                     try {
                                         JSONObject object = new JSONObject(result);
                                         int code = object.getInt("code");
@@ -1126,40 +1114,34 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                             if (mRxDialogLoading != null) {
                                                 mRxDialogLoading.cancel();
                                             }
-                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！1", Toast.LENGTH_SHORT, true).show();
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                         if (mRxDialogLoading != null) {
                                             mRxDialogLoading.cancel();
                                         }
-                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！2", Toast.LENGTH_SHORT, true).show();
 
                                     }
-
                                 }
 
                                 @Override
-                                public void onError(Throwable ex, boolean isOnCallback) {
-                                    Log.i("UploadLogPic", "onError>>>>>>" + ex.toString());
+                                public void uploadFail(Throwable ex) {
+                                    mPicDisposable.dispose();
                                     if (mRxDialogLoading != null) {
                                         mRxDialogLoading.cancel();
                                     }
-                                    mPicDisposable.dispose();
-                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！" + ex.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！3", Toast.LENGTH_SHORT, true).show();
 
                                 }
 
                                 @Override
-                                public void onCancelled(CancelledException cex) {
+                                public void uploadPositionFail(Throwable ex) {
+                                    RxToast.error(MyApp.getApplictaion(), "位置数据解析异常", Toast.LENGTH_SHORT, true).show();
 
                                 }
-
-                                @Override
-                                public void onFinished() {
-
-                                }
-                            });
+                            }).uploadJobLogForPic();
                         }
 
                         @Override
@@ -1177,28 +1159,18 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                     uploadLogPic = true;
                     checkChangeState();
                 }
+
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Log.i("GetMisRecordFilePath", "onError>>>>>>" + ex.toString());
+            public void checkedFail(Throwable ex) {
                 if (mRxDialogLoading != null) {
                     mRxDialogLoading.cancel();
                 }
-                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！4", Toast.LENGTH_SHORT, true).show();
 
             }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
+        }).checkedPicForServer();
     }
 
     private void uploadVideo() {
@@ -1296,7 +1268,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                             if (mRxDialogLoading != null) {
                                                 mRxDialogLoading.cancel();
                                             }
-                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！5", Toast.LENGTH_SHORT, true).show();
                                         }
                                     }
                                     try {
@@ -1314,8 +1286,6 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                     x.http().post(upVideoPicParams, new ProgressCallback<String>() {
                                         @Override
                                         public void onSuccess(String result) {
-                                            veodComPosion++;
-                                            mRxDialogLoading.getTextView().setText("上传数据中...图片：" + picComPostion + "/" + log.getPhotoUriList().size() + "视频：" + veodComPosion + "/" + log.getVideoUriList().size());
 
                                             try {
                                                 JSONObject object = new JSONObject(result);
@@ -1338,29 +1308,38 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
 
                                                     upVideoParams.addBodyParameter(
                                                             "files", videoFile, null);
-                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
                                                     String filename = videoFile.getName().split("\\.")[0];
 
+                                                    String  ext = null;
+
                                                     try {
-                                                        Point location = FileUtil.getLastLocationFromFile(sdf.parse(filename).getTime(), 3 * 60 * 1000);
-                                                        if (location != null) {
-                                                            location.setDatetime(sdf.parse(filename).getTime());
-                                                        }
-                                                        String ext = new Gson().toJson(location);
-                                                        if ("null".equals(ext)) {
+                                                        Point location = new Point();
+                                                        String locationstr = mSp.getString(filename, "");
+                                                        if (!TextUtils.isEmpty(locationstr)) {
+                                                            String[] split = locationstr.split(",");
+                                                            if (!split[0].equals("null")){
+                                                                location.setLatitude(Double.parseDouble(split[0]));
+                                                                location.setLongitude(Double.parseDouble(split[1]));
+                                                                location.setDatetime(videosdf.parse(filename).getTime());
+                                                                ext = new Gson().toJson(location);
+                                                            }
+
+                                                        }else {
                                                             Map<String, String> map = new HashMap<>();
-                                                            map.put("datetime", mSdf.format(sdf.parse(filename)));
+                                                            map.put("datetime", mSdf.format(videosdf.parse(filename)));
                                                             ext = new Gson().toJson(map);
                                                         }
-                                                        upVideoParams.addBodyParameter("ext", ext);
+
+
                                                     } catch (ParseException e) {
                                                         e.printStackTrace();
                                                         if (mRxDialogLoading != null) {
                                                             mRxDialogLoading.cancel();
                                                         }
-                                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！6", Toast.LENGTH_SHORT, true).show();
                                                     }
-
+                                                    upVideoParams.addBodyParameter("ext", ext);
                                                     x.http().post(upVideoParams, new Callback.CommonCallback<String>() {
                                                         @Override
                                                         public void onSuccess(String result) {
@@ -1369,6 +1348,8 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                                 JSONObject object = new JSONObject(result);
                                                                 int code = object.getInt("code");
                                                                 if (code == 200) {
+                                                                    veodComPosion++;
+                                                                    mRxDialogLoading.getTextView().setText("上传数据中...图片：" + picComPostion + "/" + log.getPhotoUriList().size() + "视频：" + veodComPosion + "/" + log.getVideoUriList().size());
 
 
                                                                     uploadLogVideoCount += 1;
@@ -1380,14 +1361,14 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                                     if (mRxDialogLoading != null) {
                                                                         mRxDialogLoading.cancel();
                                                                     }
-                                                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！7", Toast.LENGTH_SHORT, true).show();
                                                                 }
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                                 if (mRxDialogLoading != null) {
                                                                     mRxDialogLoading.cancel();
                                                                 }
-                                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！8", Toast.LENGTH_SHORT, true).show();
                                                             }
 
                                                         }
@@ -1399,7 +1380,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                                 mRxDialogLoading.cancel();
                                                             }
                                                             mVideoDisposable.dispose();
-                                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！9", Toast.LENGTH_SHORT, true).show();
                                                         }
 
                                                         @Override
@@ -1416,14 +1397,14 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                     if (mRxDialogLoading != null) {
                                                         mRxDialogLoading.cancel();
                                                     }
-                                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！10", Toast.LENGTH_SHORT, true).show();
                                                 }
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 if (mRxDialogLoading != null) {
                                                     mRxDialogLoading.cancel();
                                                 }
-                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！11", Toast.LENGTH_SHORT, true).show();
                                             }
 
                                         }
@@ -1434,7 +1415,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                 mRxDialogLoading.cancel();
                                             }
                                             mVideoDisposable.dispose();
-                                            RxToast.error(getContext(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                            RxToast.error(getContext(), "当前4G网络不稳定，上传失败，请稍后重试！12", Toast.LENGTH_SHORT, true).show();
 
                                         }
 
@@ -1489,7 +1470,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                 if (mRxDialogLoading != null) {
                     mRxDialogLoading.cancel();
                 }
-                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！13", Toast.LENGTH_SHORT, true).show();
             }
 
             @Override
@@ -1512,7 +1493,6 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i("GetMisRecordFilePath", "onSuccess>>>>>>" + result);
 
                 try {
                     JSONArray paths = new JSONArray(result);
@@ -1543,7 +1523,6 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
 
                         for (int i = 0; i < memberList.size(); i++) {
                             if (log.getMembers().get(i).getSignPic() != null) {
-                                Log.i("uploadSignPic", "Uri>>>>" + memberList.get(i).getSignPic().toString());
 
                                 //上传图片
                                 RequestParams params = new RequestParams(DefaultContants.SERVER_HOST + "/taskLog/mobile/uploadfile");
@@ -1577,14 +1556,14 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                                 if (mRxDialogLoading != null) {
                                                     mRxDialogLoading.cancel();
                                                 }
-                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！14", Toast.LENGTH_SHORT, true).show();
                                             }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                             if (mRxDialogLoading != null) {
                                                 mRxDialogLoading.cancel();
                                             }
-                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                            RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！15", Toast.LENGTH_SHORT, true).show();
                                         }
 
                                     }
@@ -1595,7 +1574,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                                         if (mRxDialogLoading != null) {
                                             mRxDialogLoading.cancel();
                                         }
-                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！16", Toast.LENGTH_SHORT, true).show();
                                     }
 
                                     @Override
@@ -1620,17 +1599,16 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                     if (mRxDialogLoading != null) {
                         mRxDialogLoading.cancel();
                     }
-                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！17", Toast.LENGTH_SHORT, true).show();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.i("GetMisRecordFilePath", "onSuccess>>>>>>" + ex.toString());
                 if (mRxDialogLoading != null) {
                     mRxDialogLoading.cancel();
                 }
-                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！18", Toast.LENGTH_SHORT, true).show();
             }
 
             @Override
@@ -1645,183 +1623,75 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
         });
     }
 
-    private void httpSaveRecordOnSuccess(String result) throws Exception {
-        SetMissionRecordParams params = new SetMissionRecordParams();
-        JSONObject object = new JSONObject(result);
-        int count = object.getInt("total");
-        if (count > 0) {
-            MissionLog oldLog = DataUtil.praseJson(object.getJSONArray("rows").getJSONObject(0).toString(),
-                    new TypeToken<MissionLog>() {
-                    });
-            params.mode = 1;
-            log.setId(oldLog.getId());
-            params.id = log.getId();
-        } else {
-            params.mode = 0;
-        }
-        params.task_id = mission.getId();
-        params.name = DefaultContants.CURRENTUSER.getUserId();
-        params.time = mSdf.format(System.currentTimeMillis());
-        params.plan = mSelePlanPos;
-        params.item = mSeleMattersPos;
-        params.type = mission.getTask_type();
-        params.area = area_TextView.getText().toString();
+    //提交任务日志文本资料
+    private void httpSaveRecordOnSuccess(String logResult) {
 
-        if (swisopen) {
-            params.whetherComplete = "0";
-        } else {
-            params.whetherComplete = "1";
-        }
-        params.patrol = summaryEditText.getText().toString();
-        params.dzyj = leaderSummaryEditText.getText().toString();
-
-        params.status = 0;
-        params.other_part = parts;
-        params.examine_status = 0;
-
-
-        if (!"".equals(equipment_textView.getText().toString())) {
-            params.equipment = equipment_textView.getText().toString();
-        }
-
-        if (mission.getExecute_start_time() == null) {
-            SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionStartTime", Context.MODE_PRIVATE);
-            mission.setExecute_start_time(sharedPreferences.getLong(mission.getId(), System.currentTimeMillis()));
-        }
-
-        if (mission.getExecute_end_time() == null) {
-
-            SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionEndTime", Context.MODE_PRIVATE);
-            mission.setExecute_end_time(sharedPreferences.getLong(mission.getId(), System.currentTimeMillis()));
-        }
-
-        long begin = mission.getExecute_start_time();
-        long end = mission.getExecute_end_time();
-
-        ArrayList<Point> path = FileUtil.getPathFromFile(begin, end);
-        params.route = new Gson().toJson(path);
-
-
-        params.tbr = DefaultContants.CURRENTUSER.getUserName();
-        params.tbrid = DefaultContants.CURRENTUSER.getUserId();
-
-//        params.tbr = mission.getFbr();
-//        params.tbrid = mission.getPublisher();
-
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        String area = area_TextView.getText().toString();
+        String summary = summaryEditText.getText().toString();
+        String leaderSummary = leaderSummaryEditText.getText().toString();
+        String equipment = equipment_textView.getText().toString();
+        new UploadJobLogTextModel(logResult, log, mission, mSdf.format(System.currentTimeMillis()), swisopen, mSelePlanPos, mSeleMattersPos,
+                area, summary, leaderSummary, parts, equipment, new OkingCallBack.UploadJobLogForText() {
             @Override
-            public void onSuccess(String result) {
-
-                try {
-                    JSONObject object = new JSONObject(result);
-                    int code = object.getInt("code");
-
-                    if (log.getId() == null) {
-                        log.setId(object.getString("id"));
-                    }
-
-                    if (code != 0) {
-                        Toast.makeText(MissionRecordFragment.this.getContext(), object.getString("msg"), Toast.LENGTH_LONG).show();
-                        if (mRxDialogLoading != null) {
-                            mRxDialogLoading.cancel();
-                        }
-                        RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
-                        return;
-                    }
-                    uploadLogPic = false;
-                    uploadSignPic = false;
-                    uploadLogVideo = false;
+            public void uploadSucc(String result) {
+                uploadLogPic = false;
+                uploadSignPic = false;
+                uploadLogVideo = false;
 
 
-                    if (picGridView.getAdapter().getCount() > 1) {
-                        //上传巡查日志的图片
-                        uploadPic();
+                if (picGridView.getAdapter().getCount() > 1) {
+                    //上传巡查日志的图片
+                    uploadPic();
 
-                    } else {
-                        uploadLogPic = true;
-                    }
-
-
-                    //上传签名图片
-                    uploadSignedPic();
+                } else {
+                    uploadLogPic = true;
+                }
 
 
-                    //上传巡查视频
-                    if (videoGridView.getAdapter().getCount() > 1) {
-                        uploadVideo();
-                    } else {
-                        uploadLogVideo = true;
-                    }
+                //上传签名图片
+                uploadSignedPic();
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    if (mRxDialogLoading != null) {
-                        mRxDialogLoading.cancel();
-                    }
-                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
+
+                //上传巡查视频
+                if (videoGridView.getAdapter().getCount() > 1) {
+                    uploadVideo();
+                } else {
+                    uploadLogVideo = true;
                 }
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+            public void uploadFail(Throwable ex) {
+
                 if (mRxDialogLoading != null) {
                     mRxDialogLoading.cancel();
                 }
-                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
+                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！19", Toast.LENGTH_SHORT, true).show();
 
             }
+        }).uploadJobLogForText();
 
-            @Override
-            public void onFinished() {
-
-            }
-        });
 
     }
 
     private void httpSaveRecord() {
 
-
-        GetMissionRecordParams params = new GetMissionRecordParams();
-        params.task_id = mission.getId();
-        x.http().post(params, new Callback.CommonCallback<String>() {
-
+        new GetJobLogModel(mission, new OkingCallBack.GetJobLog() {
             @Override
-            public void onSuccess(String result) {
-                try {
-
-                    httpSaveRecordOnSuccess(result);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (mRxDialogLoading != null) {
-                        mRxDialogLoading.cancel();
-                    }
-                    RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
-                }
+            public void getSucc(String result) {
+                httpSaveRecordOnSuccess(result);
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+            public void getFail(Throwable ex) {
                 if (mRxDialogLoading != null) {
                     mRxDialogLoading.cancel();
                 }
-                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！", Toast.LENGTH_SHORT, true).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
+                RxToast.error(MyApp.getApplictaion(), "当前4G网络不稳定，上传失败，请稍后重试！20", Toast.LENGTH_SHORT, true).show();
 
             }
+        }).getJobLog();
 
-            @Override
-            public void onFinished() {
-
-            }
-        });
 
     }
 
@@ -1852,7 +1722,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
                     params.execute_end_time = mSdf.format(mission.getExecute_end_time());
                 }
 
-                Callback.Cancelable cancelable = x.http().post(params, new Callback.CommonCallback<String>() {
+                x.http().post(params, new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
 
@@ -1964,7 +1834,7 @@ public class MissionRecordFragment extends BaseFragment implements AMap.OnMyLoca
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context != null) {
-            mMyCallBack = (MyCallBack) context;
+            mMyCallBack = (OkingCallBack.MyCallBack) context;
         }
     }
 

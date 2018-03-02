@@ -42,6 +42,7 @@ import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 责令停止违法行为
@@ -335,7 +336,6 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
                 if (installApp) {
                     if (mRb_natural_person.isChecked()) {    //当事人为自然人
 
-
                         final String partiesConcernedNatural = mTet_parties_concerned_natural.getText().toString().trim();
                         final String sexNatural = mTet_sex_natural.getText().toString().trim();
                         final String tetCardNatural = mTet_card_natural.getText().toString().trim();
@@ -389,10 +389,11 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
                             && !TextUtils.isEmpty(contact) && !TextUtils.isEmpty(phone)
                             && !TextUtils.isEmpty(addr)) {
                         //写文件html
-                        MyApp.getGlobalThreadPool().execute(new Runnable() {
+                        Schedulers.io().createWorker().schedule(new Runnable() {
                             @Override
                             public void run() {
                                 writeHtml(illegalFacts, legalProvisions1, legalProvisions2, contact, phone, addr);
+
                             }
                         });
                         ComponentName comp = new ComponentName("com.dynamixsoftware.printershare", "com.dynamixsoftware.printershare.ActivityWeb");
@@ -432,9 +433,7 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
                         }
                     });
 
-
                 }
-
                 break;
             default:
                 break;
@@ -444,26 +443,24 @@ public class StopTheIllegalActivitiesFragment extends BaseFragment implements Vi
 
     private void writeHtml(String illegalFacts, String legalProvisions1, String legalProvisions2, String contact, String phone, String addr) {
         File destDir = new File(Environment.getExternalStorageDirectory().getPath() + "/oking/print/temp1.html");
-        String contetnt = "<!DOCTYPE HTML>\n" +
-                "<html>\n" +
-                "<head>\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                "\n" +
-                "\n" +
-                "    <style>\n" +
-                "    </style>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<h1 align=\"center\">水行政责令停止违法行为通知书</h1>\n" +
-                "<p align=\"right\">x水当罚字[&nbsp;]第&nbsp;&nbsp;号</p>\n" +
-                mNaturalInfo +
-                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;据初步调查,你(单位)&nbsp; <u>&nbsp;" + illegalFacts + "&nbsp;</u>&nbsp;涉嫌违反了 &nbsp;<u>&nbsp;" + legalProvisions1 + "&nbsp;</u>&nbsp;\n" +
-                "    的规定,现根据:<u>&nbsp;" + legalProvisions2 + "&nbsp;</u>的规定,责令你(单位)立即停止违法行为,听后处理。</p>\n" +
-                "\n" +
-                "<p align=\"right\">" + mMYear + "年" + mMMonth + "月" + mMDay + "日&nbsp;&nbsp;</p>\n" +
-                "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系人:<u>&nbsp;" + contact + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话:&nbsp;<u>&nbsp;" + phone + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系地址:&nbsp;<u>&nbsp;" + addr + "&nbsp;</u></p>\n" +
-                "</body>\n" +
-                "</html>";
-        RxFileUtils.writeFileFromString(destDir, contetnt, false);
+       StringBuffer sb = new StringBuffer();
+       sb.append("<!DOCTYPE HTML>\n");
+       sb.append("<html>\n");
+       sb.append("<head>\n");
+       sb.append("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n");
+       sb.append("    <style>\n");
+       sb.append("    </style>\n");
+       sb.append("</head>\n");
+       sb.append("<body>\n");
+       sb.append("<h1 align=\"center\">水行政责令停止违法行为通知书</h1>\n");
+       sb.append("<p align=\"right\">x水当罚字[&nbsp;]第&nbsp;&nbsp;号</p>\n");
+       sb.append(mNaturalInfo);
+       sb.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;据初步调查,你(单位)&nbsp; <u>&nbsp;" + illegalFacts + "&nbsp;</u>&nbsp;涉嫌违反了 &nbsp;<u>&nbsp;" + legalProvisions1 + "&nbsp;</u>&nbsp;\n");
+       sb.append("    的规定,现根据:<u>&nbsp;" + legalProvisions2 + "&nbsp;</u>的规定,责令你(单位)立即停止违法行为,听后处理。</p>\n");
+       sb.append("<p align=\"right\">" + mMYear + "年" + mMMonth + "月" + mMDay + "日&nbsp;&nbsp;</p>\n");
+      sb.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系人:<u>&nbsp;" + contact + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话:&nbsp;<u>&nbsp;" + phone + "&nbsp;</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系地址:&nbsp;<u>&nbsp;" + addr + "&nbsp;</u></p>\n");
+      sb.append("</body>\n");
+      sb.append("</html>");
+        RxFileUtils.writeFileFromString(destDir, sb.toString(), false);
     }
 }

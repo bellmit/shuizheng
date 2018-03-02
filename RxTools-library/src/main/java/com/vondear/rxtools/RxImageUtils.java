@@ -1727,7 +1727,7 @@ public class RxImageUtils {
      * @param offset 偏移量
      * @return bitmap
      */
-    public Bitmap getBitmap(byte[] data, int offset) {
+    public static Bitmap getBitmap(byte[] data, int offset) {
         if (data.length == 0) return null;
         return BitmapFactory.decodeByteArray(data, offset, data.length);
     }

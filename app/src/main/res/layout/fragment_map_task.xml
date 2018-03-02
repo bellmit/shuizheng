@@ -14,8 +14,8 @@
     <RelativeLayout android:layout_width="wrap_content"
                     android:id="@+id/rl"
                     android:visibility="gone"
-                    android:padding="30px"
-                    android:layout_marginLeft="40px"
+                    android:padding="20px"
+                    android:layout_marginLeft="20px"
                     android:layout_marginTop="40px"
                     android:background="@drawable/maptask_bg_shap"
                     android:layout_height="wrap_content">
@@ -83,5 +83,24 @@
                   android:textColor="#f00"
                   android:textSize="32px"
                   />
+
+        <TextView android:id="@+id/tv_lng"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/tv_time"
+                  android:layout_marginTop="6px"
+                  android:text="经纬度"
+                  android:textColor="#f00"
+                  android:textSize="32px"
+                  />
     </RelativeLayout>
+
+    <ListView android:layout_width="200px"
+              android:background="@drawable/maptask_bg_shap"
+              android:layout_height="650px"
+              android:layout_marginRight="20px"
+              android:layout_marginTop="180px"
+              android:layout_alignParentRight="true"
+              android:id="@+id/lv_task">
+    </ListView>
 </RelativeLayout>

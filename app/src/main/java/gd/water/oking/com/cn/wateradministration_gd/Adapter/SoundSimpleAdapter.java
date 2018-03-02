@@ -7,17 +7,17 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.hyphenate.util.PathUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
-import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.MediaManager;
 
 /**
@@ -28,14 +28,13 @@ public class SoundSimpleAdapter extends BaseAdapter {
 
     private ArrayList<Uri> uriArrayList;
     private OnClickListener onClickListener;
-    private BaseFragment f;
     private boolean canAdd;
 
     private View viewanim;
+    private AnimationDrawable mDrawable;
 
-    public SoundSimpleAdapter(ArrayList<Uri> uriArrayList, BaseFragment f, boolean canAdd) {
+    public SoundSimpleAdapter(ArrayList<Uri> uriArrayList, boolean canAdd) {
         this.uriArrayList = uriArrayList;
-        this.f = f;
         this.canAdd = canAdd;
     }
 
@@ -45,7 +44,7 @@ public class SoundSimpleAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return uriArrayList.size();
+        return uriArrayList.size() + 1;
     }
 
     @Override
@@ -61,61 +60,94 @@ public class SoundSimpleAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        int width = (parent.getWidth() - ((GridView) parent).getHorizontalSpacing() * (((GridView) parent).getNumColumns() - 1)) / ((GridView) parent).getNumColumns();
+        convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item_layout, null);
+        LinearLayout recorder_length = convertView.findViewById(R.id.recorder_length);
+        ImageView iv_record = convertView.findViewById(R.id.iv_record);
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item_layout, null);
-        view.setLayoutParams(new AbsListView.LayoutParams(width, width));
-        try {
-            MediaPlayer mPlayer = new MediaPlayer();
-            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mPlayer.setDataSource(FileUtil.PraseUritoPath(parent.getContext(), uriArrayList.get(position)));
-            mPlayer.prepare();
-            TextView time_tv = (TextView) view.findViewById(R.id.recorder_time);
-            int time = Math.round(mPlayer.getDuration() / 1000);
-            time_tv.setText(time + "\"");
-            mPlayer.release();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewanim = v.findViewById(R.id.id_recorder_anim);
-                viewanim.setBackgroundResource(R.drawable.play);
-                AnimationDrawable drawable = (AnimationDrawable) viewanim.getBackground();
-                drawable.start();
+        if (position == 0) {
+            iv_record.setVisibility(View.VISIBLE);
+            recorder_length.setVisibility(View.GONE);
+            iv_record.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickListener.onAddSoundClick();
+                }
+            });
+        } else {
+            iv_record.setVisibility(View.GONE);
+            recorder_length.setVisibility(View.VISIBLE);
 
-                if (MediaManager.mPlayer == null) {
-                    MediaManager.playSound(FileUtil.PraseUritoPath(parent.getContext(), uriArrayList.get(position)), new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            viewanim.setBackgroundResource(R.drawable.adj);
+            try {
+                MediaPlayer mPlayer = new MediaPlayer();
+                mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mPlayer.setDataSource(PathUtil.getInstance().getVoicePath().getPath()+"/"+uriArrayList.get(position - 1).getLastPathSegment());
+                mPlayer.prepare();
+                TextView time_tv = (TextView) convertView.findViewById(R.id.recorder_time);
+                int time = Math.round(mPlayer.getDuration() / 1000);
+                time_tv.setText(time + "\"");
+                mPlayer.release();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (viewanim != null) {
+
+                        mDrawable.stop();
+                        viewanim.setBackgroundResource(R.drawable.adj);
+                    }
+                    MediaManager.init();
+                    if (!MediaManager.mPlayer.isPlaying()) {
+                        viewanim = v.findViewById(R.id.id_recorder_anim);
+                        viewanim.setBackgroundResource(R.drawable.play);
+                        mDrawable = (AnimationDrawable) viewanim.getBackground();
+                        mDrawable.start();
+
+                        if (MediaManager.mPlayer != null) {
+                            MediaManager.playSound(PathUtil.getInstance().getVoicePath().getPath()+"/"+uriArrayList.get(position - 1).getLastPathSegment(), new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    MediaManager.mPlayer.reset();
+                                    viewanim.setBackgroundResource(R.drawable.adj);
+                                }
+                            }, new MediaPlayer.OnErrorListener() {
+                                @Override
+                                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                                    MediaManager.mPlayer.reset();
+                                    return false;
+                                }
+                            });
                         }
-                    });
-                } else {
-                    MediaManager.release();
-                    drawable.stop();
-                    viewanim.setBackgroundResource(R.drawable.adj);
-                }
+                    } else {
+                        MediaManager.mPlayer.reset();
 
-            }
-        });
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onClickListener != null && canAdd) {
-                    onClickListener.onLongItemClick(SoundSimpleAdapter.this, uriArrayList, position);
-                }
-                return false;
-            }
-        });
+                    }
 
-        return view;
+
+                }
+            });
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onClickListener != null && canAdd) {
+                        onClickListener.onLongItemClick(SoundSimpleAdapter.this, uriArrayList, position-1);
+                    }
+                    return false;
+                }
+            });
+        }
+
+
+        return convertView;
     }
-
 
 
     public interface OnClickListener {
         void onLongItemClick(SoundSimpleAdapter adapter, ArrayList<Uri> data, int position);
+
+        void onAddSoundClick();
     }
+
+
 }

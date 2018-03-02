@@ -1,6 +1,8 @@
 package gd.water.oking.com.cn.wateradministration_gd.bean;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  * Created by zhao on 2017-4-1.
  */
 
-public class Evidence {
+public class Evidence implements Parcelable{
 
     private String ZJID;
     private String AJID;
@@ -32,11 +34,62 @@ public class Evidence {
     private String LRSJ;
     private String YS;
 
+    private String Otype;
     private boolean isUpload = false;
 
     private ArrayList<Uri> soundList = new ArrayList<>();
     private ArrayList<Uri> picList = new ArrayList<>();
     private ArrayList<Uri> videoList = new ArrayList<>();
+
+
+    protected Evidence(Parcel in) {
+        ZJID = in.readString();
+        AJID = in.readString();
+        ZJLX = in.readString();
+        ZJMC = in.readString();
+        ZJLY = in.readString();
+        ZJNR = in.readString();
+        SL = in.readString();
+        CJSJ = in.readLong();
+        CJR = in.readString();
+        CJDD = in.readString();
+        JZR = in.readString();
+        DW = in.readString();
+        BZ = in.readString();
+        SCR = in.readString();
+        SCSJ = in.readLong();
+        ZT = in.readString();
+        WSID = in.readString();
+        LXMC = in.readString();
+        ZJLYMC = in.readString();
+        LRSJ = in.readString();
+        YS = in.readString();
+        Otype = in.readString();
+        isUpload = in.readByte() != 0;
+        soundList = in.createTypedArrayList(Uri.CREATOR);
+        picList = in.createTypedArrayList(Uri.CREATOR);
+        videoList = in.createTypedArrayList(Uri.CREATOR);
+    }
+
+    public static final Creator<Evidence> CREATOR = new Creator<Evidence>() {
+        @Override
+        public Evidence createFromParcel(Parcel in) {
+            return new Evidence(in);
+        }
+
+        @Override
+        public Evidence[] newArray(int size) {
+            return new Evidence[size];
+        }
+    };
+
+    public String getOtype() {
+        return Otype;
+    }
+
+    public void setOtype(String otype) {
+        Otype = otype;
+    }
 
     public String getZJID() {
         return ZJID;
@@ -236,5 +289,70 @@ public class Evidence {
 
     public void setVideoList(ArrayList<Uri> videoList) {
         this.videoList = videoList;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(ZJID);
+        parcel.writeString(AJID);
+        parcel.writeString(ZJLX);
+        parcel.writeString(ZJMC);
+        parcel.writeString(ZJLY);
+        parcel.writeString(ZJNR);
+        parcel.writeString(SL);
+        parcel.writeLong(CJSJ);
+        parcel.writeString(CJR);
+        parcel.writeString(CJDD);
+        parcel.writeString(JZR);
+        parcel.writeString(DW);
+        parcel.writeString(BZ);
+        parcel.writeString(SCR);
+        parcel.writeLong(SCSJ);
+        parcel.writeString(ZT);
+        parcel.writeString(WSID);
+        parcel.writeString(LXMC);
+        parcel.writeString(ZJLYMC);
+        parcel.writeString(LRSJ);
+        parcel.writeString(YS);
+        parcel.writeByte((byte) (isUpload ? 1 : 0));
+        parcel.writeTypedList(soundList);
+        parcel.writeTypedList(picList);
+        parcel.writeTypedList(videoList);
+    }
+
+    @Override
+    public String toString() {
+        return "Evidence{" +
+                "ZJID='" + ZJID + '\'' +
+                ", AJID='" + AJID + '\'' +
+                ", ZJLX='" + ZJLX + '\'' +
+                ", ZJMC='" + ZJMC + '\'' +
+                ", ZJLY='" + ZJLY + '\'' +
+                ", ZJNR='" + ZJNR + '\'' +
+                ", SL='" + SL + '\'' +
+                ", CJSJ=" + CJSJ +
+                ", CJR='" + CJR + '\'' +
+                ", CJDD='" + CJDD + '\'' +
+                ", JZR='" + JZR + '\'' +
+                ", DW='" + DW + '\'' +
+                ", BZ='" + BZ + '\'' +
+                ", SCR='" + SCR + '\'' +
+                ", SCSJ=" + SCSJ +
+                ", ZT='" + ZT + '\'' +
+                ", WSID='" + WSID + '\'' +
+                ", LXMC='" + LXMC + '\'' +
+                ", ZJLYMC='" + ZJLYMC + '\'' +
+                ", LRSJ='" + LRSJ + '\'' +
+                ", YS='" + YS + '\'' +
+                ", isUpload=" + isUpload +
+                ", soundList=" + soundList +
+                ", picList=" + picList +
+                ", videoList=" + videoList +
+                '}';
     }
 }

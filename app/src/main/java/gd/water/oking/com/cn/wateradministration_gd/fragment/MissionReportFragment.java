@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,13 +21,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.CoordinateConverter;
-import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.CircleOptions;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.PolygonOptions;
 import com.google.gson.reflect.TypeToken;
 import com.just.library.AgentWeb;
 import com.just.library.ChromeClientCallbackManager;
@@ -56,24 +47,18 @@ import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.View.SearchMissionEditText;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Mission;
 import gd.water.oking.com.cn.wateradministration_gd.bean.MissionLog;
-import gd.water.oking.com.cn.wateradministration_gd.bean.Point;
 import gd.water.oking.com.cn.wateradministration_gd.http.DefaultContants;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionRecordFilePathParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionRecordParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.SetMissionRecordParams;
-import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
-import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
-import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
 
 /**
  * A simple {@link BaseFragment} subclass.
  */
 public class MissionReportFragment extends BaseFragment {
-    private MyCallBack mMyCallBack;
-    private MapView mapView;
     private boolean isArcgis = false;
 
     private int selectItemIndex = -1;
@@ -140,8 +125,6 @@ public class MissionReportFragment extends BaseFragment {
         }
 
 
-        mapView = (MapView) rootView.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
 
         MyApp.getGlobalThreadPool().execute(new Runnable() {
             @Override
@@ -154,8 +137,6 @@ public class MissionReportFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mapView.getMap().setMapType(AMap.MAP_TYPE_NORMAL);
-                                mapView.setVisibility(View.GONE);
                                 isArcgis = true;
                             }
                         });
@@ -254,9 +235,6 @@ public class MissionReportFragment extends BaseFragment {
 
                     missionListAdapter.notifyDataSetInvalidated();
 
-                    if (mapView != null) {
-                        setMap(mapView.getMap(), missionList.get(groupPosition));
-                    }
                 }
 
             }
@@ -276,26 +254,22 @@ public class MissionReportFragment extends BaseFragment {
 
             mAgentWeb.getWebLifeCycle().onDestroy();
         }
-        mapView.onDestroy();
         super.onDestroyView();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
     }
 
 
@@ -738,72 +712,68 @@ public class MissionReportFragment extends BaseFragment {
         });
     }
 
-    private void setMap(AMap map, Mission mission) {
-        if (isArcgis && DefaultContants.ISHTTPLOGIN) {
-            return;
-        }
-
-        mapView.setVisibility(View.VISIBLE);
-        Cursor c = MyApp.localSqlite.select(LocalSqlite.AREA_TABLE, new String[]{"coordinate,area_type"}, "task_id=?", new String[]{mission.getId()}, null, null, null);
-        map.clear();
-        Point p = FileUtil.getLastLocationFromFile(System.currentTimeMillis(), 3600000);
-        if (p != null) {
-            CoordinateConverter converter = new CoordinateConverter(getContext());
-            converter.from(CoordinateConverter.CoordType.GPS);
-            LatLng sourceLatLng = new LatLng(p.getLatitude(), p.getLongitude());
-            converter.coord(sourceLatLng);
-            LatLng desLatLng = converter.convert();
-            map.moveCamera(CameraUpdateFactory.newLatLng(desLatLng));
-        }
-        while (c.moveToNext()) {
-            String coordinate = c.getString(c.getColumnIndex("coordinate"));
-            String area_type = c.getString(c.getColumnIndex("area_type"));
-
-            try {
-                if ("point".equals(area_type)) {
-                    JSONArray ja = new JSONArray(coordinate);
-
-                    CoordinateConverter converter = new CoordinateConverter(getContext());
-                    converter.from(CoordinateConverter.CoordType.GPS);
-                    LatLng sourceLatLng = new LatLng(ja.getDouble(1), ja.getDouble(0));
-                    converter.coord(sourceLatLng);
-                    LatLng desLatLng = converter.convert();
-
-                    CircleOptions cr = new CircleOptions().radius(20).center(desLatLng).
-                            strokeWidth(3).fillColor(Color.parseColor("#22000000"));
-                    map.addCircle(cr);
-
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(desLatLng, 12));
-                } else if ("polygon".equals(area_type)) {
-                    JSONArray ja = new JSONArray(coordinate).getJSONArray(0);
-                    PolygonOptions po = new PolygonOptions();
-                    for (int i = 0; i < ja.length(); i++) {
-                        CoordinateConverter converter = new CoordinateConverter(getContext());
-                        converter.from(CoordinateConverter.CoordType.GPS);
-                        LatLng sourceLatLng = new LatLng(ja.getJSONArray(i).getDouble(1), ja.getJSONArray(i).getDouble(0));
-                        converter.coord(sourceLatLng);
-                        LatLng desLatLng = converter.convert();
-
-                        po.add(desLatLng);
-                    }
-
-                    po.strokeColor(Color.BLACK).strokeWidth(2).fillColor(Color.parseColor("#22000000"));
-                    map.addPolygon(po);
-
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(po.getPoints().get(0), 12));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void setMap(AMap map, Mission mission) {
+//        if (isArcgis && DefaultContants.ISHTTPLOGIN) {
+//            return;
+//        }
+//
+//        Cursor c = MyApp.localSqlite.select(LocalSqlite.AREA_TABLE, new String[]{"coordinate,area_type"}, "task_id=?", new String[]{mission.getId()}, null, null, null);
+//        map.clear();
+//        Point p = FileUtil.getLastLocationFromFile(System.currentTimeMillis(), 3600000);
+//        if (p != null) {
+//            CoordinateConverter converter = new CoordinateConverter(getContext());
+//            converter.from(CoordinateConverter.CoordType.GPS);
+//            LatLng sourceLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+//            converter.coord(sourceLatLng);
+//            LatLng desLatLng = converter.convert();
+//            map.moveCamera(CameraUpdateFactory.newLatLng(desLatLng));
+//        }
+//        while (c.moveToNext()) {
+//            String coordinate = c.getString(c.getColumnIndex("coordinate"));
+//            String area_type = c.getString(c.getColumnIndex("area_type"));
+//
+//            try {
+//                if ("point".equals(area_type)) {
+//                    JSONArray ja = new JSONArray(coordinate);
+//
+//                    CoordinateConverter converter = new CoordinateConverter(getContext());
+//                    converter.from(CoordinateConverter.CoordType.GPS);
+//                    LatLng sourceLatLng = new LatLng(ja.getDouble(1), ja.getDouble(0));
+//                    converter.coord(sourceLatLng);
+//                    LatLng desLatLng = converter.convert();
+//
+//                    CircleOptions cr = new CircleOptions().radius(20).center(desLatLng).
+//                            strokeWidth(3).fillColor(Color.parseColor("#22000000"));
+//                    map.addCircle(cr);
+//
+//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(desLatLng, 12));
+//                } else if ("polygon".equals(area_type)) {
+//                    JSONArray ja = new JSONArray(coordinate).getJSONArray(0);
+//                    PolygonOptions po = new PolygonOptions();
+//                    for (int i = 0; i < ja.length(); i++) {
+//                        CoordinateConverter converter = new CoordinateConverter(getContext());
+//                        converter.from(CoordinateConverter.CoordType.GPS);
+//                        LatLng sourceLatLng = new LatLng(ja.getJSONArray(i).getDouble(1), ja.getJSONArray(i).getDouble(0));
+//                        converter.coord(sourceLatLng);
+//                        LatLng desLatLng = converter.convert();
+//
+//                        po.add(desLatLng);
+//                    }
+//
+//                    po.strokeColor(Color.BLACK).strokeWidth(2).fillColor(Color.parseColor("#22000000"));
+//                    map.addPolygon(po);
+//
+//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(po.getPoints().get(0), 12));
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context != null) {
-            mMyCallBack = (MyCallBack) context;
-        }
     }
 
     public void setDefaultTaskID(String defaultTaskID) {

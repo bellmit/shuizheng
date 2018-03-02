@@ -1,6 +1,8 @@
 package gd.water.oking.com.cn.wateradministration_gd.bean;
 
 import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
@@ -10,7 +12,7 @@ import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
 /**
  * Created by zhao on 2016/9/12.
  */
-public class Case {
+public class Case implements Parcelable{
 
     private String AJID;
     private long SLRQ;
@@ -56,6 +58,53 @@ public class Case {
     public Case() {
 
     }
+
+    protected Case(Parcel in) {
+        AJID = in.readString();
+        SLRQ = in.readLong();
+        ZFBM = in.readString();
+        SLR = in.readString();
+        AJLX = in.readString();
+        AJMC = in.readString();
+        AY = in.readString();
+        AFDD = in.readString();
+        AFSJ = in.readLong();
+        AQJY = in.readString();
+        XWZSD = in.readString();
+        JGD = in.readString();
+        SSD = in.readString();
+        WHJGFSD = in.readString();
+        DSRQK = in.readString();
+        SQWTR = in.readString();
+        FLYJ = in.readString();
+        CFYJ = in.readString();
+        CFNR = in.readString();
+        CBR1 = in.readString();
+        CBRDW1 = in.readString();
+        ZFZH1 = in.readString();
+        CBR2 = in.readString();
+        CBRDW2 = in.readString();
+        ZFZH2 = in.readString();
+        ZT = in.readString();
+        AJLY = in.readString();
+        AJLXID = in.readString();
+        CBRID1 = in.readString();
+        CBRID2 = in.readString();
+        SLXX_ZT = in.readString();
+        evidenceList = in.createTypedArrayList(Evidence.CREATOR);
+    }
+
+    public static final Creator<Case> CREATOR = new Creator<Case>() {
+        @Override
+        public Case createFromParcel(Parcel in) {
+            return new Case(in);
+        }
+
+        @Override
+        public Case[] newArray(int size) {
+            return new Case[size];
+        }
+    };
 
     public String getAJID() {
         return AJID;
@@ -405,4 +454,44 @@ public class Case {
         db.update(LocalSqlite.CASE_TABLE, values, "AJID = ?", new String[]{Case.this.getAJID()});
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(AJID);
+        parcel.writeLong(SLRQ);
+        parcel.writeString(ZFBM);
+        parcel.writeString(SLR);
+        parcel.writeString(AJLX);
+        parcel.writeString(AJMC);
+        parcel.writeString(AY);
+        parcel.writeString(AFDD);
+        parcel.writeLong(AFSJ);
+        parcel.writeString(AQJY);
+        parcel.writeString(XWZSD);
+        parcel.writeString(JGD);
+        parcel.writeString(SSD);
+        parcel.writeString(WHJGFSD);
+        parcel.writeString(DSRQK);
+        parcel.writeString(SQWTR);
+        parcel.writeString(FLYJ);
+        parcel.writeString(CFYJ);
+        parcel.writeString(CFNR);
+        parcel.writeString(CBR1);
+        parcel.writeString(CBRDW1);
+        parcel.writeString(ZFZH1);
+        parcel.writeString(CBR2);
+        parcel.writeString(CBRDW2);
+        parcel.writeString(ZFZH2);
+        parcel.writeString(ZT);
+        parcel.writeString(AJLY);
+        parcel.writeString(AJLXID);
+        parcel.writeString(CBRID1);
+        parcel.writeString(CBRID2);
+        parcel.writeString(SLXX_ZT);
+        parcel.writeTypedList(evidenceList);
+    }
 }

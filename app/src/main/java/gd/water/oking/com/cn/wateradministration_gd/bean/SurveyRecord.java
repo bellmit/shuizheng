@@ -1,12 +1,15 @@
 package gd.water.oking.com.cn.wateradministration_gd.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * Created by zhao on 2017-4-3.
  */
 
-public class SurveyRecord {
+public class SurveyRecord implements Parcelable{
 
     private String XH;
     private String AJID;
@@ -41,6 +44,108 @@ public class SurveyRecord {
     private boolean isUpload = false;
 
     private ArrayList<QuestionAnswer> questionAnswers = new ArrayList<>();
+
+    protected SurveyRecord(Parcel in) {
+        XH = in.readString();
+        AJID = in.readString();
+        WSID = in.readString();
+        BDCR = in.readString();
+        XB = in.readInt();
+        NL = in.readString();
+        LXDH = in.readString();
+        SFZHM = in.readString();
+        ZW = in.readString();
+        BDCDWMC = in.readString();
+        FRMC = in.readString();
+        FRZW = in.readString();
+        DZ = in.readString();
+        XDZ = in.readString();
+        if (in.readByte() == 0) {
+            DCSJ_KS = null;
+        } else {
+            DCSJ_KS = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            DCSJ_ZZ = null;
+        } else {
+            DCSJ_ZZ = in.readLong();
+        }
+        DCDD = in.readString();
+        DCRY1 = in.readString();
+        DW1 = in.readString();
+        ZFZH1 = in.readString();
+        DCRY2 = in.readString();
+        DW2 = in.readString();
+        ZFZH2 = in.readString();
+        JLR = in.readString();
+        JLRDW = in.readString();
+        DCRY1USERID = in.readString();
+        DCRY2USERID = in.readString();
+        JLRUSERID = in.readString();
+        AY = in.readString();
+        isUpload = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(XH);
+        dest.writeString(AJID);
+        dest.writeString(WSID);
+        dest.writeString(BDCR);
+        dest.writeInt(XB);
+        dest.writeString(NL);
+        dest.writeString(LXDH);
+        dest.writeString(SFZHM);
+        dest.writeString(ZW);
+        dest.writeString(BDCDWMC);
+        dest.writeString(FRMC);
+        dest.writeString(FRZW);
+        dest.writeString(DZ);
+        dest.writeString(XDZ);
+        if (DCSJ_KS == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(DCSJ_KS);
+        }
+        if (DCSJ_ZZ == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(DCSJ_ZZ);
+        }
+        dest.writeString(DCDD);
+        dest.writeString(DCRY1);
+        dest.writeString(DW1);
+        dest.writeString(ZFZH1);
+        dest.writeString(DCRY2);
+        dest.writeString(DW2);
+        dest.writeString(ZFZH2);
+        dest.writeString(JLR);
+        dest.writeString(JLRDW);
+        dest.writeString(DCRY1USERID);
+        dest.writeString(DCRY2USERID);
+        dest.writeString(JLRUSERID);
+        dest.writeString(AY);
+        dest.writeByte((byte) (isUpload ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SurveyRecord> CREATOR = new Creator<SurveyRecord>() {
+        @Override
+        public SurveyRecord createFromParcel(Parcel in) {
+            return new SurveyRecord(in);
+        }
+
+        @Override
+        public SurveyRecord[] newArray(int size) {
+            return new SurveyRecord[size];
+        }
+    };
 
     public String getXH() {
         return XH;

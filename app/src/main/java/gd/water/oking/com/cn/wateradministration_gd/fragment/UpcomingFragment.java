@@ -39,7 +39,7 @@ import gd.water.oking.com.cn.wateradministration_gd.BaseView.BaseFragment;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.View.DountChartMissionView;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Mission;
-import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
+import gd.water.oking.com.cn.wateradministration_gd.interfaces.OkingCallBack;
 import gd.water.oking.com.cn.wateradministration_gd.main.MainActivity;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
@@ -49,7 +49,7 @@ import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
  */
 public class UpcomingFragment extends BaseFragment {
     private DataChangeReceiver mDataChangeReceiver = new DataChangeReceiver();
-    private MyCallBack mMyCallBack;
+    private OkingCallBack.MyCallBack mMyCallBack;
     private ArrayList<PieData> pieDatas = new ArrayList<>();
     private ArrayList<Mission> missionList = new ArrayList<>();
     private MissionListAdapter missionListAdapter;
@@ -81,9 +81,6 @@ public class UpcomingFragment extends BaseFragment {
         }
     };
     private TextView mTv_time;
-    private PatrolLogManagementFragment mPatrolLogManagementFragment;
-    private ArrangeMissionFragment mArrangeMissionFragment;
-    private MissionFragment mMissionFragment;
 
     public UpcomingFragment() {
         // Required empty public constructor
@@ -157,28 +154,20 @@ public class UpcomingFragment extends BaseFragment {
                     case 3:
 
                     case 4:
-
-                        if (mMissionFragment==null){
-
-                            mMissionFragment = new MissionFragment();
-                        }
-                        mMissionFragment.setDefaultTaskID(missionList.get(position).getId());
-                        fm.beginTransaction().replace(R.id.fragment_root, mMissionFragment).commit();
+                        MissionFragment missionFragment = new MissionFragment();
+                        missionFragment.setDefaultTaskID(missionList.get(position).getId());
+                        fm.beginTransaction().replace(R.id.fragment_root, missionFragment).commit();
                         break;
                     case 5:
-                        if (mPatrolLogManagementFragment==null){
 
-                            mPatrolLogManagementFragment = PatrolLogManagementFragment.newInstance(mission, null);
-                        }
-                        fm.beginTransaction().replace(R.id.fragment_root, mPatrolLogManagementFragment).commit();
+                        PatrolLogManagementFragment patrolLogManagementFragment = PatrolLogManagementFragment.newInstance(mission, null);
+                        fm.beginTransaction().replace(R.id.fragment_root, patrolLogManagementFragment).commit();
                         break;
                     case 9:
-                        if (mMissionFragment==null){
 
-                            mMissionFragment = new MissionFragment();
-                        }
-                        mMissionFragment.setDefaultTaskID(missionList.get(position).getId());
-                        fm.beginTransaction().replace(R.id.fragment_root, mMissionFragment).commit();
+                        MissionFragment missionFragment1 = new MissionFragment();
+                        missionFragment1.setDefaultTaskID(missionList.get(position).getId());
+                        fm.beginTransaction().replace(R.id.fragment_root, missionFragment1).commit();
                         break;
                     case MainActivity.Mission_Completed:
                         MissionReportFragment missionReportFragment = new MissionReportFragment();
@@ -316,7 +305,7 @@ public class UpcomingFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context != null) {
-            mMyCallBack = (MyCallBack) context;
+            mMyCallBack = (OkingCallBack.MyCallBack) context;
         }
     }
 }

@@ -2,7 +2,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_margin="10dp"
+              android:layout_margin="20px"
               android:background="@drawable/cardview_bg"
               android:orientation="vertical"
               tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.OfflineMapManagerFragment">
@@ -10,17 +10,17 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/offlineMap_listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@color/colorLine1"
-        android:dividerHeight="1dp"/>
+        />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2px"
         android:background="@color/colorLine1"/>
 
     <LinearLayout
@@ -34,14 +34,14 @@
             android:layout_weight="1"/>
 
         <Button
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20px"
+            android:layout_marginRight="20px"
             android:id="@+id/checkUpdate_btn"
             android:layout_width="wrap_content"
-            android:padding="3dp"
-            android:layout_height="35dp"
+            android:padding="6px"
+            android:layout_height="70px"
 
-            android:textSize="12sp"
+            android:textSize="32px"
             android:background="@drawable/btn_waiting_selector"
             android:text="全部下载或更新"
             android:textColor="@color/colorMain6"/>

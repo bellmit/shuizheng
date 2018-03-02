@@ -1,50 +1,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MissionRecordFragment">
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.MissionRecordFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="20px">
 
         <Button
             android:id="@+id/document_tabBtn"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="60px"
             android:layout_gravity="center_vertical"
             android:background="@drawable/btn_waiting_selector"
             android:foreground="?attr/selectableItemBackground"
             android:text="书证"
-            android:textColor="@color/colorMain6" />
+            android:textSize="32px"
+            android:textColor="@color/colorMain6"/>
 
         <Button
             android:id="@+id/audioVideo_tabBtn"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="60px"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20px"
             android:background="@drawable/btn_msg_selector"
             android:foreground="?attr/selectableItemBackground"
             android:text="视听资料"
-            android:textColor="@color/colorMain4" />
+            android:textSize="32px"
+            android:textColor="@color/colorMain4"/>
 
         <!--<android.support.design.widget.TabLayout-->
         <!--android:id="@+id/tabs"-->
         <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="30dp"-->
+        <!--android:layout_height="60px"-->
         <!--android:layout_gravity="left|center_vertical"-->
         <!--app:tabBackground="@drawable/tab_item_bg"-->
         <!--app:tabIndicatorHeight="0dp"-->
         <!--app:tabMaxWidth="100dp"-->
         <!--app:tabMinWidth="100dp"-->
         <!--app:tabMode="scrollable"-->
-        <!--app:tabPaddingEnd="10dp"-->
-        <!--app:tabPaddingStart="10dp"-->
+        <!--app:tabPaddingEnd="20px"-->
+        <!--app:tabPaddingStart="20px"-->
         <!--app:tabSelectedTextColor="@color/colorMain6"-->
         <!--app:tabTextColor="@color/colorMain4">-->
 
@@ -52,38 +54,27 @@
         <!--</android.support.design.widget.TabLayout>-->
 
         <Button
-            android:id="@+id/add_evidence_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/display_view_bg"
-            android:text="新增证据"
-            android:visibility="gone" />
-
-        <Button
             android:id="@+id/upload_evidence_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginBottom="6px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="10px"
+            android:layout_marginTop="6px"
             android:background="@drawable/display_view_bg"
             android:text="上传证据"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dip"
-        android:background="@color/colorLine1" />
+        android:background="@color/colorLine1"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:saveEnabled="false" />
+        android:saveEnabled="false"/>
 
 </LinearLayout>

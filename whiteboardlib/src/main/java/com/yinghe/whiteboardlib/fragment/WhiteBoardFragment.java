@@ -1,6 +1,5 @@
 package com.yinghe.whiteboardlib.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,23 +18,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,12 +43,10 @@ import android.widget.Toast;
 import com.yinghe.whiteboardlib.MultiImageSelector;
 import com.yinghe.whiteboardlib.R;
 import com.yinghe.whiteboardlib.Utils.BitmapUtils;
-import com.yinghe.whiteboardlib.Utils.DensityUtil;
 import com.yinghe.whiteboardlib.Utils.ScreenUtils;
 import com.yinghe.whiteboardlib.Utils.TimeUtils;
 import com.yinghe.whiteboardlib.adapter.SketchDataGridAdapter;
 import com.yinghe.whiteboardlib.bean.SketchData;
-import com.yinghe.whiteboardlib.bean.StrokeRecord;
 import com.yinghe.whiteboardlib.view.SketchView;
 
 import java.io.File;
@@ -77,7 +69,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
     private GridView materialGv;
     private int mHeightPixels;
     private int mWidthPixels;
-    private StrokeRecord mStrokeRecord;
     private EditText mEt;
 
     public interface SendBtnCallback {
@@ -140,11 +131,10 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
 
     SendBtnCallback sendBtnCallback;
     boolean isTeacher;
-    PopupWindow strokePopupWindow, eraserPopupWindow, textPopupWindow;//画笔、橡皮擦参数设置弹窗实例
+    PopupWindow strokePopupWindow, eraserPopupWindow;//画笔、橡皮擦参数设置弹窗实例
     private View popupStrokeLayout, popupEraserLayout, popupTextLayout;//画笔、橡皮擦弹窗布局
     private SeekBar strokeSeekBar, strokeAlphaSeekBar, eraserSeekBar;
     private ImageView strokeImageView, strokeAlphaImage, eraserImageView;//画笔宽度，画笔不透明度，橡皮擦宽度IV
-    private EditText strokeET;//绘制文字的内容
     private int size;
     private AlertDialog dialog;
     private ArrayList<String> mSelectPath;
@@ -270,11 +260,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
                 keyboardHeight = screenHeight - (r.bottom - r.top);//用rootView的高度减去rootView的可视区域高度得到软键盘高度
                 if (textOffY > (sketchViewHeight - keyboardHeight)) {//如果输入焦点出现在软键盘显示的范围内则进行布局上移操作
                     rootView.setTop(-keyboardHeight);//rootView整体上移软键盘高度
-                    //更新PopupWindow的位置
-                    int x = textOffX;
-                    int y = textOffY - mSketchView.getHeight();
-                    textPopupWindow.update(mSketchView, x, y,
-                            WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 }
             }
         });
@@ -384,26 +369,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
     }
 
 
-    private void initTextPop() {
-
-
-        textPopupWindow = new PopupWindow(activity);
-        textPopupWindow.setContentView(popupTextLayout);
-        textPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);//宽度200dp
-        textPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);//高度自适应
-        textPopupWindow.setFocusable(true);
-        textPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        textPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        textPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                if (!strokeET.getText().toString().equals("")) {
-                    StrokeRecord record = new StrokeRecord(strokeType);
-                    record.text = strokeET.getText().toString();
-                }
-            }
-        });
-    }
 
     private void initEraserPop() {
         //橡皮擦弹窗
@@ -578,16 +543,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         btn_background.setOnClickListener(this);
         btn_drag.setOnClickListener(this);
         btn_send.setOnClickListener(this);
-//        mSketchView.setTextWindowCallback(new SketchView.TextWindowCallback() {
-//            @Override
-//            public void onText(View anchor, StrokeRecord record) {
-//                System.out.println("添加文字");
-//                mStrokeRecord = record;
-//                textOffX = record.textOffX;
-//                textOffY = record.textOffY;
-////                showTextPopupWindow(anchor, record);
-//            }
-//        });
 
         // popupWindow布局
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Activity
@@ -622,7 +577,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         eraserSeekBar = (SeekBar) (popupEraserLayout.findViewById(R.id.stroke_seekbar));
         //文本录入弹窗布局
         popupTextLayout = inflater.inflate(R.layout.popup_sketch_text, null);
-        strokeET = (EditText) popupTextLayout.findViewById(R.id.text_pupwindow_et);
         getSketchSize();//计算选择图片弹窗的高宽
 
         final String[] maters = {"m1.png", "m2.png", "m3.png", "m4.png", "m5.png", "m6.png", "m7.png"};
@@ -892,26 +846,6 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         }
     }
 
-    @SuppressLint("WrongConstant")
-    private void showTextPopupWindow(View anchor, final StrokeRecord record) {
-        strokeET.requestFocus();
-        textPopupWindow.showAsDropDown(anchor, record.textOffX, record.textOffY - mSketchView.getHeight());
-        textPopupWindow.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-        InputMethodManager imm = (InputMethodManager) activity
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-        textPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                if (!strokeET.getText().toString().equals("")) {
-                    record.text = strokeET.getText().toString();
-                    record.textPaint.setTextSize(DensityUtil.dip2px(getContext(), 10));
-                    record.textWidth = strokeET.getMaxWidth();
-                    mSketchView.addStrokeRecord(record);
-                }
-            }
-        });
-    }
 
 
     private void saveInUI(final String imgName) {

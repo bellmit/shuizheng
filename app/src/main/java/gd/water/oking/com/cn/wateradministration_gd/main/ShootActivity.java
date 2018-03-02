@@ -1,6 +1,8 @@
 package gd.water.oking.com.cn.wateradministration_gd.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,8 @@ public class ShootActivity extends AppCompatActivity implements SurfaceHolder.Ca
     private MyCamera mCamera = new MyCamera(this);
     private File picStorageDir = new File(Environment.getExternalStorageDirectory(), "oking/mission_pic");
     private Button mTakePictureButton;
+    private SharedPreferences mSp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class ShootActivity extends AppCompatActivity implements SurfaceHolder.Ca
         //setType使用外来数据源
         //设置SurfaceHolder.Callback
         picStorageDir.mkdirs();
+        mSp = getSharedPreferences("fileLocation", Context.MODE_PRIVATE);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -106,5 +111,9 @@ public class ShootActivity extends AppCompatActivity implements SurfaceHolder.Ca
 
         this.enable = enable;
         mTakePictureButton.setEnabled(enable);
+    }
+
+    public SharedPreferences getSp() {
+        return mSp;
     }
 }

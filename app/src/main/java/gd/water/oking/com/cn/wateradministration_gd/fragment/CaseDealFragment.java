@@ -2,10 +2,10 @@ package gd.water.oking.com.cn.wateradministration_gd.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +32,32 @@ public class CaseDealFragment extends BaseFragment {
     private Button change_btn;
     private int btn_position;
     private SimpleDateFormat mSimpleDateFormat;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private String mParam2;
 
     public CaseDealFragment() {
         // Required empty public constructor
+    }
+
+    public static CaseDealFragment newInstance(Case aCase, String param2) {
+        CaseDealFragment fragment = new CaseDealFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM1, aCase);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mycase = (Case) getArguments().getParcelable(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
+
     }
 
     @Override
@@ -116,13 +139,15 @@ public class CaseDealFragment extends BaseFragment {
             }
         }
 
-        if (dealFragment != null) {
-            if (CaseDealFragment.this.getChildFragmentManager().findFragmentById(R.id.sub_fragment_root) != dealFragment) {
-
-                CaseDealFragment.this.getChildFragmentManager().beginTransaction().replace(R.id.sub_fragment_root, dealFragment).commit();
-
-            }
-        }
+        CaseEvidenceFragment caseEvidenceFragment = CaseEvidenceFragment.newInstance(mycase, null);
+        CaseDealFragment.this.getChildFragmentManager().beginTransaction().replace(R.id.sub_fragment_root, caseEvidenceFragment).commit();
+//        if (dealFragment != null) {
+//            if (CaseDealFragment.this.getChildFragmentManager().findFragmentById(R.id.sub_fragment_root) != dealFragment) {
+//
+//                CaseDealFragment.this.getChildFragmentManager().beginTransaction().replace(R.id.sub_fragment_root, dealFragment).commit();
+//
+//            }
+//        }
 
         change_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,20 +159,16 @@ public class CaseDealFragment extends BaseFragment {
                 editor.putString("selectCaseId", MainActivity.selectCaseId);
                 editor.commit();
 
-                Intent intent = new Intent(MainActivity.CALL_CASE_MANAGER);
-//                intent.putExtra("btn_position", btn_position);
-                MyApp.getApplictaion().sendBroadcast(intent);
+                CaseManagerFragment caseManagerFragment = CaseManagerFragment.newInstance(null,null);
+                FragmentManager fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.fragment_root, caseManagerFragment).commit();
+
+
             }
         });
     }
 
-    public void setDealFragment(BaseFragment dealFragment) {
-        this.dealFragment = dealFragment;
-    }
 
-    public void setMycase(Case mycase) {
-        this.mycase = mycase;
-    }
 
     public void setBtn_position(int btn_position) {
         this.btn_position = btn_position;

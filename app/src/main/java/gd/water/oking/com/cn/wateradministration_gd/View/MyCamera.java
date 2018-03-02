@@ -1,5 +1,6 @@
 package gd.water.oking.com.cn.wateradministration_gd.View;
 
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
@@ -12,17 +13,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
+import gd.water.oking.com.cn.wateradministration_gd.bean.Contants;
 import gd.water.oking.com.cn.wateradministration_gd.main.MyApp;
 import gd.water.oking.com.cn.wateradministration_gd.main.ShootActivity;
 
 @SuppressWarnings("deprecation")
-public class MyCamera implements Camera.PictureCallback, Camera.ShutterCallback{
+public class MyCamera implements Camera.PictureCallback, Camera.ShutterCallback {
     private Camera mCamera;
     private ScheduledThreadPoolExecutor mTimerShootingExecutor;
     private ArrayList<String> paths = new ArrayList<String>();
-    private  ShootActivity mShootActivity;
+    private ShootActivity mShootActivity;
 
     public MyCamera(ShootActivity shootActivity) {
         this.mShootActivity = shootActivity;
@@ -49,18 +50,6 @@ public class MyCamera implements Camera.PictureCallback, Camera.ShutterCallback{
         mCamera.takePicture(this, null, this);
     }
 
-
-    public synchronized void startTimerShooting(int timeMs) {
-        if (null == mTimerShootingExecutor) {
-            mTimerShootingExecutor = new ScheduledThreadPoolExecutor(1);
-            mTimerShootingExecutor.scheduleWithFixedDelay(new Runnable() {
-                @Override
-                public void run() {
-                    takePicture();
-                }
-            }, 0, timeMs, TimeUnit.MILLISECONDS);
-        }
-    }
 
     public synchronized void stopTimerShooting() {
         if (null != mTimerShootingExecutor) {
@@ -112,20 +101,20 @@ public class MyCamera implements Camera.PictureCallback, Camera.ShutterCallback{
     public void onPictureTaken(byte[] data, Camera camera) {
         try {
 
-
+            String filename = (String) android.text.format.DateFormat
+                    .format("yyyyMMdd_HHmmss", System.currentTimeMillis());
 
             FileOutputStream out;
-            String filename = android.text.format.DateFormat
-                    .format("yyyyMMdd_HHmmss", System.currentTimeMillis())
-                    + ".jpg";
-            String filePathname = "/storage/emulated/0/oking/mission_pic/"+ filename;
+            String filePathname = "/storage/emulated/0/oking/mission_pic/" + filename+".jpg";
+            SharedPreferences.Editor edit = mShootActivity.getSp().edit();
+            edit.putString(filename, Contants.LOCATIONRESULT[1]+","+Contants.LOCATIONRESULT[2]).commit();
             out = new FileOutputStream(filePathname);
             out.write(data);
             out.flush();
             out.close();
             paths.add(filePathname);
 
-            RxToast.success(MyApp.getApplictaion(),"拍照成功", Toast.LENGTH_SHORT).show();
+            RxToast.success(MyApp.getApplictaion(), "拍照成功", Toast.LENGTH_SHORT).show();
             mShootActivity.notyEnablestate(true);
             //重新启动预览
             mCamera.startPreview();

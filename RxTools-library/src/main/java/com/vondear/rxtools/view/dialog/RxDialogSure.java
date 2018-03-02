@@ -19,7 +19,7 @@ import com.vondear.rxtools.RxTextUtils;
  */
 public class RxDialogSure extends RxDialog {
 
-    private TextView mIvLogo;
+//    private TextView mIvLogo;
     private TextView mTvTitle;
     private TextView mTvContent;
     private TextView mTvSure;
@@ -46,13 +46,13 @@ public class RxDialogSure extends RxDialog {
         mTvSure.setText(content);
     }
 
-    public TextView getIvLogo() {
-        return mIvLogo;
-    }
+//    public TextView getIvLogo() {
+//        return mIvLogo;
+//    }
 
-    public void setIvLogo(String ivLogo) {
-        mIvLogo.setText(ivLogo);
-    }
+//    public void setIvLogo(String ivLogo) {
+//        mIvLogo.setText(ivLogo);
+//    }
 
     public void setContent(String str) {
         if (RxRegUtils.isURL(str)) {
@@ -73,7 +73,7 @@ public class RxDialogSure extends RxDialog {
         mTvContent = (TextView) dialog_view.findViewById(R.id.tv_content);
         mTvContent.setMovementMethod(ScrollingMovementMethod.getInstance());
         mTvContent.setTextIsSelectable(true);
-        mIvLogo = (TextView) dialog_view.findViewById(R.id.iv_logo);
+//        mIvLogo = (TextView) dialog_view.findViewById(R.id.iv_logo);
         setContentView(dialog_view);
     }
 

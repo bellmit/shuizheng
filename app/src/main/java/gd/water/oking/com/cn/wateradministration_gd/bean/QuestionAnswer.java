@@ -1,10 +1,12 @@
 package gd.water.oking.com.cn.wateradministration_gd.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhao on 2017-4-14.
  */
 
-public class QuestionAnswer {
+public class QuestionAnswer implements Serializable{
 
     private String XH;
     private String AJID;

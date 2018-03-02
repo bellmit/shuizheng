@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+    <ImageView android:id="@+id/iv_accept"
+               android:layout_width="40px"
+               android:layout_height="90px"
+               android:layout_centerHorizontal="true"
+               android:src="@mipmap/default_icon"
+    />
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tv_accept"
+              android:layout_alignTop="@id/iv_accept"
+              android:gravity="center"
+              android:layout_alignBottom="@id/iv_accept"
+              android:textSize="32px"
+              android:textColor="@color/colorAccent"
+              android:layout_toRightOf="@id/iv_accept"
+              android:text="受理"/>
+    <View android:id="@+id/v_below_accept"
+          android:layout_width="1px"
+          android:layout_height="200px"
+          android:layout_below="@id/iv_accept"
+          android:layout_centerHorizontal="true"
+          android:background="@color/colorAccent">
+
+    </View>
+
+    <View android:id="@+id/v_toright_accept"
+          android:layout_width="200px"
+          android:layout_height="3px"
+          android:layout_alignStart="@+id/v_below_accept"
+          android:layout_alignTop="@+id/iv_complaint"
+          android:layout_marginTop="50px"
+          android:background="@color/colorAccent"></View>
+    <ImageView android:id="@+id/iv_complaint"
+               android:layout_width="40px"
+               android:layout_height="90px"
+               android:layout_below="@id/bt_accept"
+               android:layout_marginTop="160px"
+               android:layout_toRightOf="@id/v_toright_accept"
+               android:src="@mipmap/default_icon"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tv_complaint"
+              android:layout_alignTop="@id/iv_complaint"
+              android:gravity="center"
+              android:layout_alignBottom="@id/iv_complaint"
+              android:textSize="32px"
+              android:textColor="@color/colorAccent"
+              android:layout_toRightOf="@id/iv_complaint"
+              android:text="转办"/>
+
+</RelativeLayout>

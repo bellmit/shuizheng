@@ -30,7 +30,6 @@ import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
 public class MyApp extends Application{
     public static String sessionID = "";
 //    public static Typeface typeFace;
-    public static LocationService locationService;
     public static LocalSqlite localSqlite;
     private static ExecutorService mExecutorService = new ThreadPoolExecutor(4, 8,
             1, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(128));  ;
@@ -64,7 +63,6 @@ public class MyApp extends Application{
 
                 //register incoming call receiver
                 registerReceiver(callReceiver, callFilter);
-
                 x.Ext.init(this);
 //                x.Ext.setDebug(true);
 
@@ -73,7 +71,7 @@ public class MyApp extends Application{
 
 
                 //设置高德地图apikey
-                AMapNavi.setApiKey(this, "a6d6b52cc353af3cfdadf636fd4b9d9b");
+                AMapNavi.setApiKey(this, "2b05a417c88f6eb8434eb85c1eb54fa0");
 
 //        refWatcher = LeakCanary.install(this);
 

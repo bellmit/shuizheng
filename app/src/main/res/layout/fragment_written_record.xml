@@ -50,9 +50,9 @@
                 android:textColorHint="@color/colorMain4">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_content"
-                    android:maxLength="30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="30"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -78,7 +78,6 @@
             />
             <Button
 
-                android:textSize="28px"
                 android:id="@+id/bt_select_begintime"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -87,8 +86,8 @@
                 android:background="@drawable/btn_addevidence_selector"
                 android:gravity="center"
                 android:text="选择"
-                android:textColor="@color/white"/>
-
+                android:textColor="@color/white"
+                android:textSize="28px"/>
 
 
             <TextView android:id="@+id/tv_tag6"
@@ -103,17 +102,17 @@
 
             <Button
 
-                android:textSize="28px"
                 android:id="@+id/bt_select_endtime"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5px"
+                android:layout_marginRight="40px"
                 android:layout_weight="1"
                 android:background="@drawable/btn_addevidence_selector"
                 android:gravity="center"
-                android:layout_marginRight="40px"
                 android:text="选择"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="28px"/>
         </LinearLayout>
 
         <TextView android:id="@+id/tv_addr"
@@ -129,13 +128,13 @@
 
         <Spinner android:id="@+id/sp_city"
                  android:layout_width="100px"
-                 android:layout_below="@id/ll_02"
-                 android:layout_toRightOf="@id/tv_addr"
                  android:layout_height="80px"
-                 android:layout_marginTop="12px"
-                 android:layout_marginLeft="8px"
+                 android:layout_below="@id/ll_02"
                  android:layout_marginBottom="8px"
+                 android:layout_marginLeft="8px"
                  android:layout_marginRight="8px"
+                 android:layout_marginTop="12px"
+                 android:layout_toRightOf="@id/tv_addr"
                  android:gravity="center"
                  android:overlapAnchor="false"
                  android:paddingLeft="8px"
@@ -156,13 +155,13 @@
 
         <Spinner android:id="@+id/sp_county"
                  android:layout_width="100px"
-                 android:layout_below="@id/ll_02"
-                 android:layout_toRightOf="@id/tv_tag12"
                  android:layout_height="80px"
-                 android:layout_marginTop="12px"
-                 android:layout_marginLeft="8px"
+                 android:layout_below="@id/ll_02"
                  android:layout_marginBottom="8px"
+                 android:layout_marginLeft="8px"
                  android:layout_marginRight="8px"
+                 android:layout_marginTop="12px"
+                 android:layout_toRightOf="@id/tv_tag12"
                  android:gravity="center"
                  android:overlapAnchor="false"
                  android:paddingLeft="8px"
@@ -184,19 +183,19 @@
             android:id="@+id/et_addrdetail"
             android:layout_width="match_parent"
             android:layout_height="115px"
-            android:maxLength="20"
             android:layout_below="@id/ll_02"
             android:layout_marginRight="40px"
             android:layout_marginTop="6px"
             android:layout_toRightOf="@id/tv_tag13"
+            android:maxLength="20"
             android:paddingTop="15px"
             android:textColor="@color/white"
             android:textSize="32px"/>
         <LinearLayout android:id="@+id/ll_03"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="20px"
                       android:layout_below="@id/tv_tag13"
+                      android:layout_marginTop="20px"
                       android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
@@ -227,8 +226,8 @@
                     android:id="@+id/tet_ask_enforcement_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:maxLength="15"
+                    android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -242,8 +241,8 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_recorder"
                     android:layout_width="match_parent"
-                    android:maxLength="10"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -258,8 +257,8 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_recorder_number"
                     android:layout_width="match_parent"
-                    android:maxLength="15"
                     android:layout_height="wrap_content"
+                    android:maxLength="15"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -283,10 +282,10 @@
                     android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/rb_illegal_person"
-                android:checked="true"
                 android:layout_width="160px"
                 android:layout_height="50px"
                 android:button="@drawable/radio_button_style"
+                android:checked="true"
                 android:text="违法行为人"
                 android:textColor="@color/white"
                 android:textSize="19px"/>
@@ -344,9 +343,9 @@
                     android:id="@+id/tet_asking_idcard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:digits="0123456789X"
                     android:maxLength="18"
+                    android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -359,10 +358,10 @@
                 android:hint="职务："
                 android:textColorHint="@color/colorMain4">
                 <android.support.design.widget.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:maxLength="10"
                     android:id="@+id/tet_asking_position"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -378,8 +377,8 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tet_asking_work_units"
                     android:layout_width="match_parent"
-                    android:maxLength="15"
                     android:layout_height="wrap_content"
+                    android:maxLength="15"
                     android:textColor="@color/white"
                     android:textSize="20px"/>
             </android.support.design.widget.TextInputLayout>
@@ -399,13 +398,13 @@
 
         <Spinner android:id="@+id/sp_city2"
                  android:layout_width="100px"
-                 android:layout_below="@id/ll_04"
-                 android:layout_toRightOf="@id/tv_tag15"
                  android:layout_height="80px"
-                 android:layout_marginTop="12px"
-                 android:layout_marginLeft="8px"
+                 android:layout_below="@id/ll_04"
                  android:layout_marginBottom="8px"
+                 android:layout_marginLeft="8px"
                  android:layout_marginRight="8px"
+                 android:layout_marginTop="12px"
+                 android:layout_toRightOf="@id/tv_tag15"
                  android:gravity="center"
                  android:overlapAnchor="false"
                  android:paddingLeft="8px"
@@ -426,13 +425,13 @@
 
         <Spinner android:id="@+id/sp_county2"
                  android:layout_width="100px"
-                 android:layout_below="@id/ll_04"
-                 android:layout_toRightOf="@id/tv_tag16"
                  android:layout_height="80px"
-                 android:layout_marginTop="12px"
-                 android:layout_marginLeft="8px"
+                 android:layout_below="@id/ll_04"
                  android:layout_marginBottom="8px"
+                 android:layout_marginLeft="8px"
                  android:layout_marginRight="8px"
+                 android:layout_marginTop="12px"
+                 android:layout_toRightOf="@id/tv_tag16"
                  android:gravity="center"
                  android:overlapAnchor="false"
                  android:paddingLeft="8px"
@@ -451,15 +450,14 @@
         />
 
 
-
         <EditText android:id="@+id/et_town"
                   android:layout_width="100px"
                   android:layout_height="115px"
                   android:layout_below="@id/ll_04"
                   android:layout_marginTop="6px"
                   android:layout_toRightOf="@id/tv_tag17"
-                  android:paddingTop="15px"
                   android:maxLength="10"
+                  android:paddingTop="15px"
                   android:textColor="@color/white"
                   android:textSize="32px"/>
         <TextView android:id="@+id/tv_tag18"
@@ -481,8 +479,8 @@
                   android:layout_marginRight="40px"
                   android:layout_marginTop="6px"
                   android:layout_toRightOf="@id/tv_tag18"
-                  android:paddingTop="15px"
                   android:maxLength="20"
+                  android:paddingTop="15px"
                   android:textColor="@color/white"
                   android:textSize="32px"/>
 
@@ -498,11 +496,11 @@
         />
         <EditText android:id="@+id/et_enforcement_name"
                   android:layout_width="100px"
-                  android:maxLength="10"
                   android:layout_height="115px"
                   android:layout_below="@id/et_addrdetail2"
                   android:layout_marginTop="6px"
                   android:layout_toRightOf="@id/tv_tag19"
+                  android:maxLength="10"
                   android:paddingTop="15px"
                   android:textColor="@color/white"
                   android:textSize="32px"/>
@@ -539,17 +537,35 @@
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
             android:layout_marginTop="10px"></gd.water.oking.com.cn.wateradministration_gd.View.NoScrollListView>
-        <Button
-            android:id="@+id/bt_save"
-            android:layout_width="140px"
-            android:layout_height="80px"
-            android:layout_below="@id/lv_ask"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10px"
-            android:layout_marginTop="10px"
-            android:background="@drawable/btn_waiting_selector"
-            android:text="提  交"
-            android:textColor="@color/colorMain6"
-            android:textSize="32px"/>
+
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/lv_ask"
+                      android:layout_centerHorizontal="true"
+                      android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_save"
+                android:layout_width="140px"
+                android:layout_height="80px"
+                android:layout_marginBottom="10px"
+                android:layout_marginTop="10px"
+                android:background="@drawable/btn_waiting_selector"
+                android:text="提  交"
+                android:textColor="@color/colorMain6"
+                android:textSize="32px"/>
+            <Button
+                android:id="@+id/bt_print"
+                android:layout_width="140px"
+                android:layout_height="80px"
+                android:layout_marginLeft="30px"
+                android:layout_marginBottom="10px"
+                android:layout_marginTop="10px"
+                android:background="@drawable/btn_waiting_selector"
+                android:text="打  印"
+                android:textColor="@color/colorMain6"
+                android:textSize="32px"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 </ScrollView>

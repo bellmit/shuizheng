@@ -55,12 +55,6 @@
             android:layout_height="@dimen/webview_height"
             android:layout_marginLeft="20px"
             >
-
-            <com.amap.api.maps.MapView
-                android:visibility="gone"
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
         </RelativeLayout>
 
 

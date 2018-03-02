@@ -8,4 +8,5 @@
         </attr>
         <attr name="hint" format="string|reference" />
     </declare-styleable>
+
 </resources>

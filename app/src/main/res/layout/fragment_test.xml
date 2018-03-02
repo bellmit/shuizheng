@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10px"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:background="@drawable/cardview_bg"
+                tools:context="gd.water.oking.com.cn.wateradministration_gd.fragment.TestFragment">
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tv_tag1"
+              android:paddingTop="8px"
+              android:paddingBottom="8px"
+              android:gravity="center"
+              android:textSize="32px"
+              android:layout_alignParentRight="true"
+              android:layout_marginTop="40px"
+              android:layout_marginRight="40px"
+              android:textColor="@color/white"
+              android:text="未完成"/>
+    <ImageView android:id="@+id/iv_tag1"
+               android:layout_width="30px"
+               android:layout_height="90px"
+               android:layout_alignBottom="@id/tv_tag1"
+               android:layout_toLeftOf="@id/tv_tag1"
+               android:layout_marginTop="40px"
+               android:src="@mipmap/default_icon"/>
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tv_tag2"
+              android:paddingTop="8px"
+              android:paddingBottom="8px"
+              android:gravity="center"
+              android:textSize="32px"
+              android:layout_alignParentRight="true"
+              android:layout_below="@id/tv_tag1"
+              android:layout_marginTop="30px"
+              android:layout_marginRight="40px"
+              android:textColor="@color/white"
+              android:text="已完成"/>
+    <ImageView android:id="@+id/iv_tag2"
+               android:layout_width="30px"
+               android:layout_height="90px"
+               android:layout_below="@id/tv_tag1"
+               android:layout_alignBottom="@id/tv_tag2"
+               android:layout_toLeftOf="@id/tv_tag2"
+               android:layout_marginTop="40px"
+               android:src="@mipmap/complted"/>
+
+    <ImageView android:id="@+id/iv_title"
+               android:layout_width="300px"
+               android:layout_height="110px"
+               android:layout_centerHorizontal="true"
+               android:src="@mipmap/ybcx_title"/>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/ry"
+                                            android:layout_marginTop="10px"
+                                            android:layout_below="@id/iv_title"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/ry_detail"
+                                            android:layout_width="250px"
+                                            android:visibility="gone"
+                                            android:layout_height="400px"
+                                            android:layout_margin="30px"
+                                            android:background="@drawable/maptask_bg_shap"
+                                            ></android.support.v7.widget.RecyclerView>
+</RelativeLayout>

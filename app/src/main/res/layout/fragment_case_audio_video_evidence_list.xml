@@ -8,31 +8,31 @@
         <Button
             android:id="@+id/add_evidence_button"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="80px"
             android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
+            android:layout_margin="10px"
             android:background="@drawable/btn_addevidence_selector"
             android:text="添加视听资料"
+            android:textSize="32px"
             android:textColor="@color/cpb_white" />
 
 
         <LinearLayout
-            android:layout_margin="5dp"
             android:id="@+id/ll_01"
             android:layout_below="@id/add_evidence_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60px"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/member_item_bg2"
                 android:gravity="center"
                 android:text="证据名称"
                 android:textColor="@color/colorMain6"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <TextView
                 android:layout_width="0dp"
@@ -42,7 +42,7 @@
                 android:gravity="center"
                 android:text="采集地点"
                 android:textColor="@color/colorMain6"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <TextView
                 android:layout_width="0dp"
@@ -52,32 +52,33 @@
                 android:gravity="center"
                 android:text="证据内容"
                 android:textColor="@color/colorMain6"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="120px"
                 android:layout_height="match_parent"
                 android:background="@drawable/member_item_bg2"
                 android:gravity="center"
                 android:text="类型"
                 android:textColor="@color/colorMain6"
-                android:textSize="16sp" />
+                android:textSize="32px" />
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_weight="1.5"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:background="@drawable/member_item_bg2"
                 android:gravity="center"
                 android:text="操作"
                 android:textColor="@color/colorMain6"
-                android:textSize="16sp" />
+                android:textSize="32px" />
         </LinearLayout>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:layout_below="@id/ll_01"
-            android:id="@+id/main_listView"
+            android:id="@+id/ry_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"></ListView>
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

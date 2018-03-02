@@ -49,7 +49,7 @@ public class MissionListAdapter extends AutoCompleteAdapter<Mission> {
     }
 
     @Override
-    public View getView(final int i, View view, final ViewGroup viewGroup) {
+    public View getView(final int position, View view, final ViewGroup viewGroup) {
         ViewHolder holder;
 
         if (view == null) {
@@ -68,8 +68,7 @@ public class MissionListAdapter extends AutoCompleteAdapter<Mission> {
             holder = (ViewHolder) view.getTag();
         }
 
-        if (missionList.get(i) != null) {
-            Mission mission = missionList.get(i);
+            Mission mission = missionList.get(position);
 
             holder.tv_title.setText(mission.getTask_name());
             holder.tv_date.setText("任务时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(mission.getBegin_time())) + "～" +
@@ -121,11 +120,10 @@ public class MissionListAdapter extends AutoCompleteAdapter<Mission> {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemBtnClick(i);
+                        onItemClickListener.onItemBtnClick(position);
                     }
                 }
             });
-        }
 
         return view;
     }

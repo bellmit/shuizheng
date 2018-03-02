@@ -25,9 +25,11 @@ public class LawEnforcementProcessGuidanceFragment extends BaseFragment implemen
     private RadioButton mRb_punishment_procedures;
     private RadioButton mRb_compulsory_measures;
     private RadioButton mRb_enforcement_program;
-    private PunishmentProceduresFragment mPunishmentProceduresFragment;
-    private AdministrativeEnforcementProceduresFragment mAdministrativeEnforcementProceduresFragment;
+//    private PunishmentProceduresFragment mPunishmentProceduresFragment;
+//    private AdministrativeEnforcementProceduresFragment mAdministrativeEnforcementProceduresFragment;
     private EnforcementProgramFragment mEnforcementProgramFragment;
+    private TestFragment mTestFragment;
+    private TestFragment2 mTestFragment2;
 
 
     public LawEnforcementProcessGuidanceFragment() {
@@ -72,12 +74,17 @@ public class LawEnforcementProcessGuidanceFragment extends BaseFragment implemen
     }
 
     private void initData() {
-        if (mPunishmentProceduresFragment == null) {
+//        if (mPunishmentProceduresFragment == null) {
+//
+//            mPunishmentProceduresFragment = PunishmentProceduresFragment.newInstance(null, null);
+//        }
+//       getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mPunishmentProceduresFragment).commit();
 
-            mPunishmentProceduresFragment = PunishmentProceduresFragment.newInstance(null, null);
+        if (mTestFragment==null){
+
+            mTestFragment = TestFragment.newInstance(null, null);
         }
-       getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mPunishmentProceduresFragment).commit();
-
+        getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mTestFragment).commit();
 
     }
 
@@ -97,22 +104,28 @@ public class LawEnforcementProcessGuidanceFragment extends BaseFragment implemen
         switch (compoundButton.getId()) {
             case R.id.rb_punishment_procedures:
                 if (mRb_punishment_procedures.isChecked()) {
-                    if (mPunishmentProceduresFragment == null) {
+                    if (mTestFragment == null) {
 
-                        mPunishmentProceduresFragment = PunishmentProceduresFragment.newInstance(null, null);
+                        mTestFragment = TestFragment.newInstance(null, null);
                     }
-                    getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mPunishmentProceduresFragment).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mTestFragment).commit();
 
                 }
                 break;
             case R.id.rb_compulsory_measures:
                 if (mRb_compulsory_measures.isChecked()) {
-                    if (mAdministrativeEnforcementProceduresFragment == null) {
+//                    if (mAdministrativeEnforcementProceduresFragment == null) {
+//
+//                        mAdministrativeEnforcementProceduresFragment = AdministrativeEnforcementProceduresFragment.newInstance(null, null);
+//                    }
+//                    getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mAdministrativeEnforcementProceduresFragment).commit();
 
-                        mAdministrativeEnforcementProceduresFragment = AdministrativeEnforcementProceduresFragment.newInstance(null, null);
+
+                    if (mTestFragment2==null){
+                        mTestFragment2 = TestFragment2.newInstance(null, null);
+
                     }
-                    getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mAdministrativeEnforcementProceduresFragment).commit();
-
+                    getChildFragmentManager().beginTransaction().replace(R.id.fl_law_enforcement_content, mTestFragment2).commit();
 
                 }
                 break;

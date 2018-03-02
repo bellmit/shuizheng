@@ -5,9 +5,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -15,6 +17,8 @@ import android.database.Cursor;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.NotificationCompat;
@@ -34,6 +38,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.exceptions.HyphenateException;
+import com.vondear.rxtools.RxFileUtils;
 import com.vondear.rxtools.RxLocationUtils;
 import com.vondear.rxtools.RxNetUtils;
 import com.vondear.rxtools.RxPermissionTool;
@@ -49,19 +54,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import gd.water.oking.com.cn.wateradministration_gd.AmapLocationAidlInterface;
 import gd.water.oking.com.cn.wateradministration_gd.R;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Area;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Case;
+import gd.water.oking.com.cn.wateradministration_gd.bean.Contants;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Member;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Mission;
-import gd.water.oking.com.cn.wateradministration_gd.bean.Point;
 import gd.water.oking.com.cn.wateradministration_gd.bean.Question;
 import gd.water.oking.com.cn.wateradministration_gd.db.LawDao;
 import gd.water.oking.com.cn.wateradministration_gd.fragment.LoginFragment;
@@ -72,14 +80,16 @@ import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionListParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetMissionMemberParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetQuestionParams;
 import gd.water.oking.com.cn.wateradministration_gd.http.GetTemperatureParams;
-import gd.water.oking.com.cn.wateradministration_gd.interfaces.MyCallBack;
+import gd.water.oking.com.cn.wateradministration_gd.interfaces.OkingCallBack;
+import gd.water.oking.com.cn.wateradministration_gd.model.UploadLocationToServerModel;
 import gd.water.oking.com.cn.wateradministration_gd.util.DataUtil;
-import gd.water.oking.com.cn.wateradministration_gd.util.FileUtil;
 import gd.water.oking.com.cn.wateradministration_gd.util.LocalSqlite;
-import gd.water.oking.com.cn.wateradministration_gd.util.Utils;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AutoLayoutActivity implements MyCallBack {
+public class MainActivity extends AutoLayoutActivity implements OkingCallBack.MyCallBack {
 
     public static final String UPDATE_MISSION_LIST = "oking.updateMissionList";
     public static final String UPDATE_CASE_LIST = "oking.updateCaseList";
@@ -90,7 +100,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     public static final String UPDATE_GPS_STATE_UI = "oking.updategpsstate";
     public static final String UPDATE_SIGNAL_UI = "oking.updatesignal";
     public static final String NewMission = "oking.newmission";
-    public static final String CALL_CASE_MANAGER = "oking.callCaseManager";
     public static final String UPDATE_TEMP_UI = "oking.updatetempui";
     public static final String UPDATE_MISSION_GET = "oking.missionGet";
     public static final String UNRE_ADMSG_COUNT = "oking.unreadMsgCount";
@@ -104,11 +113,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     public static String selectCaseId = "";
     public static int arrangeNum, inspectNum, reportNum;
     private int mUnreadMsgCount = 0;
-//    private Subscription mSubscription;
+    //    private Subscription mSubscription;
     private PhoneStateListener mylistener;
 
     private long missionTime = 0;
-//    private Comparator<Mission> comparator = new Comparator<Mission>() {
+    //    private Comparator<Mission> comparator = new Comparator<Mission>() {
 //        @Override
 //        public int compare(Mission o1, Mission o2) {
 //
@@ -138,9 +147,10 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     private Callback.Cancelable mGetMissionMemberCancelable;
     private Callback.Cancelable mGetMissionAreaCancelable;
     private long mRefreshTemEndTime;
-    private Intent mIntent;
-    private long mEndTime=0;
+    //    private Intent mIntent;
     private Map<String, EaseUser> mContacts;
+    private Disposable mAmapDisposable;
+    private UploadLocationToServerModel mUploadLocationToServerModel;
 
     private static void execshell(String command) {
 
@@ -194,11 +204,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             this.startActivityForResult(intent, 0); //此为设置完成后返回到获取界面Intent GPSIntent = new Intent();
         }
 
-        if (!Utils.isServiceWork(this,"gd.water.oking.com.cn.wateradministration_gd.main.LocationService")) {
-            mIntent = new Intent(getApplicationContext(), LocationService.class);
-
-            startService(mIntent);
-        }
+//        if (!Utils.isServiceWork(this,"gd.water.oking.com.cn.wateradministration_gd.main.LocationService")) {
+//            mIntent = new Intent(getApplicationContext(), LocationService.class);
+//
+//            startService(mIntent);
+//        }
     }
 
     private void requestPm() {
@@ -217,14 +227,15 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 .initPermission();
     }
 
+
     private void getTempData() {
-        if (System.currentTimeMillis()-mRefreshTemEndTime>10000){
+        if (System.currentTimeMillis() - mRefreshTemEndTime > 10000) {
             GetTemperatureParams params = new GetTemperatureParams();
             params.key = "zjd6pbelugqzxt1n";
 //            params.location = "佛山";
-            Point p = FileUtil.getLastLocationFromFile(System.currentTimeMillis(), 30 * 60 * 1000);//30min内定位
-            if (p != null) {
-                params.location = p.getLatitude() + ":" + p.getLongitude();
+
+            if (!TextUtils.isEmpty(Contants.LOCATIONRESULT[1]) && !TextUtils.isEmpty(Contants.LOCATIONRESULT[2])) {
+                params.location = Double.parseDouble(Contants.LOCATIONRESULT[1]) + ":" + Double.parseDouble(Contants.LOCATIONRESULT[2]);
             } else {
                 params.location = "ip";
             }
@@ -242,7 +253,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-
                 }
 
                 @Override
@@ -268,7 +278,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 //        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
 //                Configuration.SCREENLAYOUT_SIZE_LARGE;
 //    }
-
     private void init() {
         Schedulers.io().createWorker().schedule(new Runnable() {
             @Override
@@ -288,6 +297,128 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         //还原已选择的案件id
         SharedPreferences sharedPreferences = MyApp.getApplictaion().getSharedPreferences("selectCaseId", Context.MODE_PRIVATE);
         selectCaseId = sharedPreferences.getString("selectCaseId", "");
+
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("gd.water.oking.com.cn.wateradministration_gd", "gd.water.oking.com.cn.wateradministration_gd.service.IRemoteLocationService"));
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                final AmapLocationAidlInterface amapLocationAidlInterface = AmapLocationAidlInterface.Stub.asInterface(iBinder);
+                if (amapLocationAidlInterface != null) {
+
+                    Observable.interval(1, 4, TimeUnit.SECONDS).subscribe(new Observer<Long>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            mAmapDisposable = d;
+                        }
+
+                        @Override
+                        public void onNext(Long value) {
+                            try {
+                                String[] location = amapLocationAidlInterface.getLocation();
+                                Contants.LOCATIONRESULT = location;
+
+                                Contants.MARQUEEVIEWINFO.clear();
+                                Contants.MARQUEEVIEWINFO.add("当前定位类型：" + Contants.LOCATIONRESULT[0]);
+                                Contants.MARQUEEVIEWINFO.add("经纬度：" + Contants.LOCATIONRESULT[1] + "," + Contants.LOCATIONRESULT[2]);
+                                Contants.MARQUEEVIEWINFO.add("定位时间：" + Contants.LOCATIONRESULT[3]);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            try {
+                                if (value % 5 == 0) {
+                                    amapLocationAidlInterface.refreshNotification();
+                                    if (DefaultContants.CURRENTUSER != null && !"".equals(DefaultContants.CURRENTUSER.getUserId()) &&
+                                            DefaultContants.ISHTTPLOGIN) {
+                                        if (mUploadLocationToServerModel == null) {
+                                            mUploadLocationToServerModel = new UploadLocationToServerModel(new OkingCallBack.UploadLocationToServer() {
+                                                @Override
+                                                public void uploadSucc(String result) {
+                                                    System.out.println("上传成功");
+                                                }
+
+                                                @Override
+                                                public void uploadFail(Throwable ex) {
+                                                    System.out.println("上传失败");
+                                                }
+                                            });
+                                        }
+                                        mUploadLocationToServerModel.upploadLocationToServer();
+                                    }
+
+                                    //把定位经纬度保存text
+
+
+                                    if (!TextUtils.isEmpty(Contants.LOCATIONRESULT[3]) && !Contants.LOCATIONRESULT[0].equals("返回上次定位")) {
+
+                                        Schedulers.io().createWorker().schedule(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                writeToLogFile();
+                                            }
+                                        });
+                                    }
+
+                                }
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                if (mAmapDisposable.isDisposed()) {
+                    mAmapDisposable.dispose();
+                }
+
+
+            }
+        }, BIND_AUTO_CREATE);
+
+
+    }
+
+    private String locationFilePath = Environment.getExternalStorageDirectory() + "/oking/location/";
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat locationFileSdf = new SimpleDateFormat("yyyyMMdd");
+
+    /**
+     * 保存定位数据
+     */
+    private void writeToLogFile() {
+        String filePath = locationFilePath + locationFileSdf.format(System.currentTimeMillis()) + ".txt";
+
+
+        String cont = null;
+
+        try {
+            long time = sdf.parse(Contants.LOCATIONRESULT[3]).getTime();
+            cont = Contants.LOCATIONRESULT[1] + "," + Contants.LOCATIONRESULT[2] + "," + time + "\n";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        boolean flag = RxFileUtils.writeFileFromString(filePath, cont, true);
+        if (flag) {
+//            System.out.println("文件写入成功");
+        } else {
+//            System.out.println("文件写入失败");
+        }
+
     }
 
     /**
@@ -355,7 +486,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             mGetMissionCancelable = x.http().post(params, new Callback.CommonCallback<String>() {
                         @Override
                         public void onSuccess(final String result) {
-
+                            Contants.ENDTIME = System.currentTimeMillis();
                             if (missionList != null) {
 
 
@@ -370,7 +501,6 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                         @Override
                         public void onError(Throwable ex, boolean isOnCallback) {
-
 //                            Collections.sort(missionList, comparator);
                             sendBroadcast(new Intent(UPDATE_MISSION_LIST));
 
@@ -424,9 +554,48 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                             mission.setStatus(4);
                         }
 
-                        getMember(mission);
 
-                        getArea(mission);
+                        Schedulers.io().createWorker().schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                mission.getMembers().clear();
+
+                                Member leader = new Member();
+                                leader.setUsername(mission.getReceiver_name());
+                                leader.setUserid(mission.getReceiver());
+                                leader.setPost("任务负责人");
+                                mission.getMembers().add(leader);
+
+                                Cursor cursor = MyApp.localSqlite.select(LocalSqlite.MEMBER_TABLE,
+                                        new String[]{"task_id", "userid", "uName", "jsonStr"},
+                                        "task_id=?",
+                                        new String[]{mission.getId()},
+                                        null, null, null);
+                                while (cursor.moveToNext()) {
+                                    String jsonStr = cursor.getString(cursor.getColumnIndex("jsonStr"));
+
+                                    Member member = DataUtil.praseJson(jsonStr, new TypeToken<Member>() {
+                                    });
+                                    if (member != null) {
+                                        member.setPost("组员");
+                                        mission.getMembers().add(member);
+                                    }
+
+                                }
+                                missionTime = mMTime;
+                                //missionTime保存到SharedPreferences
+                                SharedPreferences saveSharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionTime", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = saveSharedPreferences.edit();
+                                editor.putLong("missionTime", missionTime);
+                                editor.commit();
+                                //Log.i("missionTime", missionTime + "");
+//                Collections.sort(missionList, comparator);
+                                getMissionTypeNum();
+                                sendBroadcast(new Intent(UPDATE_MISSION_LIST));
+                            }
+                        });
+
+
 
                     }
 
@@ -448,11 +617,10 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 @Override
                 public void onSuccess(final String result) {
                     caseList.clear();
-
                     Schedulers.io().createWorker().schedule(new Runnable() {
                         @Override
                         public void run() {
-                           MyApp.localSqlite.delete(LocalSqlite.CASE_TABLE,
+                            MyApp.localSqlite.delete(LocalSqlite.CASE_TABLE,
                                     null, null);
 
                             ArrayList<Case> cList = DataUtil.praseJson(result.toString(),
@@ -490,11 +658,12 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                 }
             });
         } else {
-            caseList.clear();
 
             Schedulers.io().createWorker().schedule(new Runnable() {
                 @Override
                 public void run() {
+                    caseList.clear();
+
                     Cursor cursor = MyApp.localSqlite.select(LocalSqlite.CASE_TABLE,
                             new String[]{"jsonStr"},
                             null, null, null, null, null);
@@ -509,6 +678,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                     }
                 }
             });
+
         }
     }
 
@@ -523,14 +693,14 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                     Schedulers.io().createWorker().schedule(new Runnable() {
                         @Override
                         public void run() {
-                         MyApp.localSqlite.delete(LocalSqlite.QUESTION_TABLE,
+                            MyApp.localSqlite.delete(LocalSqlite.QUESTION_TABLE,
                                     null, null);
 
                             final ArrayList<Question> qList = DataUtil.praseJson(result.toString(),
                                     new TypeToken<ArrayList<Question>>() {
                                     });
 
-                            mEndTime = System.currentTimeMillis();
+
                             if (qList != null) {
                                 for (int i = 0; i < qList.size(); i++) {
                                     Question question = qList.get(i);
@@ -539,6 +709,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
                             }
                         }
                     });
+
                 }
 
                 @Override
@@ -567,89 +738,102 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         mGetMissionMemberCancelable = x.http().post(params, new Callback.CommonCallback<String>() {
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(final String result) {
+                Schedulers.io().createWorker().schedule(new Runnable() {
+                    @Override
+                    public void run() {
 
-                try {
-                    JSONObject object = new JSONObject(result);
-                    JSONArray missionJSONArray = object.getJSONArray("rows");
+                        try {
+                            JSONObject object = new JSONObject(result);
+                            JSONArray missionJSONArray = object.getJSONArray("rows");
 
-                    mission.getMembers().clear();
-                    MyApp.localSqlite.delete(LocalSqlite.MEMBER_TABLE, "task_id = ?",
-                            new String[]{mission.getId()});
+                            mission.getMembers().clear();
+                            MyApp.localSqlite.delete(LocalSqlite.MEMBER_TABLE, "task_id = ?",
+                                    new String[]{mission.getId()});
 
-                    final ArrayList<Member> mbList = DataUtil.praseJson(missionJSONArray.toString(),
-                            new TypeToken<ArrayList<Member>>() {
-                            });
+                            final ArrayList<Member> mbList = DataUtil.praseJson(missionJSONArray.toString(),
+                                    new TypeToken<ArrayList<Member>>() {
+                                    });
 
-                    Member leader = new Member();
-                    leader.setUsername(mission.getReceiver_name());
-                    leader.setUserid(mission.getReceiver());
-                    leader.setPost("任务负责人");
-                    mission.getMembers().add(leader);
+                            Member leader = new Member();
+                            leader.setUsername(mission.getReceiver_name());
+                            leader.setUserid(mission.getReceiver());
+                            leader.setPost("任务负责人");
+                            mission.getMembers().add(leader);
 
-                    if (mbList != null) {
-                        for (int i = 0; i < mbList.size(); i++) {
-                            Member member = mbList.get(i);
-                            member.setPost("组员");
-                            mission.getMembers().add(member);
-                            member.insertDB(MyApp.localSqlite);
+                            if (mbList != null) {
+                                for (int i = 0; i < mbList.size(); i++) {
+                                    Member member = mbList.get(i);
+                                    member.setPost("组员");
+                                    mission.getMembers().add(member);
+                                    member.insertDB(MyApp.localSqlite);
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                missionTime = mMTime;
-                //missionTime保存到SharedPreferences
-                SharedPreferences saveSharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionTime", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = saveSharedPreferences.edit();
-                editor.putLong("missionTime", missionTime);
-                editor.commit();
-                //Log.i("missionTime", missionTime + "");
+                        missionTime = mMTime;
+                        //missionTime保存到SharedPreferences
+                        SharedPreferences saveSharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionTime", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = saveSharedPreferences.edit();
+                        editor.putLong("missionTime", missionTime);
+                        editor.commit();
+                        //Log.i("missionTime", missionTime + "");
 //                Collections.sort(missionList, comparator);
-                getMissionTypeNum();
-                sendBroadcast(new Intent(UPDATE_MISSION_LIST));
+                        getMissionTypeNum();
+                        sendBroadcast(new Intent(UPDATE_MISSION_LIST));
+
+                    }
+                });
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
 
 
-                mission.getMembers().clear();
+                Schedulers.io().createWorker().schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        mission.getMembers().clear();
 
-                Member leader = new Member();
-                leader.setUsername(mission.getReceiver_name());
-                leader.setUserid(mission.getReceiver());
-                leader.setPost("任务负责人");
-                mission.getMembers().add(leader);
+                        Member leader = new Member();
+                        leader.setUsername(mission.getReceiver_name());
+                        leader.setUserid(mission.getReceiver());
+                        leader.setPost("任务负责人");
+                        mission.getMembers().add(leader);
 
-                Cursor cursor = MyApp.localSqlite.select(LocalSqlite.MEMBER_TABLE,
-                        new String[]{"task_id", "userid", "uName", "jsonStr"},
-                        "task_id=?",
-                        new String[]{mission.getId()},
-                        null, null, null);
-                while (cursor.moveToNext()) {
-                    String jsonStr = cursor.getString(cursor.getColumnIndex("jsonStr"));
+                        Cursor cursor = MyApp.localSqlite.select(LocalSqlite.MEMBER_TABLE,
+                                new String[]{"task_id", "userid", "uName", "jsonStr"},
+                                "task_id=?",
+                                new String[]{mission.getId()},
+                                null, null, null);
+                        while (cursor.moveToNext()) {
+                            String jsonStr = cursor.getString(cursor.getColumnIndex("jsonStr"));
 
-                    Member member = DataUtil.praseJson(jsonStr, new TypeToken<Member>() {
-                    });
-                    if (member != null) {
-                        member.setPost("组员");
-                        mission.getMembers().add(member);
-                    }
+                            Member member = DataUtil.praseJson(jsonStr, new TypeToken<Member>() {
+                            });
+                            if (member != null) {
+                                member.setPost("组员");
+                                mission.getMembers().add(member);
+                            }
 
-                }
-                missionTime = mMTime;
-                //missionTime保存到SharedPreferences
-                SharedPreferences saveSharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionTime", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = saveSharedPreferences.edit();
-                editor.putLong("missionTime", missionTime);
-                editor.commit();
-                //Log.i("missionTime", missionTime + "");
+                        }
+                        missionTime = mMTime;
+                        //missionTime保存到SharedPreferences
+                        SharedPreferences saveSharedPreferences = MyApp.getApplictaion().getSharedPreferences("missionTime", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = saveSharedPreferences.edit();
+                        editor.putLong("missionTime", missionTime);
+                        editor.commit();
+                        //Log.i("missionTime", missionTime + "");
 //                Collections.sort(missionList, comparator);
-                getMissionTypeNum();
-                sendBroadcast(new Intent(UPDATE_MISSION_LIST));
+                        getMissionTypeNum();
+                        sendBroadcast(new Intent(UPDATE_MISSION_LIST));
+                    }
+                });
+
             }
 
             @Override
@@ -671,34 +855,39 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         mGetMissionAreaCancelable = x.http().post(params, new Callback.CommonCallback<String>() {
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(final String result) {
 
                 if (result == null || "".equals(result) || "[]".equals(result)) {
                     return;
                 }
+                Schedulers.io().createWorker().schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject object = new JSONArray(result).getJSONObject(0);
+                            String coordinate = object.getString("coordinate");
+                            String type = object.getString("area_type");
+                            String id = object.getString("id");
 
-                try {
-                    JSONObject object = new JSONArray(result).getJSONObject(0);
-                    String coordinate = object.getString("coordinate");
-                    String type = object.getString("area_type");
-                    String id = object.getString("id");
+                            final Area a = new Area();
+                            a.setArea_type(type);
+                            a.setCoordinate(coordinate);
+                            a.setTaskid(mission.getId());
+                            a.setId(id);
 
-                    final Area a = new Area();
-                    a.setArea_type(type);
-                    a.setCoordinate(coordinate);
-                    a.setTaskid(mission.getId());
-                    a.setId(id);
+                            final Cursor c = MyApp.localSqlite.select(LocalSqlite.AREA_TABLE, new String[]{"aid"}, "aid=?", new String[]{id}, null, null, null);
+                            if (c.moveToNext()) {
+                                a.updateDB(MyApp.localSqlite);
+                            } else {
+                                a.insertDB(MyApp.localSqlite);
+                            }
 
-                    final Cursor c = MyApp.localSqlite.select(LocalSqlite.AREA_TABLE, new String[]{"aid"}, "aid=?", new String[]{id}, null, null, null);
-                    if (c.moveToNext()) {
-                        a.updateDB(MyApp.localSqlite);
-                    } else {
-                        a.insertDB(MyApp.localSqlite);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+                });
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
@@ -840,10 +1029,10 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mIntent!=null){
-
-            stopService(mIntent);
-        }
+//        if (mIntent!=null){
+//
+//            stopService(mIntent);
+//        }
 //        if (mSubscription!=null){
 //
 //            mSubscription.cancel();
@@ -853,7 +1042,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         if (!StorageDir.exists()) {
             StorageDir.mkdirs();
         }
-        File f = new File(StorageDir, new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + ".txt");
+        File f = new File(StorageDir, new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(System.currentTimeMillis()) + ".txt");
         execshell("logcat -d -v time -f " + f.getPath());
 
         MyApp.getApplictaion().unregisterReceiver(mGetMissionListRecever);
@@ -862,25 +1051,25 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             mGetCaseCancelable.cancel();
         }
 
-        if (mGetTemperatureCancelable != null&&mGetTemperatureCancelable.isCancelled()) {
+        if (mGetTemperatureCancelable != null && mGetTemperatureCancelable.isCancelled()) {
 
             mGetTemperatureCancelable.cancel();
         }
 
-        if (mGetMissionCancelable != null&&mGetMissionCancelable.isCancelled()) {
+        if (mGetMissionCancelable != null && mGetMissionCancelable.isCancelled()) {
             mGetMissionCancelable.cancel();
         }
 
-        if (mGetQuestionCancelable != null&&mGetQuestionCancelable.isCancelled()) {
+        if (mGetQuestionCancelable != null && mGetQuestionCancelable.isCancelled()) {
             mGetQuestionCancelable.cancel();
         }
 
-        if (mGetMissionMemberCancelable != null&&mGetMissionMemberCancelable.isCancelled()) {
+        if (mGetMissionMemberCancelable != null && mGetMissionMemberCancelable.isCancelled()) {
 
             mGetMissionMemberCancelable.cancel();
         }
 
-        if (mGetMissionAreaCancelable != null&&mGetMissionAreaCancelable.isCancelled()) {
+        if (mGetMissionAreaCancelable != null && mGetMissionAreaCancelable.isCancelled()) {
             mGetMissionAreaCancelable.cancel();
         }
 
@@ -893,8 +1082,11 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
             JSONArray missionJSONArray = object.getJSONArray("rows");
 
             missionList.clear();
-            int deleteCount = MyApp.localSqlite.delete(LocalSqlite.MISSION_TABLE,
-                    "receiver = ?", new String[]{DefaultContants.CURRENTUSER.getUserId()});
+            if (DefaultContants.CURRENTUSER != null && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getUserId())) {
+
+                int deleteCount = MyApp.localSqlite.delete(LocalSqlite.MISSION_TABLE,
+                        "receiver = ?", new String[]{DefaultContants.CURRENTUSER.getUserId()});
+            }
 
             final ArrayList<Mission> mList = DataUtil.praseJson(missionJSONArray.toString(),
                     new TypeToken<ArrayList<Mission>>() {
@@ -999,17 +1191,25 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
     @Override
     public void refreshMission() {
-        getHttpMissionList();
+        if (System.currentTimeMillis() - Contants.ENDTIME > 3000) {
+            getHttpMissionList();
+            Contants.ENDTIME = System.currentTimeMillis();
+        }
     }
 
     @Override
     public void refreshTemp() {
-        getTempData();
+        if (System.currentTimeMillis() - Contants.ENDTIME > 3000) {
+            getTempData();
+            Contants.ENDTIME = System.currentTimeMillis();
+        }
     }
 
     @Override
     public void refreshCase() {
-        getHttpCaseList();
+        if (System.currentTimeMillis() - Contants.ENDTIME > 3000) {
+            getHttpCaseList();
+        }
     }
 
     private class GetMissionListRecever extends BroadcastReceiver {
@@ -1068,28 +1268,28 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 //            mSubscription=null;
 //        }
 
-        if (mGetCaseCancelable != null&&mGetCaseCancelable.isCancelled()) {
+        if (mGetCaseCancelable != null && mGetCaseCancelable.isCancelled()) {
 
             mGetCaseCancelable.cancel();
         }
 
-        if (mGetTemperatureCancelable != null&&mGetTemperatureCancelable.isCancelled()) {
+        if (mGetTemperatureCancelable != null && mGetTemperatureCancelable.isCancelled()) {
             mGetTemperatureCancelable.cancel();
         }
 
-        if (mGetMissionCancelable != null&&mGetMissionCancelable.isCancelled()) {
+        if (mGetMissionCancelable != null && mGetMissionCancelable.isCancelled()) {
             mGetMissionCancelable.cancel();
         }
 
-        if (mGetQuestionCancelable != null&&mGetQuestionCancelable.isCancelled()) {
+        if (mGetQuestionCancelable != null && mGetQuestionCancelable.isCancelled()) {
             mGetQuestionCancelable.cancel();
         }
 
-        if (mGetMissionMemberCancelable != null&&mGetMissionMemberCancelable.isCancelled()) {
+        if (mGetMissionMemberCancelable != null && mGetMissionMemberCancelable.isCancelled()) {
             mGetMissionMemberCancelable.cancel();
         }
 
-        if (mGetMissionAreaCancelable != null&&mGetMissionAreaCancelable.isCancelled()) {
+        if (mGetMissionAreaCancelable != null && mGetMissionAreaCancelable.isCancelled()) {
             mGetMissionAreaCancelable.cancel();
         }
     }
@@ -1102,19 +1302,21 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
-
-        if (System.currentTimeMillis()-mEndTime>6000&&RxNetUtils.isConnected(MyApp.getApplictaion())){
+        if (System.currentTimeMillis() - Contants.ENDTIME > 6000 && RxNetUtils.isConnected(MyApp.getApplictaion())) {
             if (DefaultContants.CURRENTUSER != null && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getUserId())
-                    &&!TextUtils.isEmpty(DefaultContants.CURRENTUSER.getAccount())) {
+                    && !TextUtils.isEmpty(DefaultContants.CURRENTUSER.getAccount())) {
+                System.out.println("触发按下");
+
                 getHttpMissionList();
                 getHttpCaseList();
                 getHttpAlarm();
                 getHttpQuestionList();
                 getTempData();
+                Contants.ENDTIME = System.currentTimeMillis();
 
-                if (EMClient.getInstance().isConnected()){
+                if (EMClient.getInstance().isConnected()) {
                     System.out.println("环信已经登录");
-               }else {
+                } else {
                     Schedulers.io().createWorker().schedule(new Runnable() {
                         @Override
                         public void run() {
@@ -1132,7 +1334,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
                                 @Override
                                 public void onError(int i, String s) {
-                                    System.out.println("环信登录失败"+s);
+                                    System.out.println("环信登录失败" + s);
                                 }
 
                                 @Override
@@ -1175,8 +1377,8 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
     }
 
-   public  Map<String, EaseUser> getEMContacts(){
-       mUnreadMsgCount = 0;
+    public Map<String, EaseUser> getEMContacts() {
+        mUnreadMsgCount = 0;
         return mContacts;
     }
 
@@ -1187,7 +1389,7 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
         public void onMessageReceived(List<EMMessage> list) {
             mUnreadMsgCount++;
             Intent intent = new Intent(UNRE_ADMSG_COUNT);
-            intent.putExtra("unreadMsgCount",mUnreadMsgCount);
+            intent.putExtra("unreadMsgCount", mUnreadMsgCount);
             MyApp.getApplictaion().sendBroadcast(intent);
 
         }
@@ -1215,6 +1417,24 @@ public class MainActivity extends AutoLayoutActivity implements MyCallBack {
 
         @Override
         public void onMessageChanged(EMMessage emMessage, Object o) {
+
+        }
+    }
+
+    public void resetMissionList() {
+        if (System.currentTimeMillis() - Contants.ENDTIME > 6000) {
+
+            Schedulers.io().createWorker().schedule(new Runnable() {
+                @Override
+                public void run() {
+                    getHttpMissionList();
+                    getHttpCaseList();
+                    getHttpAlarm();
+                    getHttpQuestionList();
+                    getTempData();
+                    Contants.ENDTIME = System.currentTimeMillis();
+                }
+            });
 
         }
     }
