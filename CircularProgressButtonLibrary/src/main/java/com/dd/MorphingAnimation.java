@@ -116,8 +116,7 @@ class MorphingAnimation {
                 ObjectAnimator.ofInt(mDrawable, "strokeColor", mFromStrokeColor, mToStrokeColor);
         strokeColorAnimation.setEvaluator(new ArgbEvaluator());
 
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", mFromCornerRadius, mToCornerRadius);
+        ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", mFromCornerRadius, mToCornerRadius);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(mDuration);
